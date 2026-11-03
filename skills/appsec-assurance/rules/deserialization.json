@@ -1,0 +1,189 @@
+{
+  "pack": "deserialization",
+  "version": "1.0.0",
+  "description": "Built-in deserialization rules for appsec-assurance.",
+  "rules": [
+    {
+      "id": "DES-PY-PICKLE",
+      "title": "Unsafe Python deserialization (pickle and friends)",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "deserialization",
+      "files": [
+        "*.py"
+      ],
+      "remediation": "Never unpickle untrusted data; use JSON or a schema-validated format. Sign data with HMAC if pickle is unavoidable.",
+      "pattern": "\\b(c?[Pp]ickle|_pickle|dill|cloudpickle)\\.loads?\\(|\\bjoblib\\.load\\(|\\bshelve\\.open\\(|\\bjsonpickle\\.decode\\(|torch\\.load\\((?![^)]*weights_only\\s*=\\s*True)",
+      "cwe": [
+        "CWE-502"
+      ],
+      "owasp": [
+        "A08:2021"
+      ],
+      "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+    },
+    {
+      "id": "DES-PY-YAML-UNSAFE",
+      "title": "Unsafe YAML load (Python)",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "deserialization",
+      "files": [
+        "*.py"
+      ],
+      "remediation": "Use yaml.safe_load or Loader=yaml.SafeLoader.",
+      "pattern": "\\byaml\\.(unsafe_load|full_load)\\(|\\byaml\\.load\\((?![^)]*Loader\\s*=\\s*(yaml\\.)?C?SafeLoader)|Loader\\s*=\\s*(yaml\\.)?(Unsafe|Full)?Loader\\b(?<!SafeLoader)",
+      "negative": "safe_load|SafeLoader",
+      "cwe": [
+        "CWE-502"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "DES-JAVA-NATIVE",
+      "title": "Java native/polymorphic deserialization",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "deserialization",
+      "files": [
+        "*.java",
+        "*.kt"
+      ],
+      "remediation": "Avoid ObjectInputStream on untrusted data; if unavoidable use an ObjectInputFilter allowlist. Disable Jackson default typing; restrict XStream types.",
+      "pattern": "new\\s+ObjectInputStream\\(|\\bXMLDecoder\\(|new\\s+XStream\\(|enableDefaultTyping\\(|activateDefaultTyping\\(|JsonTypeInfo\\.Id\\.CLASS|SerializationUtils\\.deserialize\\(",
+      "cwe": [
+        "CWE-502"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "DES-DOTNET-FORMATTER",
+      "title": "Dangerous .NET serializer or TypeNameHandling",
+      "severity": "high",
+      "confidence": "high",
+      "category": "deserialization",
+      "files": [
+        "*.cs",
+        "*.cshtml"
+      ],
+      "remediation": "Replace BinaryFormatter & co. with System.Text.Json; set TypeNameHandling.None.",
+      "pattern": "\\b(BinaryFormatter|NetDataContractSerializer|LosFormatter|SoapFormatter|ObjectStateFormatter)\\b|TypeNameHandling\\s*=\\s*TypeNameHandling\\.(All|Auto|Objects|Arrays)",
+      "cwe": [
+        "CWE-502"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "DES-PHP-UNSERIALIZE-INPUT",
+      "title": "unserialize() on request data (PHP)",
+      "severity": "critical",
+      "confidence": "high",
+      "category": "deserialization",
+      "files": [
+        "*.php"
+      ],
+      "remediation": "Use json_decode; if unserialize is required pass ['allowed_classes' => false].",
+      "pattern": "unserialize\\s*\\(\\s*(base64_decode\\()?\\s*\\$_(GET|POST|COOKIE|REQUEST)",
+      "cwe": [
+        "CWE-502"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "DES-PHP-UNSERIALIZE",
+      "title": "unserialize() usage (PHP)",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "deserialization",
+      "files": [
+        "*.php"
+      ],
+      "remediation": "Pass ['allowed_classes' => false] or switch to JSON.",
+      "pattern": "\\bunserialize\\s*\\(",
+      "negative": "allowed_classes",
+      "cwe": [
+        "CWE-502"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "DES-RUBY-MARSHAL-YAML",
+      "title": "Unsafe Ruby deserialization",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "deserialization",
+      "files": [
+        "*.rb",
+        "*.erb"
+      ],
+      "remediation": "Use JSON or YAML.safe_load with permitted_classes.",
+      "pattern": "\\bMarshal\\.(load|restore)\\(|\\bYAML\\.unsafe_load\\(|\\bPsych\\.unsafe_load\\(",
+      "cwe": [
+        "CWE-502"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "DES-JS-UNSAFE-LIB",
+      "title": "Known-dangerous JS serialization library",
+      "severity": "high",
+      "confidence": "high",
+      "category": "deserialization",
+      "files": [
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte"
+      ],
+      "remediation": "Remove node-serialize/funcster/serialize-to-js deserialization of untrusted data; use JSON.parse with schema validation.",
+      "pattern": "require\\(\\s*[\\\"'](node-serialize|funcster|serialize-to-js)[\\\"']\\s*\\)|from\\s+[\\\"'](node-serialize|funcster|serialize-to-js)[\\\"']",
+      "cwe": [
+        "CWE-502"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "DES-JS-PROTOTYPE-POLLUTION",
+      "title": "Deep merge of request data (prototype pollution risk)",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "deserialization",
+      "files": [
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte"
+      ],
+      "remediation": "Validate input with a schema, reject __proto__/constructor/prototype keys, or use Object.create(null)/Map.",
+      "pattern": "\\b(merge|mergeWith|defaultsDeep|extend|deepmerge|set|setWith|zipObjectDeep)\\(\\s*(\\{\\}|true\\s*,\\s*\\{\\}|\\w+)\\s*,\\s*req\\.(body|query)",
+      "cwe": [
+        "CWE-1321"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    }
+  ]
+}

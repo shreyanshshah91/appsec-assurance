@@ -1,0 +1,27 @@
+{
+  "_comment": "Rules of engagement. Copy to .appsec/scope.json. Anything not listed is OUT of scope. Static analysis of the local repository needs no scope file; everything that sends traffic does.",
+  "authorized_by": "Jane Doe <jane@example.com>, Head of Engineering",
+  "authorization_reference": "TICKET-1234 / signed RoE dated 2026-11-01",
+  "valid_until": "2026-12-31",
+  "repositories": ["github.com/example/app"],
+  "allowed_activities": ["static", "dependency-lookup", "dast-passive", "dast-active", "poc"],
+  "targets": [
+    {
+      "host": "localhost",
+      "ports": [3000, 8000],
+      "environment": "local",
+      "activities": ["dast-passive", "dast-active", "poc"],
+      "notes": "docker compose up; seeded test data only"
+    },
+    {
+      "host": "staging.example.com",
+      "environment": "staging",
+      "activities": ["dast-passive"],
+      "notes": "Passive only. No authenticated testing."
+    }
+  ],
+  "excluded": ["*.prod.example.com", "10.0.0.0/8", "payments.example.com"],
+  "test_accounts": "Provided by the owner out-of-band; never use real customer accounts.",
+  "data_handling": "No customer data may leave the test environment. Report secrets redacted.",
+  "emergency_contact": "oncall@example.com"
+}

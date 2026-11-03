@@ -1,0 +1,392 @@
+{
+  "pack": "config",
+  "version": "1.0.0",
+  "description": "Built-in config rules for appsec-assurance.",
+  "rules": [
+    {
+      "id": "CFG-FLASK-DEBUG",
+      "title": "Flask/Werkzeug debugger enabled",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "misconfiguration",
+      "files": [
+        "*.py"
+      ],
+      "remediation": "Never enable debug outside local development; the Werkzeug console allows code execution.",
+      "pattern": "\\.run\\([^)]*debug\\s*=\\s*True|app\\.debug\\s*=\\s*True|FLASK_DEBUG\\s*=\\s*[\\\"']?1",
+      "cwe": [
+        "CWE-489",
+        "CWE-94"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "CFG-DEBUG-ENABLED",
+      "title": "Debug mode enabled in configuration",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "misconfiguration",
+      "files": [
+        "*.py",
+        ".env*",
+        "*.json",
+        "*.yml",
+        "*.yaml",
+        "*.ini",
+        "*.toml",
+        "*.properties"
+      ],
+      "remediation": "Drive DEBUG from environment and default to off; verify production settings.",
+      "pattern": "^\\s*DEBUG\\s*[=:]\\s*[\\\"']?(True|true|1|on)\\b|[\\\"']debug[\\\"']\\s*:\\s*true|APP_DEBUG\\s*=\\s*true",
+      "cwe": [
+        "CWE-489",
+        "CWE-215"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "CFG-CORS-WILDCARD",
+      "title": "CORS allows any origin",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "cors",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs",
+        "*.conf",
+        "*.yml",
+        "*.yaml",
+        "*.json"
+      ],
+      "remediation": "Allow an explicit list of trusted origins; never combine wildcard/reflection with credentials.",
+      "pattern": "Access-Control-Allow-Origin[\\\"']?\\s*[,:]\\s*[\\\"']\\*|\\borigin\\s*:\\s*[\\\"']\\*[\\\"']|allow_origins\\s*=\\s*\\[\\s*[\\\"']\\*|CORS_ORIGIN_ALLOW_ALL\\s*=\\s*True|CORS_ALLOW_ALL_ORIGINS\\s*=\\s*True|AllowAnyOrigin\\(\\)|@CrossOrigin\\(\\s*(origins\\s*=\\s*)?\\\"\\*\\\"|\\bcors\\(\\s*\\)|require\\(\\s*[\\\"']cors[\\\"']\\s*\\)\\(\\s*\\)|add_header\\s+Access-Control-Allow-Origin\\s+[\\\"']?\\*",
+      "cwe": [
+        "CWE-942"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "CFG-CORS-REFLECT-ORIGIN",
+      "title": "CORS reflects arbitrary Origin",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "cors",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs"
+      ],
+      "remediation": "Compare the Origin against an allowlist before echoing it; set Vary: Origin.",
+      "pattern": "\\borigin\\s*:\\s*(true|\\(\\s*origin\\s*,\\s*cb?\\w*\\)\\s*=>\\s*\\w+\\(\\s*null\\s*,\\s*true)|Access-Control-Allow-Origin[\\\"']?\\s*,\\s*req\\.(headers\\.origin|header\\([\\\"']origin)|SetIsOriginAllowed\\(\\s*_\\s*=>\\s*true|allow_origin_regex\\s*=\\s*[\\\"']\\.\\*",
+      "cwe": [
+        "CWE-942"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "CFG-ALLOWED-HOSTS-WILDCARD",
+      "title": "Django ALLOWED_HOSTS wildcard",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "misconfiguration",
+      "files": [
+        "*.py"
+      ],
+      "remediation": "List the exact production hostnames.",
+      "pattern": "ALLOWED_HOSTS\\s*=\\s*\\[\\s*[\\\"']\\*[\\\"']",
+      "cwe": [
+        "CWE-183"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "CFG-HARDCODED-APP-SECRET",
+      "title": "Hardcoded framework secret key",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "secrets",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs",
+        ".env*"
+      ],
+      "remediation": "Load SECRET_KEY / session secrets from the environment or secrets manager; rotate the exposed value (this invalidates sessions/signatures).",
+      "pattern": "(SECRET_KEY|secret_key|SESSION_SECRET|COOKIE_SECRET|APP_KEY|secretKeyBase|secret_key_base)[\\\"']?\\]?\\s*[:=]\\s*[\\\"'](?P<secret>[^\\\"']{6,})[\\\"']|session\\(\\s*\\{[^}]*secret\\s*:\\s*[\\\"'](?P<s2>[^\\\"']{6,})[\\\"']",
+      "secret": true,
+      "cwe": [
+        "CWE-798"
+      ],
+      "owasp": [
+        "A07:2021"
+      ]
+    },
+    {
+      "id": "CFG-EXPRESS-NO-HELMET",
+      "title": "Express app without security headers middleware",
+      "severity": "low",
+      "confidence": "medium",
+      "category": "security-headers",
+      "files": [
+        "package.json"
+      ],
+      "remediation": "Add helmet (or equivalent explicit headers: CSP, HSTS, X-Content-Type-Options, frame-ancestors).",
+      "kind": "file",
+      "status": "missing-control",
+      "all_of": [
+        "\\\"express\\\"\\s*:"
+      ],
+      "none_of": [
+        "\\\"helmet\\\"\\s*:"
+      ],
+      "cwe": [
+        "CWE-693"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "CFG-NO-RATE-LIMIT-DEP",
+      "title": "No rate limiting library detected (Node)",
+      "severity": "low",
+      "confidence": "low",
+      "category": "rate-limiting",
+      "files": [
+        "package.json"
+      ],
+      "remediation": "Rate-limit authentication, password reset, OTP and expensive endpoints (express-rate-limit, gateway/WAF limits).",
+      "kind": "file",
+      "status": "missing-control",
+      "all_of": [
+        "\\\"(express|fastify|koa|@nestjs/core)\\\"\\s*:"
+      ],
+      "none_of": [
+        "rate-limit|ratelimit|rate-limiter|@nestjs/throttler|limiter"
+      ],
+      "cwe": [
+        "CWE-307",
+        "CWE-770"
+      ],
+      "owasp": [
+        "A07:2021",
+        "API4:2023"
+      ]
+    },
+    {
+      "id": "CFG-ENV-FILE-PRESENT",
+      "title": "Environment file with values in repository",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "secrets",
+      "files": [
+        ".env",
+        ".env.*",
+        "*.env"
+      ],
+      "remediation": "Do not commit .env files; add them to .gitignore, commit a placeholder .env.example, and rotate any real values.",
+      "kind": "file",
+      "all_of": [
+        "^\\s*[A-Za-z_][A-Za-z0-9_]*\\s*=\\s*\\S+"
+      ],
+      "exclude_files": [
+        ".env.example",
+        ".env.sample",
+        ".env.template",
+        ".env.dist",
+        "*.example.env"
+      ],
+      "cwe": [
+        "CWE-538"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "CFG-VERBOSE-ERRORS",
+      "title": "Stack traces or raw errors returned to clients",
+      "severity": "low",
+      "confidence": "low",
+      "category": "error-handling",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs"
+      ],
+      "remediation": "Return generic error messages; log details server-side with a correlation ID.",
+      "pattern": "res\\.(send|json|status\\(\\d+\\)\\.(send|json))\\(\\s*(err|error|e)(\\.stack|\\.message)?\\s*\\)|printStackTrace\\(\\)|traceback\\.format_exc\\(\\).*return|return\\s+str\\(e\\)",
+      "cwe": [
+        "CWE-209"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "CFG-SPRING-ACTUATOR-ALL",
+      "title": "All Spring Boot actuator endpoints exposed",
+      "severity": "high",
+      "confidence": "high",
+      "category": "misconfiguration",
+      "files": [
+        "*.properties",
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Expose only health/info, protect the rest with authentication, and never expose heapdump/env publicly.",
+      "pattern": "management\\.endpoints\\.web\\.exposure\\.include\\s*[=:]\\s*[\\\"']?\\*|include:\\s*[\\\"']\\*[\\\"']",
+      "cwe": [
+        "CWE-200"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "CFG-DIRECTORY-LISTING",
+      "title": "Directory listing enabled",
+      "severity": "low",
+      "confidence": "high",
+      "category": "misconfiguration",
+      "files": [
+        "*.conf",
+        ".htaccess",
+        "*.config"
+      ],
+      "remediation": "Disable autoindex / Options Indexes.",
+      "pattern": "autoindex\\s+on|Options\\s+[^#\\n]*\\+?Indexes",
+      "cwe": [
+        "CWE-548"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "CFG-PHPINFO",
+      "title": "phpinfo() exposure",
+      "severity": "low",
+      "confidence": "high",
+      "category": "misconfiguration",
+      "files": [
+        "*.php"
+      ],
+      "remediation": "Remove phpinfo() from deployable code.",
+      "pattern": "\\bphpinfo\\s*\\(",
+      "cwe": [
+        "CWE-200"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "CFG-GRAPHQL-INTROSPECTION",
+      "title": "GraphQL introspection/playground explicitly enabled",
+      "severity": "low",
+      "confidence": "medium",
+      "category": "api",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs"
+      ],
+      "remediation": "Disable introspection and playgrounds in production, and add depth/complexity limits.",
+      "pattern": "introspection\\s*:\\s*true|playground\\s*:\\s*true|graphiql\\s*[:=]\\s*(true|True)",
+      "cwe": [
+        "CWE-200"
+      ],
+      "owasp": [
+        "A05:2021",
+        "API8:2023"
+      ]
+    }
+  ]
+}

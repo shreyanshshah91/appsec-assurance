@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/OWNER/appsec-assurance/schemas/rule.schema.json",
+  "title": "appsec-assurance rule pack",
+  "type": "object",
+  "required": ["pack", "rules"],
+  "properties": {
+    "pack": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+    "version": {"type": "string"},
+    "description": {"type": "string"},
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "severity", "confidence", "category", "files", "remediation"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Z0-9][A-Z0-9-]+$", "description": "Globally unique, stable. Never reuse."},
+          "title": {"type": "string"},
+          "kind": {"enum": ["line", "file"], "default": "line"},
+          "severity": {"enum": ["critical", "high", "medium", "low", "info"]},
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "status": {"enum": ["unverified", "suspected", "missing-control", "confirmed"], "default": "unverified"},
+          "category": {"type": "string"},
+          "files": {"type": "array", "items": {"type": "string"}, "description": "fnmatch globs matched against relative path or basename"},
+          "exclude_files": {"type": "array", "items": {"type": "string"}},
+          "pattern": {"type": "string", "description": "Python regex (kind=line). Named group 'secret' marks the value to redact."},
+          "negative": {"type": "string", "description": "Python regex; a matching line is not reported"},
+          "all_of": {"type": "array", "items": {"type": "string"}, "description": "kind=file: every regex must match"},
+          "none_of": {"type": "array", "items": {"type": "string"}, "description": "kind=file: no regex may match (missing-control rules)"},
+          "ignore_case": {"type": "boolean"},
+          "secret": {"type": "boolean", "description": "Redact matched value; apply placeholder filter"},
+          "entropy_min": {"type": "number"},
+          "cwe": {"type": "array", "items": {"type": "string", "pattern": "^CWE-[0-9]+$"}},
+          "owasp": {"type": "array", "items": {"type": "string"}},
+          "cvss": {"type": "string", "pattern": "^CVSS:3\\.[01]/"},
+          "description": {"type": "string"},
+          "impact": {"type": "string"},
+          "remediation": {"type": "string"},
+          "references": {"type": "array", "items": {"type": "string"}}
+        },
+        "allOf": [
+          {"if": {"properties": {"kind": {"const": "file"}}, "required": ["kind"]}, "then": {"required": ["all_of"]}, "else": {"required": ["pattern"]}}
+        ]
+      }
+    }
+  }
+}

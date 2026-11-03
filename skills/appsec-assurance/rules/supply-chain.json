@@ -1,0 +1,328 @@
+{
+  "pack": "supply-chain",
+  "version": "1.0.0",
+  "description": "Built-in supply-chain rules for appsec-assurance.",
+  "rules": [
+    {
+      "id": "SC-INSTALL-SCRIPT-SUSPICIOUS",
+      "title": "Install lifecycle script with network/eval/encoded payload",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "supply-chain",
+      "files": [
+        "package.json"
+      ],
+      "remediation": "Inspect the script statically (do NOT run it). Remove it or replace with an auditable build step; install with --ignore-scripts in CI.",
+      "status": "suspected",
+      "pattern": "\\\"(preinstall|install|postinstall|preuninstall|prepare|prepublish)\\\"\\s*:\\s*\\\"[^\\\"]*(curl|wget|https?://|node\\s+-e|eval|base64|\\|\\s*(ba)?sh|powershell|Invoke-WebRequest|nc\\s|/dev/tcp)",
+      "cwe": [
+        "CWE-506",
+        "CWE-829"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "SC-INSTALL-SCRIPT",
+      "title": "Package defines an install-time lifecycle script",
+      "severity": "info",
+      "confidence": "high",
+      "category": "supply-chain",
+      "files": [
+        "package.json"
+      ],
+      "remediation": "Confirm the script is necessary and reviewed; consumers can install with --ignore-scripts.",
+      "pattern": "\\\"(preinstall|install|postinstall)\\\"\\s*:",
+      "cwe": [
+        "CWE-829"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "SC-DEP-FROM-URL",
+      "title": "Dependency fetched from git/URL/file instead of registry",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "supply-chain",
+      "files": [
+        "package.json",
+        "requirements*.txt",
+        "Pipfile",
+        "pyproject.toml"
+      ],
+      "remediation": "Prefer registry releases pinned in a lockfile; if a git dependency is needed pin to a commit SHA.",
+      "pattern": "\\\"[^\\\"]+\\\"\\s*:\\s*\\\"(git\\+|git://|github:|gitlab:|bitbucket:|https?://|file:)|^\\s*(git\\+|https?://)\\S+|@\\s*(git\\+|https?://)",
+      "cwe": [
+        "CWE-829"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "SC-WILDCARD-VERSION",
+      "title": "Dependency version wildcard or 'latest'",
+      "severity": "low",
+      "confidence": "high",
+      "category": "supply-chain",
+      "files": [
+        "package.json"
+      ],
+      "remediation": "Specify a version range and commit a lockfile; use exact versions for critical packages.",
+      "pattern": "^\\s*\\\"[^\\\"]+\\\"\\s*:\\s*\\\"(\\*|latest|x|>=\\s*0(\\.0)*)\\\"\\s*,?\\s*$",
+      "cwe": [
+        "CWE-1104"
+      ],
+      "owasp": [
+        "A06:2021"
+      ]
+    },
+    {
+      "id": "SC-PIP-EXTRA-INDEX",
+      "title": "Additional package index (dependency confusion risk)",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "supply-chain",
+      "files": [
+        "requirements*.txt",
+        "pip.conf",
+        "*.cfg",
+        "pyproject.toml",
+        "Pipfile",
+        ".npmrc",
+        "*.ini"
+      ],
+      "remediation": "Use a single private index that proxies the public one, pin hashes (--require-hashes), and reserve internal names publicly.",
+      "pattern": "--extra-index-url|extra-index-url\\s*=|\\[\\[tool\\.poetry\\.source\\]\\]|\\[\\[source\\]\\]",
+      "cwe": [
+        "CWE-427",
+        "CWE-829"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "SC-INSECURE-INDEX",
+      "title": "Package index over HTTP or trusted-host override",
+      "severity": "high",
+      "confidence": "high",
+      "category": "supply-chain",
+      "files": [
+        "requirements*.txt",
+        "pip.conf",
+        ".npmrc",
+        "*.cfg",
+        ".yarnrc*",
+        "pyproject.toml"
+      ],
+      "remediation": "Use HTTPS indexes only and remove --trusted-host / strict-ssl=false.",
+      "pattern": "(index-url|registry)\\s*[= ]\\s*http://|--trusted-host|strict-ssl\\s*=\\s*false",
+      "cwe": [
+        "CWE-494"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "SC-UNPINNED-PY-REQ",
+      "title": "Unpinned Python requirement",
+      "severity": "low",
+      "confidence": "medium",
+      "category": "supply-chain",
+      "files": [
+        "requirements*.txt"
+      ],
+      "remediation": "Pin exact versions (==) and ideally hashes; generate with pip-compile/uv.",
+      "pattern": "^\\s*(?!#|-|git\\+|https?:)[A-Za-z0-9][A-Za-z0-9_.\\-]*(\\[[^\\]]*\\])?\\s*(>=|>|~=|!=|<|<=)?\\s*[^=#\\s]*\\s*(#.*)?$",
+      "negative": "==|@|^\\s*$",
+      "cwe": [
+        "CWE-1104"
+      ],
+      "owasp": [
+        "A06:2021"
+      ]
+    },
+    {
+      "id": "SC-OBFUSCATED-EXEC",
+      "title": "Execution of decoded/obfuscated payload",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "malware-indicator",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs",
+        "*.sh",
+        "*.ps1"
+      ],
+      "remediation": "Treat as potentially malicious: do not run it. Decode statically, identify origin (git blame/package), and remove or replace the component.",
+      "status": "suspected",
+      "pattern": "(eval|exec|Function|execSync|spawn|system|Invoke-Expression|iex)\\s*\\(?\\s*(atob|Buffer\\.from|base64\\.b64decode|b64decode|codecs\\.decode|bytes\\.fromhex|zlib\\.decompress|marshal\\.loads|base64_decode|gzinflate|str_rot13|FromBase64String|unhexlify)\\(",
+      "cwe": [
+        "CWE-506"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "SC-ENV-EXFIL-PATTERN",
+      "title": "Entire environment serialized (possible exfiltration)",
+      "severity": "high",
+      "confidence": "low",
+      "category": "malware-indicator",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs"
+      ],
+      "remediation": "Review where this data is sent; environment variables commonly hold secrets.",
+      "status": "suspected",
+      "pattern": "JSON\\.stringify\\(\\s*process\\.env\\s*\\)|base64.*process\\.env\\b|dict\\(\\s*os\\.environ\\s*\\)|json\\.dumps\\(\\s*(dict\\()?\\s*os\\.environ|os\\.environ\\.copy\\(\\).*(post|send|urlopen)",
+      "cwe": [
+        "CWE-200",
+        "CWE-506"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "SC-LARGE-ENCODED-BLOB",
+      "title": "Large encoded blob embedded in source",
+      "severity": "info",
+      "confidence": "low",
+      "category": "malware-indicator",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs",
+        "*.sh"
+      ],
+      "remediation": "Confirm the blob's purpose (fonts/test data are common); obfuscated payloads often hide this way.",
+      "pattern": "[\\\"'`][A-Za-z0-9+/]{600,}={0,2}[\\\"'`]|(\\\\x[0-9a-fA-F]{2}){100,}",
+      "cwe": [
+        "CWE-506"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "SC-SETUP-PY-SIDE-EFFECTS",
+      "title": "setup.py performs network/process actions at install",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "malware-indicator",
+      "files": [
+        "setup.py"
+      ],
+      "remediation": "Install-time code runs with the installer's privileges; remove side effects and use declarative pyproject.toml metadata.",
+      "status": "suspected",
+      "pattern": "\\b(urlopen|urllib\\.request|requests\\.(get|post)|subprocess\\.|os\\.system|socket\\.socket|exec\\(|eval\\(|base64\\.b64decode)",
+      "cwe": [
+        "CWE-506"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "SC-CURL-PIPE-SHELL",
+      "title": "Remote script piped to shell",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "supply-chain",
+      "files": [
+        "*.sh",
+        "*.bash",
+        "Makefile",
+        "Jenkinsfile",
+        "Dockerfile",
+        "Dockerfile.*",
+        "*.Dockerfile",
+        "*.dockerfile",
+        "Containerfile",
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Download to a file, verify checksum/signature, then execute; or use a package manager.",
+      "pattern": "(curl|wget)\\s[^|#\\n]*\\|\\s*(sudo\\s+)?(-E\\s+)?(ba|z|da)?sh\\b|iwr\\s[^|]*\\|\\s*iex",
+      "cwe": [
+        "CWE-494"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "SC-LOCKFILE-HTTP-RESOLVED",
+      "title": "Lockfile resolves package over plain HTTP",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "supply-chain",
+      "files": [
+        "package-lock.json",
+        "yarn.lock"
+      ],
+      "remediation": "Regenerate the lockfile against an HTTPS registry.",
+      "pattern": "\\\"?resolved\\\"?\\s*[: ]\\s*\\\"http://",
+      "cwe": [
+        "CWE-494"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    }
+  ]
+}

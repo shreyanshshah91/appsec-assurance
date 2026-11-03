@@ -1,0 +1,192 @@
+{
+  "pack": "cicd",
+  "version": "1.0.0",
+  "description": "Built-in cicd rules for appsec-assurance.",
+  "rules": [
+    {
+      "id": "CI-GHA-UNPINNED-ACTION",
+      "title": "Third-party GitHub Action not pinned to a commit SHA",
+      "severity": "low",
+      "confidence": "high",
+      "category": "cicd",
+      "files": [
+        ".github/workflows/*.yml",
+        ".github/workflows/*.yaml",
+        "action.yml",
+        "action.yaml"
+      ],
+      "remediation": "Pin to a full 40-char commit SHA (with a version comment) and let Dependabot update it.",
+      "pattern": "^\\s*-?\\s*uses:\\s*[\\\"']?(?!\\./|docker://|actions/|github/)[\\w.\\-]+/[\\w.\\-/]+@(?![0-9a-f]{40}\\b)[\\w.\\-]+",
+      "cwe": [
+        "CWE-829"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "CI-GHA-SCRIPT-INJECTION",
+      "title": "Untrusted GitHub context expanded in workflow script",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "cicd",
+      "files": [
+        ".github/workflows/*.yml",
+        ".github/workflows/*.yaml",
+        "action.yml",
+        "action.yaml"
+      ],
+      "remediation": "Pass the value through an env var (env: TITLE: ${{ github.event.issue.title }}) and reference \"$TITLE\" in the script.",
+      "pattern": "\\$\\{\\{\\s*github\\.(event\\.(issue|pull_request|comment|review|review_comment|discussion|head_commit|commits|pages|workflow_run|inputs)[^}]*\\.(title|body|message|name|label|ref|email|head_ref|default_branch|page_name)|head_ref)\\s*\\}\\}",
+      "negative": "^\\s*[\\w-]+\\s*:\\s*[\\\"']?\\$\\{\\{[^}]*\\}\\}[\\\"']?\\s*$",
+      "cwe": [
+        "CWE-78",
+        "CWE-94"
+      ],
+      "owasp": [
+        "A03:2021",
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "CI-GHA-PRT-UNTRUSTED-CHECKOUT",
+      "title": "pull_request_target checks out untrusted PR code",
+      "severity": "critical",
+      "confidence": "high",
+      "category": "cicd",
+      "files": [
+        ".github/workflows/*.yml",
+        ".github/workflows/*.yaml",
+        "action.yml",
+        "action.yaml"
+      ],
+      "remediation": "Do not check out or run PR head code in pull_request_target; use pull_request, or split into an unprivileged build + privileged workflow_run.",
+      "kind": "file",
+      "all_of": [
+        "pull_request_target",
+        "ref:\\s*\\$\\{\\{\\s*github\\.(event\\.pull_request\\.head\\.(sha|ref)|head_ref)"
+      ],
+      "cwe": [
+        "CWE-829"
+      ],
+      "owasp": [
+        "A08:2021"
+      ],
+      "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:N"
+    },
+    {
+      "id": "CI-GHA-NO-PERMISSIONS",
+      "title": "Workflow without explicit token permissions",
+      "severity": "low",
+      "confidence": "high",
+      "category": "cicd",
+      "files": [
+        ".github/workflows/*.yml",
+        ".github/workflows/*.yaml"
+      ],
+      "remediation": "Add top-level `permissions: contents: read` and grant write scopes per job only where needed.",
+      "kind": "file",
+      "status": "missing-control",
+      "all_of": [
+        "^jobs\\s*:"
+      ],
+      "none_of": [
+        "^\\s*permissions\\s*:"
+      ],
+      "cwe": [
+        "CWE-250"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "CI-GHA-WRITE-ALL",
+      "title": "Workflow token granted write-all",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "cicd",
+      "files": [
+        ".github/workflows/*.yml",
+        ".github/workflows/*.yaml",
+        "action.yml",
+        "action.yaml"
+      ],
+      "remediation": "Use least-privilege permissions per job.",
+      "pattern": "permissions\\s*:\\s*write-all",
+      "cwe": [
+        "CWE-250"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "CI-SELF-HOSTED-PUBLIC-PR",
+      "title": "Self-hosted runner on pull request trigger",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "cicd",
+      "files": [
+        ".github/workflows/*.yml",
+        ".github/workflows/*.yaml",
+        "action.yml",
+        "action.yaml"
+      ],
+      "remediation": "Do not run untrusted PR code on persistent self-hosted runners; use ephemeral, isolated runners.",
+      "kind": "file",
+      "all_of": [
+        "runs-on:.*self-hosted",
+        "^\\s*(pull_request|pull_request_target)\\s*:?"
+      ],
+      "cwe": [
+        "CWE-829"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "CI-SECRET-ECHO",
+      "title": "Secret printed in CI log",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "cicd",
+      "files": [
+        ".github/workflows/*.yml",
+        ".github/workflows/*.yaml",
+        "action.yml",
+        "action.yaml",
+        ".gitlab-ci.yml",
+        "Jenkinsfile",
+        "*.sh"
+      ],
+      "remediation": "Never echo secrets; rely on masking and pass secrets via env to tools that need them.",
+      "pattern": "(echo|printf|print|Write-Host)\\s+.*(\\$\\{\\{\\s*secrets\\.|\\$CI_JOB_TOKEN|\\$\\{?[A-Z_]*(TOKEN|SECRET|PASSWORD)\\}?)",
+      "cwe": [
+        "CWE-532"
+      ],
+      "owasp": [
+        "A09:2021"
+      ]
+    },
+    {
+      "id": "CI-GITLAB-UNPROTECTED-VAR",
+      "title": "GitLab CI image not pinned",
+      "severity": "low",
+      "confidence": "low",
+      "category": "cicd",
+      "files": [
+        ".gitlab-ci.yml"
+      ],
+      "remediation": "Pin CI images to version and digest.",
+      "pattern": "^\\s*image\\s*:\\s*[\\\"']?[^\\s:@\\\"']+(:latest)?[\\\"']?\\s*$",
+      "cwe": [
+        "CWE-1357"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    }
+  ]
+}

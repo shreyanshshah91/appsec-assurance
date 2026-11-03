@@ -1,0 +1,27 @@
+name: test
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4  # pin to a full commit SHA before publishing
+      - uses: actions/setup-python@v5  # pin to a full commit SHA before publishing
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m unittest discover -s tests -t . -v
+  self-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4  # pin to a full commit SHA before publishing
+      - uses: actions/setup-python@v5  # pin to a full commit SHA before publishing
+        with:
+          python-version: "3.12"
+      - name: Scan this repository with the skill itself
+        run: python skills/appsec-assurance/scripts/appsec.py scan --mode comprehensive --no-tools --offline --fail-on high --out /tmp/self-scan

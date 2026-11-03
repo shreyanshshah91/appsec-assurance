@@ -1,0 +1,50 @@
+{
+  "ci": [
+    "github-actions"
+  ],
+  "cloud": [
+    "aws"
+  ],
+  "containers": [
+    "docker"
+  ],
+  "datastores": [],
+  "file_count": 11,
+  "frameworks": [
+    "express",
+    "flask"
+  ],
+  "iac": [
+    "kubernetes",
+    "terraform"
+  ],
+  "languages": {
+    "hcl": 1,
+    "javascript": 2,
+    "python": 2
+  },
+  "lockfiles": {
+    "npm": [],
+    "pip": [
+      "requirements.txt"
+    ]
+  },
+  "manifests": [
+    "package.json",
+    "requirements.txt"
+  ],
+  "missing_lockfiles": [
+    "npm"
+  ],
+  "mobile": [],
+  "package_managers": [
+    "npm",
+    "pip"
+  ],
+  "primary_languages": [
+    "javascript",
+    "python",
+    "hcl"
+  ],
+  "unsupported_languages": []
+}

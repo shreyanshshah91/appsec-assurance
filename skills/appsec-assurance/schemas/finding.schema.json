@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/OWNER/appsec-assurance/schemas/finding.schema.json",
+  "title": "appsec-assurance finding (as emitted in findings.json)",
+  "type": "object",
+  "required": ["id", "rule_id", "title", "severity", "status", "confidence", "category", "location", "fingerprint", "sources"],
+  "properties": {
+    "id": {"type": "string", "description": "AUTO-#### (engine) or analyst ID such as MAN-001; AUTO IDs may change between runs, fingerprints do not"},
+    "rule_id": {"type": "string"},
+    "title": {"type": "string"},
+    "severity": {"enum": ["critical", "high", "medium", "low", "info"]},
+    "status": {"enum": ["confirmed", "suspected", "unverified", "missing-control", "false-positive", "accepted-risk", "fixed"]},
+    "confidence": {"enum": ["high", "medium", "low"]},
+    "category": {"type": "string"},
+    "location": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": {"type": "string"}, "start_line": {"type": "integer"}, "end_line": {"type": "integer"},
+        "snippet": {"type": "string", "description": "Secrets are redacted"}
+      }
+    },
+    "description": {"type": "string"},
+    "evidence": {"type": "string"},
+    "impact": {"type": "string"},
+    "remediation": {"type": "string"},
+    "cwe": {"type": "array", "items": {"type": "string"}},
+    "owasp": {"type": "array", "items": {"type": "string"}},
+    "references": {"type": "array", "items": {"type": "string"}},
+    "cvss_vector": {"type": "string"},
+    "cvss_score": {"type": ["number", "null"]},
+    "sources": {"type": "array", "items": {"type": "string"}},
+    "validation_steps": {"type": "array", "items": {"type": "string"}},
+    "regression_test": {"type": "string"},
+    "patch": {"type": "string"},
+    "triage_reason": {"type": "string"},
+    "fingerprint": {"type": "string", "description": "sha256(rule_id|path|normalized snippet|occurrence)[:20]; stable across line shifts"}
+  }
+}

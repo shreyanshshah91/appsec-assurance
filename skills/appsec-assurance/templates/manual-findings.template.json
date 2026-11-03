@@ -1,0 +1,56 @@
+{
+  "schema_version": "1",
+  "assessors": ["Claude Code (appsec-assurance skill)"],
+  "scope_reference": ".appsec/scope.json",
+  "executive_summary": "Two-to-four sentences for a non-technical reader: what was assessed, the most important risks, and what to do first.",
+  "posture_statement": "Analyst judgement of overall posture with reasons. Never state that the application is secure.",
+  "threat_model": ".appsec/out/threat-model.md",
+  "findings": [
+    {
+      "id": "MAN-001",
+      "title": "IDOR: any authenticated user can read any invoice",
+      "severity": "high",
+      "status": "confirmed",
+      "confidence": "high",
+      "category": "authorization",
+      "cwe": ["CWE-639"],
+      "owasp": ["A01:2021", "API1:2023"],
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+      "location": { "path": "src/routes/invoices.js", "start_line": 42, "end_line": 51 },
+      "description": "GET /api/invoices/:id loads the invoice by primary key without checking that invoice.accountId matches the caller's account.",
+      "evidence": "src/routes/invoices.js:42 `Invoice.findByPk(req.params.id)`; no ownership predicate; middleware `requireAuth` only checks the session exists (src/middleware/auth.js:10).",
+      "impact": "Any user can enumerate sequential IDs and read every customer's invoices (PII, amounts).",
+      "validation_steps": [
+        "Start the app locally with seed data (npm run dev; two seeded users A and B).",
+        "Log in as user A and request GET /api/invoices/<id owned by B>.",
+        "Observe HTTP 200 with B's invoice. Expected: 404."
+      ],
+      "remediation": "Scope every query by tenant/owner: Invoice.findOne({ where: { id, accountId: req.user.accountId } }); add a policy layer with default deny.",
+      "patch": "--- a/src/routes/invoices.js\n+++ b/src/routes/invoices.js\n@@\n-  const invoice = await Invoice.findByPk(req.params.id);\n+  const invoice = await Invoice.findOne({ where: { id: req.params.id, accountId: req.user.accountId } });\n",
+      "regression_test": "it('denies access to another account\\'s invoice', async () => {\n  const res = await asUser(A).get(`/api/invoices/${invoiceOfB.id}`);\n  expect(res.status).toBe(404);\n});",
+      "references": ["https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/"]
+    }
+  ],
+  "triage": [
+    { "fingerprint": "<fingerprint from findings.json>", "status": "false-positive", "reason": "Value is a public test fixture key in tests/; not loaded in production builds." },
+    { "id": "AUTO-0007", "status": "confirmed", "reason": "Traced request.args['url'] to requests.get with no allowlist (app.py:35).", "severity": "high" }
+  ],
+  "attack_paths": [
+    {
+      "id": "AP-1",
+      "title": "SSRF to cloud credential theft",
+      "steps": ["AUTO-0007", "AUTO-0021"],
+      "severity": "critical",
+      "narrative": "User-controlled URL fetch (SSRF) combined with IMDSv1 being allowed lets an attacker retrieve instance role credentials from 169.254.169.254."
+    }
+  ],
+  "checklist_results": [
+    { "checklist": "authorization.md", "item": "AUTHZ-01", "result": "fail", "notes": "See MAN-001" },
+    { "checklist": "mobile.md", "item": "MOB-01", "result": "n/a", "notes": "No mobile client in repository" },
+    { "checklist": "business-logic-and-race-conditions.md", "item": "BIZ-05", "result": "untested", "notes": "Requires concurrent requests against a running instance; no authorized environment" }
+  ],
+  "limitations": [
+    "No running environment was available; runtime authorization behaviour is inferred from code.",
+    "Third-party payment provider integration reviewed from client code only."
+  ]
+}

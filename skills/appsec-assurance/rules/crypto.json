@@ -1,0 +1,334 @@
+{
+  "pack": "crypto",
+  "version": "1.0.0",
+  "description": "Built-in crypto rules for appsec-assurance.",
+  "rules": [
+    {
+      "id": "CRY-WEAK-PASSWORD-HASH",
+      "title": "Fast/weak hash used for passwords",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "crypto",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs"
+      ],
+      "remediation": "Store passwords with Argon2id, scrypt, bcrypt (cost >= 12) or PBKDF2-HMAC-SHA256 with a high iteration count.",
+      "pattern": "(?i)(md5|sha1|sha256|sha512)\\w*\\(.*pass(word|wd)?|pass(word|wd)?\\w*\\s*=\\s*\\w*\\.?(md5|sha1|sha256|sha512)\\(",
+      "cwe": [
+        "CWE-916"
+      ],
+      "owasp": [
+        "A02:2021"
+      ]
+    },
+    {
+      "id": "CRY-WEAK-HASH",
+      "title": "MD5/SHA-1 usage",
+      "severity": "low",
+      "confidence": "low",
+      "category": "crypto",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs"
+      ],
+      "remediation": "Use SHA-256 or stronger for integrity; mark non-security uses explicitly (usedforsecurity=False).",
+      "pattern": "hashlib\\.(md5|sha1)\\(|createHash\\(\\s*[\\\"'](md5|sha1)[\\\"']|MessageDigest\\.getInstance\\(\\s*\\\"(MD5|SHA-?1)\\\"|\\\"crypto/(md5|sha1)\\\"|DigestUtils\\.(md5|sha1)|\\b(MD5|SHA1)\\.Create\\(",
+      "negative": "usedforsecurity\\s*=\\s*False",
+      "cwe": [
+        "CWE-328"
+      ],
+      "owasp": [
+        "A02:2021"
+      ]
+    },
+    {
+      "id": "CRY-ECB-MODE",
+      "title": "Block cipher in ECB mode (or Java default)",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "crypto",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs"
+      ],
+      "remediation": "Use an AEAD mode: AES-GCM or ChaCha20-Poly1305 with unique nonces.",
+      "pattern": "Cipher\\.getInstance\\(\\s*\\\"(AES|DES|DESede)(/ECB/[^\\\"]*)?\\\"\\s*\\)|MODE_ECB|aes-\\d+-ecb|modes\\.ECB\\(",
+      "ignore_case": false,
+      "cwe": [
+        "CWE-327"
+      ],
+      "owasp": [
+        "A02:2021"
+      ]
+    },
+    {
+      "id": "CRY-BROKEN-CIPHER",
+      "title": "Broken/legacy cipher (DES, 3DES, RC4, Blowfish, RC2)",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "crypto",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs"
+      ],
+      "remediation": "Replace with AES-GCM or ChaCha20-Poly1305.",
+      "pattern": "(Cipher\\.getInstance\\(\\s*\\\"(DES|DESede|RC4|ARCFOUR|Blowfish|RC2)|Crypto\\.Cipher\\s+import\\s+.*(DES|ARC4|Blowfish)|algorithms\\.(TripleDES|ARC4|Blowfish)|createCipheriv\\(\\s*[\\\"'](des|rc4|bf|rc2)|des\\.NewCipher|rc4\\.NewCipher)",
+      "cwe": [
+        "CWE-327"
+      ],
+      "owasp": [
+        "A02:2021"
+      ]
+    },
+    {
+      "id": "CRY-INSECURE-RANDOM",
+      "title": "Non-cryptographic RNG used for security value",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "crypto",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs"
+      ],
+      "remediation": "Use secrets / crypto.randomBytes / crypto.getRandomValues / SecureRandom / crypto/rand.",
+      "pattern": "(?i)(token|secret|passw|nonce|otp|salt|session|\\bsid|csrf|api.?key|reset|verif)\\w*\\s*[:=].*(Math\\.random\\(|\\brandom\\.(random|randint|choice|choices|randrange|getrandbits)\\(|\\bmt_rand\\(|\\brand\\(\\)|new\\s+Random\\(|math/rand)",
+      "cwe": [
+        "CWE-338"
+      ],
+      "owasp": [
+        "A02:2021"
+      ]
+    },
+    {
+      "id": "CRY-TLS-VERIFY-DISABLED",
+      "title": "TLS certificate verification disabled",
+      "severity": "high",
+      "confidence": "high",
+      "category": "crypto",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs",
+        "*.yml",
+        "*.yaml",
+        ".env*",
+        "*.json",
+        "*.sh"
+      ],
+      "remediation": "Keep certificate and hostname verification on; trust a private CA bundle explicitly if needed.",
+      "pattern": "verify\\s*=\\s*False|rejectUnauthorized\\s*:\\s*false|InsecureSkipVerify\\s*:\\s*true|NODE_TLS_REJECT_UNAUTHORIZED[\\\"']?\\s*[:=]\\s*[\\\"']?0|CURLOPT_SSL_VERIFY(PEER|HOST)\\s*,\\s*(false|0)|ServerCertificateValidationCallback\\s*[+]?=|ssl\\._create_unverified_context|check_hostname\\s*=\\s*False|CERT_NONE|danger_accept_invalid_certs\\(\\s*true|NoopHostnameVerifier|ALLOW_ALL_HOSTNAME_VERIFIER|curl\\s+(-k|--insecure)\\b",
+      "cwe": [
+        "CWE-295"
+      ],
+      "owasp": [
+        "A02:2021"
+      ],
+      "cvss": "CVSS:3.1/AV:A/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N"
+    },
+    {
+      "id": "CRY-WEAK-TLS-PROTOCOL",
+      "title": "Legacy TLS/SSL protocol enabled",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "crypto",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs",
+        "*.yml",
+        "*.yaml",
+        "*.conf",
+        "*.tf"
+      ],
+      "remediation": "Require TLS 1.2+ (prefer 1.3) with modern cipher suites.",
+      "pattern": "\\b(SSLv2|SSLv3|PROTOCOL_TLSv1(_1)?\\b|TLSv1_1?_method|ssl_protocols[^;]*\\bTLSv1(\\.1)?[\\s;]|MinVersion:\\s*tls\\.VersionTLS1[01]\\b|minimum_protocol_version\\s*=\\s*\\\"TLSv1(_2016|\\.1_2016)?\\\"|tls1_0|TLS1_0)",
+      "cwe": [
+        "CWE-326"
+      ],
+      "owasp": [
+        "A02:2021"
+      ]
+    },
+    {
+      "id": "CRY-SMALL-RSA-KEY",
+      "title": "RSA key size below 2048 bits",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "crypto",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs"
+      ],
+      "remediation": "Use RSA >= 3072 bits or move to elliptic-curve keys (Ed25519 / P-256).",
+      "pattern": "key_size\\s*=\\s*(512|768|1024)\\b|RSA\\.generate\\(\\s*(512|768|1024)\\b|initialize\\(\\s*(512|768|1024)\\s*\\)|modulusLength\\s*:\\s*(512|768|1024)\\b|rsa\\.GenerateKey\\([^,]+,\\s*(512|768|1024)\\)",
+      "cwe": [
+        "CWE-326"
+      ],
+      "owasp": [
+        "A02:2021"
+      ]
+    },
+    {
+      "id": "CRY-STATIC-IV",
+      "title": "Hardcoded IV/nonce",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "crypto",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs"
+      ],
+      "remediation": "Generate a fresh random IV/nonce per encryption and store it with the ciphertext.",
+      "pattern": "(?i)\\b(iv|nonce)\\s*[:=]\\s*(b?[\\\"'][^\\\"']{8,}[\\\"']|bytes\\(\\s*\\d+\\s*\\)|new\\s+byte\\[\\s*\\d+\\s*\\]|Buffer\\.alloc\\(\\s*\\d+\\s*\\))",
+      "cwe": [
+        "CWE-329"
+      ],
+      "owasp": [
+        "A02:2021"
+      ]
+    }
+  ]
+}

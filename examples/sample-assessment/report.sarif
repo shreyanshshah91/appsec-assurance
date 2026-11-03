@@ -1,0 +1,3556 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "appsec-assurance",
+          "version": "1.0.0",
+          "informationUri": "https://github.com/OWNER/appsec-assurance",
+          "rules": [
+            {
+              "id": "AUTH-JWT-DECODE-NO-VERIFY-JS",
+              "name": "JsonwebtokenDecodeDoesNotVerifySignatures",
+              "shortDescription": {
+                "text": "jsonwebtoken decode() does not verify signatures"
+              },
+              "fullDescription": {
+                "text": "jsonwebtoken decode() does not verify signatures"
+              },
+              "help": {
+                "text": "Use jwt.verify(token, key, { algorithms: [...] }) for any trust decision.",
+                "markdown": "Use jwt.verify(token, key, { algorithms: [...] }) for any trust decision."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-347",
+                  "A07:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "low"
+              }
+            },
+            {
+              "id": "AUTH-JWT-HARDCODED-SECRET",
+              "name": "JwtSignedVerifiedWithHardcodedSecret",
+              "shortDescription": {
+                "text": "JWT signed/verified with hardcoded secret"
+              },
+              "fullDescription": {
+                "text": "JWT signed/verified with hardcoded secret"
+              },
+              "help": {
+                "text": "Load signing keys from a secrets manager; prefer asymmetric keys; rotate the exposed secret.",
+                "markdown": "Load signing keys from a secrets manager; prefer asymmetric keys; rotate the exposed secret."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-798",
+                  "external/cwe/cwe-321",
+                  "A07:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "AUTH-MASS-ASSIGNMENT",
+              "name": "RequestBodyBoundDirectlyToAModel",
+              "shortDescription": {
+                "text": "Request body bound directly to a model"
+              },
+              "fullDescription": {
+                "text": "Request body bound directly to a model"
+              },
+              "help": {
+                "text": "Bind an explicit allowlist of fields (DTO/serializer fields/strong params); never let clients set role, owner, price, or tenant.",
+                "markdown": "Bind an explicit allowlist of fields (DTO/serializer fields/strong params); never let clients set role, owner, price, or tenant."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-915",
+                  "A01:2021",
+                  "API3:2023"
+                ],
+                "security-severity": "5.5",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "CFG-CORS-WILDCARD",
+              "name": "CorsAllowsAnyOrigin",
+              "shortDescription": {
+                "text": "CORS allows any origin"
+              },
+              "fullDescription": {
+                "text": "CORS allows any origin"
+              },
+              "help": {
+                "text": "Allow an explicit list of trusted origins; never combine wildcard/reflection with credentials.",
+                "markdown": "Allow an explicit list of trusted origins; never combine wildcard/reflection with credentials."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-942",
+                  "A05:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "CFG-ENV-FILE-PRESENT",
+              "name": "EnvironmentFileWithValuesInRepository",
+              "shortDescription": {
+                "text": "Environment file with values in repository"
+              },
+              "fullDescription": {
+                "text": "Environment file with values in repository"
+              },
+              "help": {
+                "text": "Do not commit .env files; add them to .gitignore, commit a placeholder .env.example, and rotate any real values.",
+                "markdown": "Do not commit .env files; add them to .gitignore, commit a placeholder .env.example, and rotate any real values."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-538",
+                  "A05:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "CFG-EXPRESS-NO-HELMET",
+              "name": "ExpressAppWithoutSecurityHeadersMiddleware",
+              "shortDescription": {
+                "text": "Express app without security headers middleware"
+              },
+              "fullDescription": {
+                "text": "Express app without security headers middleware"
+              },
+              "help": {
+                "text": "Add helmet (or equivalent explicit headers: CSP, HSTS, X-Content-Type-Options, frame-ancestors).",
+                "markdown": "Add helmet (or equivalent explicit headers: CSP, HSTS, X-Content-Type-Options, frame-ancestors)."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-693",
+                  "A05:2021"
+                ],
+                "security-severity": "3.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "CFG-FLASK-DEBUG",
+              "name": "FlaskWerkzeugDebuggerEnabled",
+              "shortDescription": {
+                "text": "Flask/Werkzeug debugger enabled"
+              },
+              "fullDescription": {
+                "text": "Flask/Werkzeug debugger enabled"
+              },
+              "help": {
+                "text": "Never enable debug outside local development; the Werkzeug console allows code execution.",
+                "markdown": "Never enable debug outside local development; the Werkzeug console allows code execution."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-489",
+                  "external/cwe/cwe-94",
+                  "A05:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "CFG-HARDCODED-APP-SECRET",
+              "name": "HardcodedFrameworkSecretKey",
+              "shortDescription": {
+                "text": "Hardcoded framework secret key"
+              },
+              "fullDescription": {
+                "text": "Hardcoded framework secret key"
+              },
+              "help": {
+                "text": "Load SECRET_KEY / session secrets from the environment or secrets manager; rotate the exposed value (this invalidates sessions/signatures).",
+                "markdown": "Load SECRET_KEY / session secrets from the environment or secrets manager; rotate the exposed value (this invalidates sessions/signatures)."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-798",
+                  "A07:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "CFG-NO-RATE-LIMIT-DEP",
+              "name": "NoRateLimitingLibraryDetectedNode",
+              "shortDescription": {
+                "text": "No rate limiting library detected (Node)"
+              },
+              "fullDescription": {
+                "text": "No rate limiting library detected (Node)"
+              },
+              "help": {
+                "text": "Rate-limit authentication, password reset, OTP and expensive endpoints (express-rate-limit, gateway/WAF limits).",
+                "markdown": "Rate-limit authentication, password reset, OTP and expensive endpoints (express-rate-limit, gateway/WAF limits)."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-307",
+                  "external/cwe/cwe-770",
+                  "A07:2021",
+                  "API4:2023"
+                ],
+                "security-severity": "3.0",
+                "precision": "low"
+              }
+            },
+            {
+              "id": "CI-GHA-NO-PERMISSIONS",
+              "name": "WorkflowWithoutExplicitTokenPermissions",
+              "shortDescription": {
+                "text": "Workflow without explicit token permissions"
+              },
+              "fullDescription": {
+                "text": "Workflow without explicit token permissions"
+              },
+              "help": {
+                "text": "Add top-level `permissions: contents: read` and grant write scopes per job only where needed.",
+                "markdown": "Add top-level `permissions: contents: read` and grant write scopes per job only where needed."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-250",
+                  "A05:2021"
+                ],
+                "security-severity": "3.0",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "CI-GHA-PRT-UNTRUSTED-CHECKOUT",
+              "name": "PullRequestTargetChecksOutUntrustedPrCode",
+              "shortDescription": {
+                "text": "pull_request_target checks out untrusted PR code"
+              },
+              "fullDescription": {
+                "text": "pull_request_target checks out untrusted PR code"
+              },
+              "help": {
+                "text": "Do not check out or run PR head code in pull_request_target; use pull_request, or split into an unprivileged build + privileged workflow_run.",
+                "markdown": "Do not check out or run PR head code in pull_request_target; use pull_request, or split into an unprivileged build + privileged workflow_run."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-829",
+                  "A08:2021"
+                ],
+                "security-severity": "10.0",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "CI-GHA-SCRIPT-INJECTION",
+              "name": "UntrustedGithubContextExpandedInWorkflowScript",
+              "shortDescription": {
+                "text": "Untrusted GitHub context expanded in workflow script"
+              },
+              "fullDescription": {
+                "text": "Untrusted GitHub context expanded in workflow script"
+              },
+              "help": {
+                "text": "Pass the value through an env var (env: TITLE: ${{ github.event.issue.title }}) and reference \"$TITLE\" in the script.",
+                "markdown": "Pass the value through an env var (env: TITLE: ${{ github.event.issue.title }}) and reference \"$TITLE\" in the script."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-78",
+                  "external/cwe/cwe-94",
+                  "A03:2021",
+                  "A08:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "CI-GHA-UNPINNED-ACTION",
+              "name": "ThirdPartyGithubActionNotPinnedToACommitSha",
+              "shortDescription": {
+                "text": "Third-party GitHub Action not pinned to a commit SHA"
+              },
+              "fullDescription": {
+                "text": "Third-party GitHub Action not pinned to a commit SHA"
+              },
+              "help": {
+                "text": "Pin to a full 40-char commit SHA (with a version comment) and let Dependabot update it.",
+                "markdown": "Pin to a full 40-char commit SHA (with a version comment) and let Dependabot update it."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-829",
+                  "A08:2021"
+                ],
+                "security-severity": "3.0",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "CRY-INSECURE-RANDOM",
+              "name": "NonCryptographicRngUsedForSecurityValue",
+              "shortDescription": {
+                "text": "Non-cryptographic RNG used for security value"
+              },
+              "fullDescription": {
+                "text": "Non-cryptographic RNG used for security value"
+              },
+              "help": {
+                "text": "Use secrets / crypto.randomBytes / crypto.getRandomValues / SecureRandom / crypto/rand.",
+                "markdown": "Use secrets / crypto.randomBytes / crypto.getRandomValues / SecureRandom / crypto/rand."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-338",
+                  "A02:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "CRY-TLS-VERIFY-DISABLED",
+              "name": "TlsCertificateVerificationDisabled",
+              "shortDescription": {
+                "text": "TLS certificate verification disabled"
+              },
+              "fullDescription": {
+                "text": "TLS certificate verification disabled"
+              },
+              "help": {
+                "text": "Keep certificate and hostname verification on; trust a private CA bundle explicitly if needed.",
+                "markdown": "Keep certificate and hostname verification on; trust a private CA bundle explicitly if needed."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-295",
+                  "A02:2021"
+                ],
+                "security-severity": "6.8",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "DES-PY-PICKLE",
+              "name": "UnsafePythonDeserializationPickleAndFriends",
+              "shortDescription": {
+                "text": "Unsafe Python deserialization (pickle and friends)"
+              },
+              "fullDescription": {
+                "text": "Unsafe Python deserialization (pickle and friends)"
+              },
+              "help": {
+                "text": "Never unpickle untrusted data; use JSON or a schema-validated format. Sign data with HMAC if pickle is unavoidable.",
+                "markdown": "Never unpickle untrusted data; use JSON or a schema-validated format. Sign data with HMAC if pickle is unavoidable."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-502",
+                  "A08:2021"
+                ],
+                "security-severity": "9.8",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "DES-PY-YAML-UNSAFE",
+              "name": "UnsafeYamlLoadPython",
+              "shortDescription": {
+                "text": "Unsafe YAML load (Python)"
+              },
+              "fullDescription": {
+                "text": "Unsafe YAML load (Python)"
+              },
+              "help": {
+                "text": "Use yaml.safe_load or Loader=yaml.SafeLoader.",
+                "markdown": "Use yaml.safe_load or Loader=yaml.SafeLoader."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-502",
+                  "A08:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "IAC-DB-PUBLICLY-ACCESSIBLE",
+              "name": "DatabasePubliclyAccessible",
+              "shortDescription": {
+                "text": "Database publicly accessible"
+              },
+              "fullDescription": {
+                "text": "Database publicly accessible"
+              },
+              "help": {
+                "text": "Set publicly_accessible = false and place databases in private subnets.",
+                "markdown": "Set publicly_accessible = false and place databases in private subnets."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-284",
+                  "A05:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "IAC-DOCKER-ADD-REMOTE",
+              "name": "AddFetchesRemoteUrl",
+              "shortDescription": {
+                "text": "ADD fetches remote URL"
+              },
+              "fullDescription": {
+                "text": "ADD fetches remote URL"
+              },
+              "help": {
+                "text": "Download with curl/wget and verify a checksum or signature, or COPY vendored artifacts.",
+                "markdown": "Download with curl/wget and verify a checksum or signature, or COPY vendored artifacts."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-494",
+                  "A08:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "IAC-DOCKER-NO-USER",
+              "name": "ContainerRunsAsRootNoNonRootUser",
+              "shortDescription": {
+                "text": "Container runs as root (no non-root USER)"
+              },
+              "fullDescription": {
+                "text": "Container runs as root (no non-root USER)"
+              },
+              "help": {
+                "text": "Add a non-root user and `USER <uid>` in the final stage; combine with runAsNonRoot in Kubernetes.",
+                "markdown": "Add a non-root user and `USER <uid>` in the final stage; combine with runAsNonRoot in Kubernetes."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-250",
+                  "A05:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "IAC-DOCKER-SECRET-IN-LAYER",
+              "name": "SecretPassedViaEnvArgInImage",
+              "shortDescription": {
+                "text": "Secret passed via ENV/ARG in image"
+              },
+              "fullDescription": {
+                "text": "Secret passed via ENV/ARG in image"
+              },
+              "help": {
+                "text": "Use BuildKit secrets (RUN --mount=type=secret) and inject runtime secrets via the orchestrator.",
+                "markdown": "Use BuildKit secrets (RUN --mount=type=secret) and inject runtime secrets via the orchestrator."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-798",
+                  "external/cwe/cwe-538",
+                  "A05:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "IAC-DOCKER-UNPINNED-BASE",
+              "name": "BaseImageUnpinnedOrLatest",
+              "shortDescription": {
+                "text": "Base image unpinned or :latest"
+              },
+              "fullDescription": {
+                "text": "Base image unpinned or :latest"
+              },
+              "help": {
+                "text": "Pin base images to a version tag and digest (image:tag@sha256:...); update via Dependabot/Renovate.",
+                "markdown": "Pin base images to a version tag and digest (image:tag@sha256:...); update via Dependabot/Renovate."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-1357",
+                  "A08:2021"
+                ],
+                "security-severity": "3.0",
+                "precision": "low"
+              }
+            },
+            {
+              "id": "IAC-ENCRYPTION-DISABLED",
+              "name": "EncryptionAtRestOrKeyRotationDisabled",
+              "shortDescription": {
+                "text": "Encryption at rest or key rotation disabled"
+              },
+              "fullDescription": {
+                "text": "Encryption at rest or key rotation disabled"
+              },
+              "help": {
+                "text": "Enable encryption at rest with KMS CMKs and automatic key rotation.",
+                "markdown": "Enable encryption at rest with KMS CMKs and automatic key rotation."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-311",
+                  "A02:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "IAC-HARDCODED-PASSWORD",
+              "name": "HardcodedPasswordInInfrastructureCode",
+              "shortDescription": {
+                "text": "Hardcoded password in infrastructure code"
+              },
+              "fullDescription": {
+                "text": "Hardcoded password in infrastructure code"
+              },
+              "help": {
+                "text": "Use a secrets manager reference or a generated random_password; mark variables sensitive.",
+                "markdown": "Use a secrets manager reference or a generated random_password; mark variables sensitive."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-798",
+                  "A07:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "IAC-IMDSV1-ALLOWED",
+              "name": "Ec2InstanceMetadataV1Allowed",
+              "shortDescription": {
+                "text": "EC2 instance metadata v1 allowed"
+              },
+              "fullDescription": {
+                "text": "EC2 instance metadata v1 allowed"
+              },
+              "help": {
+                "text": "Require IMDSv2: http_tokens = \"required\" (limits SSRF-to-credential theft).",
+                "markdown": "Require IMDSv2: http_tokens = \"required\" (limits SSRF-to-credential theft)."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-918",
+                  "A10:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "IAC-K8S-HOST-NAMESPACE",
+              "name": "PodSharesHostNetworkPidIpcNamespace",
+              "shortDescription": {
+                "text": "Pod shares host network/PID/IPC namespace"
+              },
+              "fullDescription": {
+                "text": "Pod shares host network/PID/IPC namespace"
+              },
+              "help": {
+                "text": "Remove hostNetwork/hostPID/hostIPC unless it is a vetted node-level agent.",
+                "markdown": "Remove hostNetwork/hostPID/hostIPC unless it is a vetted node-level agent."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-250",
+                  "A05:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "IAC-K8S-NO-RESOURCE-LIMITS",
+              "name": "WorkloadWithoutResourceLimits",
+              "shortDescription": {
+                "text": "Workload without resource limits"
+              },
+              "fullDescription": {
+                "text": "Workload without resource limits"
+              },
+              "help": {
+                "text": "Set CPU/memory requests and limits to contain resource exhaustion.",
+                "markdown": "Set CPU/memory requests and limits to contain resource exhaustion."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-770",
+                  "A05:2021"
+                ],
+                "security-severity": "3.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "IAC-K8S-NO-SECURITY-CONTEXT",
+              "name": "WorkloadWithoutRunasnonroot",
+              "shortDescription": {
+                "text": "Workload without runAsNonRoot"
+              },
+              "fullDescription": {
+                "text": "Workload without runAsNonRoot"
+              },
+              "help": {
+                "text": "Set securityContext: runAsNonRoot: true, readOnlyRootFilesystem: true, allowPrivilegeEscalation: false, capabilities.drop: [ALL], seccompProfile RuntimeDefault.",
+                "markdown": "Set securityContext: runAsNonRoot: true, readOnlyRootFilesystem: true, allowPrivilegeEscalation: false, capabilities.drop: [ALL], seccompProfile RuntimeDefault."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-250",
+                  "A05:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "IAC-K8S-PRIV-ESCALATION",
+              "name": "AllowprivilegeescalationEnabled",
+              "shortDescription": {
+                "text": "allowPrivilegeEscalation enabled"
+              },
+              "fullDescription": {
+                "text": "allowPrivilegeEscalation enabled"
+              },
+              "help": {
+                "text": "Set allowPrivilegeEscalation: false.",
+                "markdown": "Set allowPrivilegeEscalation: false."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-250",
+                  "A05:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "IAC-PRIVILEGED-CONTAINER",
+              "name": "PrivilegedContainer",
+              "shortDescription": {
+                "text": "Privileged container"
+              },
+              "fullDescription": {
+                "text": "Privileged container"
+              },
+              "help": {
+                "text": "Remove privileged mode; grant only specific capabilities if strictly needed.",
+                "markdown": "Remove privileged mode; grant only specific capabilities if strictly needed."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-250",
+                  "A05:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "IAC-TF-OPEN-INGRESS",
+              "name": "NetworkRuleOpenToTheInternet00000Or0",
+              "shortDescription": {
+                "text": "Network rule open to the internet (0.0.0.0/0 or ::/0)"
+              },
+              "fullDescription": {
+                "text": "Network rule open to the internet (0.0.0.0/0 or ::/0)"
+              },
+              "help": {
+                "text": "Restrict source ranges to known CIDRs; never expose SSH/RDP/DB ports publicly; put services behind a load balancer/WAF.",
+                "markdown": "Restrict source ranges to known CIDRs; never expose SSH/RDP/DB ports publicly; put services behind a load balancer/WAF."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-284",
+                  "A05:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "IAC-TF-PUBLIC-BUCKET",
+              "name": "ObjectStoragePubliclyAccessible",
+              "shortDescription": {
+                "text": "Object storage publicly accessible"
+              },
+              "fullDescription": {
+                "text": "Object storage publicly accessible"
+              },
+              "help": {
+                "text": "Enable S3 Block Public Access (all four settings), remove public ACLs, and serve public content via CloudFront with OAC.",
+                "markdown": "Enable S3 Block Public Access (all four settings), remove public ACLs, and serve public content via CloudFront with OAC."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-284",
+                  "A01:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "INJ-JS-CHILD-PROCESS-STRING",
+              "name": "ChildProcessExecWithDynamicString",
+              "shortDescription": {
+                "text": "child_process exec with dynamic string"
+              },
+              "fullDescription": {
+                "text": "child_process exec with dynamic string"
+              },
+              "help": {
+                "text": "Use execFile/spawn with an argument array and no shell; validate inputs against an allowlist.",
+                "markdown": "Use execFile/spawn with an argument array and no shell; validate inputs against an allowlist."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-78",
+                  "A03:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "INJ-JS-EVAL",
+              "name": "EvalNewFunctionStringTimersJs",
+              "shortDescription": {
+                "text": "eval / new Function / string timers (JS)"
+              },
+              "fullDescription": {
+                "text": "eval / new Function / string timers (JS)"
+              },
+              "help": {
+                "text": "Remove dynamic code evaluation; use JSON.parse, lookup tables, or function references.",
+                "markdown": "Remove dynamic code evaluation; use JSON.parse, lookup tables, or function references."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-95",
+                  "A03:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "INJ-JS-SQL-STRING",
+              "name": "SqlBuiltWithTemplateLiteralOrConcatenationJsTs",
+              "shortDescription": {
+                "text": "SQL built with template literal or concatenation (JS/TS)"
+              },
+              "fullDescription": {
+                "text": "SQL built with template literal or concatenation (JS/TS)"
+              },
+              "help": {
+                "text": "Use placeholders ($1, ?) with a values array, tagged templates (sql``, Prisma.sql), or the query builder.",
+                "markdown": "Use placeholders ($1, ?) with a values array, tagged templates (sql``, Prisma.sql), or the query builder."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-89",
+                  "A03:2021"
+                ],
+                "security-severity": "9.8",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "INJ-OPEN-REDIRECT",
+              "name": "RedirectToUserControlledLocation",
+              "shortDescription": {
+                "text": "Redirect to user-controlled location"
+              },
+              "fullDescription": {
+                "text": "Redirect to user-controlled location"
+              },
+              "help": {
+                "text": "Redirect only to relative paths or an allowlist of hosts; reject scheme-relative (//) and backslash tricks.",
+                "markdown": "Redirect only to relative paths or an allowlist of hosts; reject scheme-relative (//) and backslash tricks."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-601",
+                  "A01:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "INJ-PATH-TRAVERSAL-JS",
+              "name": "RequestDataUsedInFilesystemPathJs",
+              "shortDescription": {
+                "text": "Request data used in filesystem path (JS)"
+              },
+              "fullDescription": {
+                "text": "Request data used in filesystem path (JS)"
+              },
+              "help": {
+                "text": "Resolve against a fixed base directory, reject paths escaping it (path.resolve + startsWith check), or map IDs to files server-side.",
+                "markdown": "Resolve against a fixed base directory, reject paths escaping it (path.resolve + startsWith check), or map IDs to files server-side."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-22",
+                  "A01:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "INJ-PATH-TRAVERSAL-PY",
+              "name": "RequestDataUsedInFilesystemPathPython",
+              "shortDescription": {
+                "text": "Request data used in filesystem path (Python)"
+              },
+              "fullDescription": {
+                "text": "Request data used in filesystem path (Python)"
+              },
+              "help": {
+                "text": "Use werkzeug.utils.safe_join / send_from_directory, or resolve and verify the path stays under the base directory.",
+                "markdown": "Use werkzeug.utils.safe_join / send_from_directory, or resolve and verify the path stays under the base directory."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-22",
+                  "A01:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "INJ-PY-SHELL-TRUE",
+              "name": "SubprocessWithShellTrue",
+              "shortDescription": {
+                "text": "subprocess with shell=True"
+              },
+              "fullDescription": {
+                "text": "subprocess with shell=True"
+              },
+              "help": {
+                "text": "Pass an argument list with shell=False; if a shell is unavoidable, use shlex.quote on every untrusted value.",
+                "markdown": "Pass an argument list with shell=False; if a shell is unavoidable, use shlex.quote on every untrusted value."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-78",
+                  "A03:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "INJ-PY-SQL-STRING",
+              "name": "SqlBuiltWithStringFormattingPython",
+              "shortDescription": {
+                "text": "SQL built with string formatting (Python)"
+              },
+              "fullDescription": {
+                "text": "SQL built with string formatting (Python)"
+              },
+              "help": {
+                "text": "Use parameterized queries (cursor.execute(sql, params)) or ORM query builders; never interpolate untrusted values into SQL.",
+                "markdown": "Use parameterized queries (cursor.execute(sql, params)) or ORM query builders; never interpolate untrusted values into SQL."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-89",
+                  "A03:2021"
+                ],
+                "security-severity": "9.8",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "INJ-PY-SSTI",
+              "name": "TemplateRenderedFromADynamicStringSsti",
+              "shortDescription": {
+                "text": "Template rendered from a dynamic string (SSTI)"
+              },
+              "fullDescription": {
+                "text": "Template rendered from a dynamic string (SSTI)"
+              },
+              "help": {
+                "text": "Render fixed template files and pass user data as context variables; never build template source from input.",
+                "markdown": "Render fixed template files and pass user data as context variables; never build template source from input."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-1336",
+                  "A03:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "INJ-SSRF-PY",
+              "name": "OutboundRequestToUserControlledUrlPython",
+              "shortDescription": {
+                "text": "Outbound request to user-controlled URL (Python)"
+              },
+              "fullDescription": {
+                "text": "Outbound request to user-controlled URL (Python)"
+              },
+              "help": {
+                "text": "Validate the URL against an allowlist of hosts/schemes, resolve and block private/link-local ranges (incl. 169.254.169.254), disable redirects or re-validate them.",
+                "markdown": "Validate the URL against an allowlist of hosts/schemes, resolve and block private/link-local ranges (incl. 169.254.169.254), disable redirects or re-validate them."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-918",
+                  "A10:2021"
+                ],
+                "security-severity": "8.6",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "MANUAL-MAN-001",
+              "name": "NoAuthenticationOrAuthorizationOnAnyHttpRoute",
+              "shortDescription": {
+                "text": "No authentication or authorization on any HTTP route"
+              },
+              "fullDescription": {
+                "text": "All ten Flask routes and all Express routes are reachable without a session or token; there is no auth middleware, decorator or gateway configuration in the repository."
+              },
+              "help": {
+                "text": "Introduce a default-deny authentication layer (before_request hook / Express middleware mounted before routes), then per-route authorization checks; add a test that enumerates routes and asserts 401 without credentials.",
+                "markdown": "Introduce a default-deny authentication layer (before_request hook / Express middleware mounted before routes), then per-route authorization checks; add a test that enumerates routes and asserts 401 without credentials."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-306",
+                  "external/cwe/cwe-862",
+                  "A01:2021",
+                  "A07:2021",
+                  "API2:2023"
+                ],
+                "security-severity": "8.0",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "SC-CURL-PIPE-SHELL",
+              "name": "RemoteScriptPipedToShell",
+              "shortDescription": {
+                "text": "Remote script piped to shell"
+              },
+              "fullDescription": {
+                "text": "Remote script piped to shell"
+              },
+              "help": {
+                "text": "Download to a file, verify checksum/signature, then execute; or use a package manager.",
+                "markdown": "Download to a file, verify checksum/signature, then execute; or use a package manager."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-494",
+                  "A08:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "SC-DEP-FROM-URL",
+              "name": "DependencyFetchedFromGitUrlFileInsteadOfRegistry",
+              "shortDescription": {
+                "text": "Dependency fetched from git/URL/file instead of registry"
+              },
+              "fullDescription": {
+                "text": "Dependency fetched from git/URL/file instead of registry"
+              },
+              "help": {
+                "text": "Prefer registry releases pinned in a lockfile; if a git dependency is needed pin to a commit SHA.",
+                "markdown": "Prefer registry releases pinned in a lockfile; if a git dependency is needed pin to a commit SHA."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-829",
+                  "A08:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "SC-INSTALL-SCRIPT",
+              "name": "PackageDefinesAnInstallTimeLifecycleScript",
+              "shortDescription": {
+                "text": "Package defines an install-time lifecycle script"
+              },
+              "fullDescription": {
+                "text": "Package defines an install-time lifecycle script"
+              },
+              "help": {
+                "text": "Confirm the script is necessary and reviewed; consumers can install with --ignore-scripts.",
+                "markdown": "Confirm the script is necessary and reviewed; consumers can install with --ignore-scripts."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-829",
+                  "A08:2021"
+                ],
+                "security-severity": "0.0",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "SC-INSTALL-SCRIPT-SUSPICIOUS",
+              "name": "InstallLifecycleScriptWithNetworkEvalEncodedPayload",
+              "shortDescription": {
+                "text": "Install lifecycle script with network/eval/encoded payload"
+              },
+              "fullDescription": {
+                "text": "Install lifecycle script with network/eval/encoded payload"
+              },
+              "help": {
+                "text": "Inspect the script statically (do NOT run it). Remove it or replace with an auditable build step; install with --ignore-scripts in CI.",
+                "markdown": "Inspect the script statically (do NOT run it). Remove it or replace with an auditable build step; install with --ignore-scripts in CI."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-506",
+                  "external/cwe/cwe-829",
+                  "A08:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "SC-NO-LOCKFILE",
+              "name": "NoLockfileForNpmDependencies",
+              "shortDescription": {
+                "text": "No lockfile for npm dependencies"
+              },
+              "fullDescription": {
+                "text": "No lockfile for npm dependencies"
+              },
+              "help": {
+                "text": "Commit a lockfile so builds are reproducible and dependency integrity hashes are enforced.",
+                "markdown": "Commit a lockfile so builds are reproducible and dependency integrity hashes are enforced."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-1104",
+                  "external/cwe/cwe-829",
+                  "A06:2021",
+                  "A08:2021"
+                ],
+                "security-severity": "3.0",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "SC-OBFUSCATED-EXEC",
+              "name": "ExecutionOfDecodedObfuscatedPayload",
+              "shortDescription": {
+                "text": "Execution of decoded/obfuscated payload"
+              },
+              "fullDescription": {
+                "text": "Execution of decoded/obfuscated payload"
+              },
+              "help": {
+                "text": "Treat as potentially malicious: do not run it. Decode statically, identify origin (git blame/package), and remove or replace the component.",
+                "markdown": "Treat as potentially malicious: do not run it. Decode statically, identify origin (git blame/package), and remove or replace the component."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-506",
+                  "A08:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "SC-PIP-EXTRA-INDEX",
+              "name": "AdditionalPackageIndexDependencyConfusionRisk",
+              "shortDescription": {
+                "text": "Additional package index (dependency confusion risk)"
+              },
+              "fullDescription": {
+                "text": "Additional package index (dependency confusion risk)"
+              },
+              "help": {
+                "text": "Use a single private index that proxies the public one, pin hashes (--require-hashes), and reserve internal names publicly.",
+                "markdown": "Use a single private index that proxies the public one, pin hashes (--require-hashes), and reserve internal names publicly."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-427",
+                  "external/cwe/cwe-829",
+                  "A08:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "SC-TYPOSQUAT-CANDIDATE",
+              "name": "DependencyLodahsResemblesPopularPackageLodash",
+              "shortDescription": {
+                "text": "Dependency 'lodahs' resembles popular package 'lodash'"
+              },
+              "fullDescription": {
+                "text": "Dependency 'lodahs' resembles popular package 'lodash'"
+              },
+              "help": {
+                "text": "Verify the package's publisher, repository, download history and creation date; replace with the intended package if it is a typo.",
+                "markdown": "Verify the package's publisher, repository, download history and creation date; replace with the intended package if it is a typo."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-829",
+                  "A08:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "low"
+              }
+            },
+            {
+              "id": "SC-UNPINNED-PY-REQ",
+              "name": "UnpinnedPythonRequirement",
+              "shortDescription": {
+                "text": "Unpinned Python requirement"
+              },
+              "fullDescription": {
+                "text": "Unpinned Python requirement"
+              },
+              "help": {
+                "text": "Pin exact versions (==) and ideally hashes; generate with pip-compile/uv.",
+                "markdown": "Pin exact versions (==) and ideally hashes; generate with pip-compile/uv."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-1104",
+                  "A06:2021"
+                ],
+                "security-severity": "3.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "SC-WILDCARD-VERSION",
+              "name": "DependencyVersionWildcardOrLatest",
+              "shortDescription": {
+                "text": "Dependency version wildcard or 'latest'"
+              },
+              "fullDescription": {
+                "text": "Dependency version wildcard or 'latest'"
+              },
+              "help": {
+                "text": "Specify a version range and commit a lockfile; use exact versions for critical packages.",
+                "markdown": "Specify a version range and commit a lockfile; use exact versions for critical packages."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-1104",
+                  "A06:2021"
+                ],
+                "security-severity": "3.0",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "SEC-AWS-ACCESS-KEY",
+              "name": "AwsAccessKeyIdInSource",
+              "shortDescription": {
+                "text": "AWS access key ID in source"
+              },
+              "fullDescription": {
+                "text": "Hardcoded cloud credentials can be harvested from source, history, packages and build artifacts."
+              },
+              "help": {
+                "text": "Remove the key, rotate it in IAM immediately, audit CloudTrail for its use, and load credentials from the environment, an instance/workload role, or a secrets manager.",
+                "markdown": "Remove the key, rotate it in IAM immediately, audit CloudTrail for its use, and load credentials from the environment, an instance/workload role, or a secrets manager."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-798",
+                  "A07:2021"
+                ],
+                "security-severity": "9.1",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "SEC-CONN-STRING-CREDS",
+              "name": "CredentialsEmbeddedInConnectionUrl",
+              "shortDescription": {
+                "text": "Credentials embedded in connection URL"
+              },
+              "fullDescription": {
+                "text": "Credentials embedded in connection URL"
+              },
+              "help": {
+                "text": "Move the connection string to a secret store / environment variable and rotate the database password.",
+                "markdown": "Move the connection string to a secret store / environment variable and rotate the database password."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-798",
+                  "A07:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "medium"
+              }
+            },
+            {
+              "id": "SEC-GITHUB-TOKEN",
+              "name": "GithubTokenInSource",
+              "shortDescription": {
+                "text": "GitHub token in source"
+              },
+              "fullDescription": {
+                "text": "GitHub token in source"
+              },
+              "help": {
+                "text": "Revoke the token in GitHub settings, review the audit log, and use GITHUB_TOKEN or a secrets store.",
+                "markdown": "Revoke the token in GitHub settings, review the audit log, and use GITHUB_TOKEN or a secrets store."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-798",
+                  "A07:2021"
+                ],
+                "security-severity": "8.0",
+                "precision": "high"
+              }
+            },
+            {
+              "id": "XSS-DOM-INNERHTML",
+              "name": "AssignmentToInnerhtmlOuterhtml",
+              "shortDescription": {
+                "text": "Assignment to innerHTML/outerHTML"
+              },
+              "fullDescription": {
+                "text": "Assignment to innerHTML/outerHTML"
+              },
+              "help": {
+                "text": "Use textContent or DOM APIs; sanitize HTML with DOMPurify when markup is required; adopt Trusted Types.",
+                "markdown": "Use textContent or DOM APIs; sanitize HTML with DOMPurify when markup is required; adopt Trusted Types."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-79",
+                  "A03:2021"
+                ],
+                "security-severity": "5.5",
+                "precision": "low"
+              }
+            },
+            {
+              "id": "XSS-REFLECTED-SEND",
+              "name": "RequestDataWrittenDirectlyToHtmlResponse",
+              "shortDescription": {
+                "text": "Request data written directly to HTML response"
+              },
+              "fullDescription": {
+                "text": "Request data written directly to HTML response"
+              },
+              "help": {
+                "text": "Encode output for the HTML context or render through an auto-escaping template; set Content-Type correctly.",
+                "markdown": "Encode output for the HTML context or render through an auto-escaping template; set Content-Type correctly."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-79",
+                  "A03:2021"
+                ],
+                "security-severity": "6.1",
+                "precision": "medium"
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CI-GHA-PRT-UNTRUSTED-CHECKOUT",
+          "level": "error",
+          "message": {
+            "text": "pull_request_target checks out untrusted PR code [unverified, confidence high]. Matched 2 required signal(s)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": ".github/workflows/ci.yml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 3,
+                  "endLine": 3
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "d5028719e93c5c1e763d"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "critical",
+            "sources": [
+              "builtin:cicd"
+            ],
+            "findingId": "AUTO-0001"
+          }
+        },
+        {
+          "ruleId": "DES-PY-PICKLE",
+          "level": "error",
+          "message": {
+            "text": "Unsafe Python deserialization (pickle and friends) [confirmed, confidence high]. Line matches pattern for DES-PY-PICKLE."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 45,
+                  "endLine": 45
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "0a0d3c3601a492ea2c26"
+          },
+          "properties": {
+            "status": "confirmed",
+            "confidence": "high",
+            "severity": "critical",
+            "sources": [
+              "builtin:deserialization"
+            ],
+            "findingId": "AUTO-0012"
+          }
+        },
+        {
+          "ruleId": "SEC-CONN-STRING-CREDS",
+          "level": "error",
+          "message": {
+            "text": "Credentials embedded in connection URL [unverified, confidence medium]. Value Pr0d\u2026[redacted 11 chars] (entropy 3.46). Secret redacted; it was not used or validated."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": ".env",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 1
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "121427fe1d187a3f23dd"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:secrets"
+            ],
+            "findingId": "AUTO-0002"
+          }
+        },
+        {
+          "ruleId": "SEC-GITHUB-TOKEN",
+          "level": "error",
+          "message": {
+            "text": "GitHub token in source [unverified, confidence high]. Value ghp_\u2026[redacted 40 chars] (entropy 5.07). Secret redacted; it was not used or validated."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": ".env",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 2
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "6995595c6a88f0193860"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "high",
+            "sources": [
+              "builtin:secrets"
+            ],
+            "findingId": "AUTO-0003"
+          }
+        },
+        {
+          "ruleId": "CI-GHA-SCRIPT-INJECTION",
+          "level": "error",
+          "message": {
+            "text": "Untrusted GitHub context expanded in workflow script [unverified, confidence medium]. Line matches pattern for CI-GHA-SCRIPT-INJECTION."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": ".github/workflows/ci.yml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 13,
+                  "endLine": 13
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "1b61f6dce44e7377219b"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:cicd"
+            ],
+            "findingId": "AUTO-0004"
+          }
+        },
+        {
+          "ruleId": "IAC-DOCKER-SECRET-IN-LAYER",
+          "level": "error",
+          "message": {
+            "text": "Secret passed via ENV/ARG in image [unverified, confidence medium]. Line matches pattern for IAC-DOCKER-SECRET-IN-LAYER."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "Dockerfile",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 3,
+                  "endLine": 3
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "32e845d01dbad46e0681"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0005"
+          }
+        },
+        {
+          "ruleId": "CFG-HARDCODED-APP-SECRET",
+          "level": "error",
+          "message": {
+            "text": "Hardcoded framework secret key [unverified, confidence medium]. Value s3cr\u2026[redacted 28 chars] (entropy 3.84). Secret redacted; it was not used or validated."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 11,
+                  "endLine": 11
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "f2f6c485b41dcbd67dd8"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:config"
+            ],
+            "findingId": "AUTO-0006"
+          }
+        },
+        {
+          "ruleId": "SEC-AWS-ACCESS-KEY",
+          "level": "error",
+          "message": {
+            "text": "AWS access key ID in source [unverified, confidence high]. Value AKIA\u2026[redacted 20 chars] (entropy 4.12). Secret redacted; it was not used or validated."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 12,
+                  "endLine": 12
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "af55fd400e92f8109063"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "high",
+            "sources": [
+              "builtin:secrets"
+            ],
+            "findingId": "AUTO-0007"
+          }
+        },
+        {
+          "ruleId": "MANUAL-MAN-001",
+          "level": "error",
+          "message": {
+            "text": "No authentication or authorization on any HTTP route [missing-control, confidence high]. app.py defines @app.route handlers with no login_required/before_request hook; server.js mounts handlers directly on `app` with no auth middleware; no gateway/ingress auth config present."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 16,
+                  "endLine": 60
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "372a9b414328e581007c"
+          },
+          "properties": {
+            "status": "missing-control",
+            "confidence": "high",
+            "severity": "high",
+            "sources": [
+              "manual-review"
+            ],
+            "findingId": "MAN-001"
+          }
+        },
+        {
+          "ruleId": "INJ-PY-SQL-STRING",
+          "level": "error",
+          "message": {
+            "text": "SQL built with string formatting (Python) [confirmed, confidence high]. Line matches pattern for INJ-PY-SQL-STRING."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 19,
+                  "endLine": 19
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "d1857e575972946766e7"
+          },
+          "properties": {
+            "status": "confirmed",
+            "confidence": "high",
+            "severity": "high",
+            "sources": [
+              "builtin:injection"
+            ],
+            "findingId": "AUTO-0008"
+          }
+        },
+        {
+          "ruleId": "INJ-PY-SHELL-TRUE",
+          "level": "error",
+          "message": {
+            "text": "subprocess with shell=True [unverified, confidence medium]. Line matches pattern for INJ-PY-SHELL-TRUE."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 25,
+                  "endLine": 25
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "2ae19806b7574fc79f64"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:injection"
+            ],
+            "findingId": "AUTO-0009"
+          }
+        },
+        {
+          "ruleId": "INJ-PY-SSTI",
+          "level": "error",
+          "message": {
+            "text": "Template rendered from a dynamic string (SSTI) [unverified, confidence medium]. Line matches pattern for INJ-PY-SSTI."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 30,
+                  "endLine": 30
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "aa65b78956c88ca2c4de"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:injection"
+            ],
+            "findingId": "AUTO-0010"
+          }
+        },
+        {
+          "ruleId": "INJ-SSRF-PY",
+          "level": "error",
+          "message": {
+            "text": "Outbound request to user-controlled URL (Python) [confirmed, confidence high]. Line matches pattern for INJ-SSRF-PY."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 35,
+                  "endLine": 35
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "189b0ca7d311a170dc35"
+          },
+          "properties": {
+            "status": "confirmed",
+            "confidence": "high",
+            "severity": "high",
+            "sources": [
+              "builtin:injection"
+            ],
+            "findingId": "AUTO-0011"
+          }
+        },
+        {
+          "ruleId": "DES-PY-YAML-UNSAFE",
+          "level": "error",
+          "message": {
+            "text": "Unsafe YAML load (Python) [unverified, confidence medium]. Line matches pattern for DES-PY-YAML-UNSAFE."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 50,
+                  "endLine": 50
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "a396d29b649836a2d8ee"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:deserialization"
+            ],
+            "findingId": "AUTO-0013"
+          }
+        },
+        {
+          "ruleId": "INJ-PATH-TRAVERSAL-PY",
+          "level": "error",
+          "message": {
+            "text": "Request data used in filesystem path (Python) [unverified, confidence medium]. Line matches pattern for INJ-PATH-TRAVERSAL-PY."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 55,
+                  "endLine": 55
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "13736063f0635789576b"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:injection"
+            ],
+            "findingId": "AUTO-0014"
+          }
+        },
+        {
+          "ruleId": "CRY-TLS-VERIFY-DISABLED",
+          "level": "error",
+          "message": {
+            "text": "TLS certificate verification disabled [unverified, confidence high]. Line matches pattern for CRY-TLS-VERIFY-DISABLED."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 59,
+                  "endLine": 59
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "9d265703cc0a5d6140dd"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "high",
+            "sources": [
+              "builtin:crypto"
+            ],
+            "findingId": "AUTO-0015"
+          }
+        },
+        {
+          "ruleId": "CFG-FLASK-DEBUG",
+          "level": "error",
+          "message": {
+            "text": "Flask/Werkzeug debugger enabled [unverified, confidence medium]. Line matches pattern for CFG-FLASK-DEBUG."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 60,
+                  "endLine": 60
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "312b6676e76664ef8f91"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:config"
+            ],
+            "findingId": "AUTO-0016"
+          }
+        },
+        {
+          "ruleId": "IAC-TF-PUBLIC-BUCKET",
+          "level": "error",
+          "message": {
+            "text": "Object storage publicly accessible [unverified, confidence high]. Line matches pattern for IAC-TF-PUBLIC-BUCKET."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/main.tf",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 14,
+                  "endLine": 14
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "a24a4c01cb3c95462cb0"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "high",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0017"
+          }
+        },
+        {
+          "ruleId": "IAC-TF-PUBLIC-BUCKET",
+          "level": "error",
+          "message": {
+            "text": "Object storage publicly accessible [unverified, confidence high]. Line matches pattern for IAC-TF-PUBLIC-BUCKET."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/main.tf",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 15,
+                  "endLine": 15
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "8f1516e0b8c25fb30ee6"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "high",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0018"
+          }
+        },
+        {
+          "ruleId": "IAC-DB-PUBLICLY-ACCESSIBLE",
+          "level": "error",
+          "message": {
+            "text": "Database publicly accessible [unverified, confidence high]. Line matches pattern for IAC-DB-PUBLICLY-ACCESSIBLE."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/main.tf",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 19,
+                  "endLine": 19
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "c4054fcf9fbf64b050dc"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "high",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0019"
+          }
+        },
+        {
+          "ruleId": "IAC-HARDCODED-PASSWORD",
+          "level": "error",
+          "message": {
+            "text": "Hardcoded password in infrastructure code [unverified, confidence medium]. Value hunt\u2026[redacted 14 chars] (entropy 2.81). Secret redacted; it was not used or validated."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/main.tf",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 21,
+                  "endLine": 21
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "b67050428fabbc644950"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0020"
+          }
+        },
+        {
+          "ruleId": "IAC-K8S-HOST-NAMESPACE",
+          "level": "error",
+          "message": {
+            "text": "Pod shares host network/PID/IPC namespace [unverified, confidence high]. Line matches pattern for IAC-K8S-HOST-NAMESPACE."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "k8s/deployment.yaml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 8,
+                  "endLine": 8
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "5cadf6a6c7cde4f41b5f"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "high",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0021"
+          }
+        },
+        {
+          "ruleId": "IAC-PRIVILEGED-CONTAINER",
+          "level": "error",
+          "message": {
+            "text": "Privileged container [unverified, confidence high]. Line matches pattern for IAC-PRIVILEGED-CONTAINER."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "k8s/deployment.yaml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 13,
+                  "endLine": 13
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "a638ee08860b66a42403"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "high",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0022"
+          }
+        },
+        {
+          "ruleId": "SC-INSTALL-SCRIPT-SUSPICIOUS",
+          "level": "error",
+          "message": {
+            "text": "Install lifecycle script with network/eval/encoded payload [suspected, confidence medium]. Line matches pattern for SC-INSTALL-SCRIPT-SUSPICIOUS."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "package.json",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 5,
+                  "endLine": 5
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "bb8eda3867e4a012aea4"
+          },
+          "properties": {
+            "status": "suspected",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:supply-chain"
+            ],
+            "findingId": "AUTO-0023"
+          }
+        },
+        {
+          "ruleId": "SC-OBFUSCATED-EXEC",
+          "level": "error",
+          "message": {
+            "text": "Execution of decoded/obfuscated payload [suspected, confidence medium]. Line matches pattern for SC-OBFUSCATED-EXEC."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "public/app.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 3,
+                  "endLine": 3
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "828f528b189d08602241"
+          },
+          "properties": {
+            "status": "suspected",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:supply-chain"
+            ],
+            "findingId": "AUTO-0024"
+          }
+        },
+        {
+          "ruleId": "INJ-JS-SQL-STRING",
+          "level": "error",
+          "message": {
+            "text": "SQL built with template literal or concatenation (JS/TS) [unverified, confidence medium]. Line matches pattern for INJ-JS-SQL-STRING."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 8,
+                  "endLine": 8
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "b0ca6b33d1c14f1e5b8b"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:injection"
+            ],
+            "findingId": "AUTO-0025"
+          }
+        },
+        {
+          "ruleId": "INJ-JS-CHILD-PROCESS-STRING",
+          "level": "error",
+          "message": {
+            "text": "child_process exec with dynamic string [unverified, confidence medium]. Line matches pattern for INJ-JS-CHILD-PROCESS-STRING."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 12,
+                  "endLine": 12
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "cb5a768108199db2b941"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:injection"
+            ],
+            "findingId": "AUTO-0026"
+          }
+        },
+        {
+          "ruleId": "XSS-REFLECTED-SEND",
+          "level": "error",
+          "message": {
+            "text": "Request data written directly to HTML response [unverified, confidence medium]. Line matches pattern for XSS-REFLECTED-SEND."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 16,
+                  "endLine": 16
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "aa4ea01d55513ff58615"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:xss"
+            ],
+            "findingId": "AUTO-0027"
+          }
+        },
+        {
+          "ruleId": "AUTH-JWT-HARDCODED-SECRET",
+          "level": "error",
+          "message": {
+            "text": "JWT signed/verified with hardcoded secret [unverified, confidence medium]. Value hard\u2026[redacted 26 chars] (entropy 3.72). Secret redacted; it was not used or validated."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 26,
+                  "endLine": 26
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "a0d24d2917f772b70045"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:auth"
+            ],
+            "findingId": "AUTO-0028"
+          }
+        },
+        {
+          "ruleId": "INJ-PATH-TRAVERSAL-JS",
+          "level": "error",
+          "message": {
+            "text": "Request data used in filesystem path (JS) [unverified, confidence medium]. Line matches pattern for INJ-PATH-TRAVERSAL-JS."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 30,
+                  "endLine": 30
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "91240de6a5f4678e96f6"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "high",
+            "sources": [
+              "builtin:injection"
+            ],
+            "findingId": "AUTO-0029"
+          }
+        },
+        {
+          "ruleId": "CFG-ENV-FILE-PRESENT",
+          "level": "warning",
+          "message": {
+            "text": "Environment file with values in repository [unverified, confidence medium]. Matched 1 required signal(s)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": ".env",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 1
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "e6a5614450e5c971012f"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "medium",
+            "sources": [
+              "builtin:config"
+            ],
+            "findingId": "AUTO-0030"
+          }
+        },
+        {
+          "ruleId": "IAC-DOCKER-NO-USER",
+          "level": "warning",
+          "message": {
+            "text": "Container runs as root (no non-root USER) [missing-control, confidence high]. Matched 1 required signal(s); none of 1 expected control pattern(s) present."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "Dockerfile",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 1
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "948597abf5ec2db9d8a7"
+          },
+          "properties": {
+            "status": "missing-control",
+            "confidence": "high",
+            "severity": "medium",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0031"
+          }
+        },
+        {
+          "ruleId": "IAC-DOCKER-ADD-REMOTE",
+          "level": "warning",
+          "message": {
+            "text": "ADD fetches remote URL [unverified, confidence high]. Line matches pattern for IAC-DOCKER-ADD-REMOTE."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "Dockerfile",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 2
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "04ff9c274195571b0dfc"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "medium",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0032"
+          }
+        },
+        {
+          "ruleId": "SC-CURL-PIPE-SHELL",
+          "level": "warning",
+          "message": {
+            "text": "Remote script piped to shell [unverified, confidence high]. Line matches pattern for SC-CURL-PIPE-SHELL."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "Dockerfile",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 5,
+                  "endLine": 5
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "a4053468cba7b2f4572d"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "medium",
+            "sources": [
+              "builtin:supply-chain"
+            ],
+            "findingId": "AUTO-0033"
+          }
+        },
+        {
+          "ruleId": "INJ-OPEN-REDIRECT",
+          "level": "warning",
+          "message": {
+            "text": "Redirect to user-controlled location [unverified, confidence medium]. Line matches pattern for INJ-OPEN-REDIRECT."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "app.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 40,
+                  "endLine": 40
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "307ba00f90cfb4c6c75e"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "medium",
+            "sources": [
+              "builtin:injection"
+            ],
+            "findingId": "AUTO-0034"
+          }
+        },
+        {
+          "ruleId": "IAC-TF-OPEN-INGRESS",
+          "level": "warning",
+          "message": {
+            "text": "Network rule open to the internet (0.0.0.0/0 or ::/0) [unverified, confidence medium]. Line matches pattern for IAC-TF-OPEN-INGRESS."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/main.tf",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 8,
+                  "endLine": 8
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "a705c05ffeea4eb69c4d"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "medium",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0035"
+          }
+        },
+        {
+          "ruleId": "IAC-ENCRYPTION-DISABLED",
+          "level": "warning",
+          "message": {
+            "text": "Encryption at rest or key rotation disabled [unverified, confidence high]. Line matches pattern for IAC-ENCRYPTION-DISABLED."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/main.tf",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 20,
+                  "endLine": 20
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "fe61ed8333ff52c93ba8"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "medium",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0036"
+          }
+        },
+        {
+          "ruleId": "IAC-IMDSV1-ALLOWED",
+          "level": "warning",
+          "message": {
+            "text": "EC2 instance metadata v1 allowed [unverified, confidence high]. Line matches pattern for IAC-IMDSV1-ALLOWED."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/main.tf",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 25,
+                  "endLine": 25
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "cc84e455f56bd9836abe"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "medium",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0037"
+          }
+        },
+        {
+          "ruleId": "IAC-K8S-NO-SECURITY-CONTEXT",
+          "level": "warning",
+          "message": {
+            "text": "Workload without runAsNonRoot [missing-control, confidence medium]. Matched 1 required signal(s); none of 1 expected control pattern(s) present."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "k8s/deployment.yaml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 2
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "dc4f9e8d16324e391f1e"
+          },
+          "properties": {
+            "status": "missing-control",
+            "confidence": "medium",
+            "severity": "medium",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0038"
+          }
+        },
+        {
+          "ruleId": "IAC-K8S-PRIV-ESCALATION",
+          "level": "warning",
+          "message": {
+            "text": "allowPrivilegeEscalation enabled [unverified, confidence high]. Line matches pattern for IAC-K8S-PRIV-ESCALATION."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "k8s/deployment.yaml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 14,
+                  "endLine": 14
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "5c928fb5280f3c2177d2"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "medium",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0039"
+          }
+        },
+        {
+          "ruleId": "SC-TYPOSQUAT-CANDIDATE",
+          "level": "warning",
+          "message": {
+            "text": "Dependency 'lodahs' resembles popular package 'lodash' [suspected, confidence low]. Name is one edit away from 'lodash' (npm). This is a heuristic, not proof of malice."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "package.json",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 12,
+                  "endLine": 12
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "77abbf21d701cabd1f6e"
+          },
+          "properties": {
+            "status": "suspected",
+            "confidence": "low",
+            "severity": "medium",
+            "sources": [
+              "builtin:supply-chain-structural"
+            ],
+            "findingId": "AUTO-0040"
+          }
+        },
+        {
+          "ruleId": "SC-DEP-FROM-URL",
+          "level": "warning",
+          "message": {
+            "text": "Dependency fetched from git/URL/file instead of registry [unverified, confidence medium]. Line matches pattern for SC-DEP-FROM-URL."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "package.json",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 13,
+                  "endLine": 13
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "7a800cf9808af7ef80c2"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "medium",
+            "sources": [
+              "builtin:supply-chain"
+            ],
+            "findingId": "AUTO-0041"
+          }
+        },
+        {
+          "ruleId": "XSS-DOM-INNERHTML",
+          "level": "warning",
+          "message": {
+            "text": "Assignment to innerHTML/outerHTML [unverified, confidence low]. Line matches pattern for XSS-DOM-INNERHTML."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "public/app.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 2
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "21c25e641b3a581a129d"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "low",
+            "severity": "medium",
+            "sources": [
+              "builtin:xss"
+            ],
+            "findingId": "AUTO-0042"
+          }
+        },
+        {
+          "ruleId": "INJ-JS-EVAL",
+          "level": "warning",
+          "message": {
+            "text": "eval / new Function / string timers (JS) [unverified, confidence medium]. Line matches pattern for INJ-JS-EVAL."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "public/app.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 3,
+                  "endLine": 3
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "84464002c7f71c84ef30"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "medium",
+            "sources": [
+              "builtin:injection"
+            ],
+            "findingId": "AUTO-0043"
+          }
+        },
+        {
+          "ruleId": "SC-TYPOSQUAT-CANDIDATE",
+          "level": "warning",
+          "message": {
+            "text": "Dependency 'reqeusts' resembles popular package 'requests' [suspected, confidence low]. Name is one edit away from 'requests' (pypi). This is a heuristic, not proof of malice."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "requirements.txt",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 4,
+                  "endLine": 4
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "c0691e65bf0c5de27109"
+          },
+          "properties": {
+            "status": "suspected",
+            "confidence": "low",
+            "severity": "medium",
+            "sources": [
+              "builtin:supply-chain-structural"
+            ],
+            "findingId": "AUTO-0044"
+          }
+        },
+        {
+          "ruleId": "SC-PIP-EXTRA-INDEX",
+          "level": "warning",
+          "message": {
+            "text": "Additional package index (dependency confusion risk) [unverified, confidence medium]. Line matches pattern for SC-PIP-EXTRA-INDEX."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "requirements.txt",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 5,
+                  "endLine": 5
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "fa5e4165dfe215abf796"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "medium",
+            "sources": [
+              "builtin:supply-chain"
+            ],
+            "findingId": "AUTO-0045"
+          }
+        },
+        {
+          "ruleId": "CFG-CORS-WILDCARD",
+          "level": "warning",
+          "message": {
+            "text": "CORS allows any origin [unverified, confidence medium]. Line matches pattern for CFG-CORS-WILDCARD."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 5,
+                  "endLine": 5
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "3bbdb19ead93be0aaf6b"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "medium",
+            "sources": [
+              "builtin:config"
+            ],
+            "findingId": "AUTO-0046"
+          }
+        },
+        {
+          "ruleId": "AUTH-MASS-ASSIGNMENT",
+          "level": "warning",
+          "message": {
+            "text": "Request body bound directly to a model [unverified, confidence medium]. Line matches pattern for AUTH-MASS-ASSIGNMENT."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 20,
+                  "endLine": 20
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "8518189194eac3ec47a0"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "medium",
+            "sources": [
+              "builtin:auth"
+            ],
+            "findingId": "AUTO-0047"
+          }
+        },
+        {
+          "ruleId": "AUTH-JWT-DECODE-NO-VERIFY-JS",
+          "level": "warning",
+          "message": {
+            "text": "jsonwebtoken decode() does not verify signatures [unverified, confidence low]. Line matches pattern for AUTH-JWT-DECODE-NO-VERIFY-JS."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 25,
+                  "endLine": 25
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "01245f1dec0ad603d01a"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "low",
+            "severity": "medium",
+            "sources": [
+              "builtin:auth"
+            ],
+            "findingId": "AUTO-0048"
+          }
+        },
+        {
+          "ruleId": "CRY-INSECURE-RANDOM",
+          "level": "warning",
+          "message": {
+            "text": "Non-cryptographic RNG used for security value [unverified, confidence medium]. Line matches pattern for CRY-INSECURE-RANDOM."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server.js",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 27,
+                  "endLine": 27
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "ce144029edd1334eb819"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "medium",
+            "sources": [
+              "builtin:crypto"
+            ],
+            "findingId": "AUTO-0049"
+          }
+        },
+        {
+          "ruleId": "CI-GHA-NO-PERMISSIONS",
+          "level": "note",
+          "message": {
+            "text": "Workflow without explicit token permissions [missing-control, confidence high]. Matched 1 required signal(s); none of 1 expected control pattern(s) present."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": ".github/workflows/ci.yml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 5,
+                  "endLine": 5
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "9c7f3c4db96611285219"
+          },
+          "properties": {
+            "status": "missing-control",
+            "confidence": "high",
+            "severity": "low",
+            "sources": [
+              "builtin:cicd"
+            ],
+            "findingId": "AUTO-0050"
+          }
+        },
+        {
+          "ruleId": "CI-GHA-UNPINNED-ACTION",
+          "level": "note",
+          "message": {
+            "text": "Third-party GitHub Action not pinned to a commit SHA [unverified, confidence high]. Line matches pattern for CI-GHA-UNPINNED-ACTION."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": ".github/workflows/ci.yml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 12,
+                  "endLine": 12
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "44a689331bcb20ef506f"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "low",
+            "sources": [
+              "builtin:cicd"
+            ],
+            "findingId": "AUTO-0051"
+          }
+        },
+        {
+          "ruleId": "IAC-DOCKER-UNPINNED-BASE",
+          "level": "note",
+          "message": {
+            "text": "Base image unpinned or :latest [unverified, confidence low]. Line matches pattern for IAC-DOCKER-UNPINNED-BASE."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "Dockerfile",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 1
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "2c205d341653de6ac5e1"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "low",
+            "severity": "low",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0052"
+          }
+        },
+        {
+          "ruleId": "IAC-K8S-NO-RESOURCE-LIMITS",
+          "level": "note",
+          "message": {
+            "text": "Workload without resource limits [missing-control, confidence medium]. Matched 2 required signal(s); none of 1 expected control pattern(s) present."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "k8s/deployment.yaml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 2
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "363d7550223c3224eb19"
+          },
+          "properties": {
+            "status": "missing-control",
+            "confidence": "medium",
+            "severity": "low",
+            "sources": [
+              "builtin:iac"
+            ],
+            "findingId": "AUTO-0053"
+          }
+        },
+        {
+          "ruleId": "SC-NO-LOCKFILE",
+          "level": "note",
+          "message": {
+            "text": "No lockfile for npm dependencies [missing-control, confidence high]. Manifest package.json found without a npm lockfile."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "package.json",
+                  "uriBaseId": "%SRCROOT%"
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "26045036331847942e7c"
+          },
+          "properties": {
+            "status": "missing-control",
+            "confidence": "high",
+            "severity": "low",
+            "sources": [
+              "builtin:supply-chain-structural"
+            ],
+            "findingId": "AUTO-0054"
+          }
+        },
+        {
+          "ruleId": "CFG-EXPRESS-NO-HELMET",
+          "level": "note",
+          "message": {
+            "text": "Express app without security headers middleware [missing-control, confidence medium]. Matched 1 required signal(s); none of 1 expected control pattern(s) present."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "package.json",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 9,
+                  "endLine": 9
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "1215045d3d2ef1fac867"
+          },
+          "properties": {
+            "status": "missing-control",
+            "confidence": "medium",
+            "severity": "low",
+            "sources": [
+              "builtin:config"
+            ],
+            "findingId": "AUTO-0055"
+          }
+        },
+        {
+          "ruleId": "CFG-NO-RATE-LIMIT-DEP",
+          "level": "note",
+          "message": {
+            "text": "No rate limiting library detected (Node) [missing-control, confidence low]. Matched 1 required signal(s); none of 1 expected control pattern(s) present."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "package.json",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 9,
+                  "endLine": 9
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "8db685547206e3ee0ac3"
+          },
+          "properties": {
+            "status": "missing-control",
+            "confidence": "low",
+            "severity": "low",
+            "sources": [
+              "builtin:config"
+            ],
+            "findingId": "AUTO-0056"
+          }
+        },
+        {
+          "ruleId": "SC-WILDCARD-VERSION",
+          "level": "note",
+          "message": {
+            "text": "Dependency version wildcard or 'latest' [unverified, confidence high]. Line matches pattern for SC-WILDCARD-VERSION."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "package.json",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 10,
+                  "endLine": 10
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "e565e4803d6e2c879bdb"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "high",
+            "severity": "low",
+            "sources": [
+              "builtin:supply-chain"
+            ],
+            "findingId": "AUTO-0057"
+          }
+        },
+        {
+          "ruleId": "SC-UNPINNED-PY-REQ",
+          "level": "note",
+          "message": {
+            "text": "Unpinned Python requirement [unverified, confidence medium]. Line matches pattern for SC-UNPINNED-PY-REQ."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "requirements.txt",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 1
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "e0b12389655a19638aad"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "low",
+            "sources": [
+              "builtin:supply-chain"
+            ],
+            "findingId": "AUTO-0058"
+          }
+        },
+        {
+          "ruleId": "SC-UNPINNED-PY-REQ",
+          "level": "note",
+          "message": {
+            "text": "Unpinned Python requirement [unverified, confidence medium]. Line matches pattern for SC-UNPINNED-PY-REQ."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "requirements.txt",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 2,
+                  "endLine": 2
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "61d4616c0715f897b284"
+          },
+          "properties": {
+            "status": "unverified",
+            "confidence": "medium",
+            "severity": "low",
+            "sources": [
+              "builtin:supply-chain"
+            ],
+            "findingId": "AUTO-0059"
+          }
+        },
+        {
+          "ruleId": "SC-INSTALL-SCRIPT",
+          "level": "note",
+          "message": {
+            "text": "Package defines an install-time lifecycle script [accepted-risk, confidence high]. Line matches pattern for SC-INSTALL-SCRIPT."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "package.json",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 5,
+                  "endLine": 5
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "appsecFingerprint/v1": "2804de5ba871b1e24fc0"
+          },
+          "properties": {
+            "status": "accepted-risk",
+            "confidence": "high",
+            "severity": "info",
+            "sources": [
+              "builtin:supply-chain"
+            ],
+            "findingId": "AUTO-0060"
+          }
+        }
+      ],
+      "originalUriBaseIds": {
+        "%SRCROOT%": {
+          "uri": "./"
+        }
+      }
+    }
+  ]
+}

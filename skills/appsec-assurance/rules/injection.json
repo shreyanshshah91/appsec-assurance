@@ -1,0 +1,633 @@
+{
+  "pack": "injection",
+  "version": "1.0.0",
+  "description": "Built-in injection rules for appsec-assurance.",
+  "rules": [
+    {
+      "id": "INJ-PY-SQL-STRING",
+      "title": "SQL built with string formatting (Python)",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.py"
+      ],
+      "remediation": "Use parameterized queries (cursor.execute(sql, params)) or ORM query builders; never interpolate untrusted values into SQL.",
+      "pattern": "\\.(execute|executemany|executescript|raw|extra)\\(\\s*(f[\\\"']|[\\\"'][^\\\"']*[\\\"']\\s*(%|\\+|\\.format\\())|\\btext\\(\\s*f[\\\"']",
+      "cwe": [
+        "CWE-89"
+      ],
+      "owasp": [
+        "A03:2021"
+      ],
+      "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+    },
+    {
+      "id": "INJ-JS-SQL-STRING",
+      "title": "SQL built with template literal or concatenation (JS/TS)",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte"
+      ],
+      "remediation": "Use placeholders ($1, ?) with a values array, tagged templates (sql``, Prisma.sql), or the query builder.",
+      "pattern": "\\.(query|execute|raw|whereRaw|orderByRaw|\\$queryRawUnsafe|\\$executeRawUnsafe|sequelize\\.query)\\(\\s*(`[^`]*\\$\\{|[\\\"'][^\\\"']*\\b(SELECT|INSERT|UPDATE|DELETE|WHERE|ORDER BY)\\b[^\\\"']*[\\\"']\\s*\\+)",
+      "ignore_case": true,
+      "cwe": [
+        "CWE-89"
+      ],
+      "owasp": [
+        "A03:2021"
+      ],
+      "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+    },
+    {
+      "id": "INJ-JS-PRISMA-UNSAFE",
+      "title": "Prisma unsafe raw query API",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte"
+      ],
+      "remediation": "Prefer $queryRaw with tagged template (auto-parameterized); if Unsafe is required, pass values as separate parameters.",
+      "pattern": "\\$(queryRawUnsafe|executeRawUnsafe)\\(",
+      "cwe": [
+        "CWE-89"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-JAVA-SQL-CONCAT",
+      "title": "SQL/JPQL built with string concatenation (Java/Kotlin)",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.java",
+        "*.kt"
+      ],
+      "remediation": "Use PreparedStatement with ? placeholders, JPA named parameters, or Criteria API.",
+      "pattern": "(createQuery|createNativeQuery|executeQuery|executeUpdate|prepareStatement|addBatch|\\.execute|queryForObject|queryForList|\\.query)\\(\\s*\\\"[^\\\"]*\\\"\\s*\\+",
+      "cwe": [
+        "CWE-89"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-GO-SQL-SPRINTF",
+      "title": "SQL built with fmt.Sprintf or concatenation (Go)",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.go"
+      ],
+      "remediation": "Use placeholders (db.Query(\"... WHERE id = $1\", id)).",
+      "pattern": "\\.(Query|QueryRow|Exec|QueryContext|QueryRowContext|ExecContext|Raw|Where)\\(\\s*(ctx\\s*,\\s*)?(fmt\\.Sprintf\\(|\\\"[^\\\"]*\\\"\\s*\\+)",
+      "cwe": [
+        "CWE-89"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-PHP-SQL-SUPERGLOBAL",
+      "title": "Superglobal used in SQL query (PHP)",
+      "severity": "critical",
+      "confidence": "high",
+      "category": "injection",
+      "files": [
+        "*.php"
+      ],
+      "remediation": "Use PDO/mysqli prepared statements with bound parameters.",
+      "pattern": "(mysqli?_query|->query|->exec|pg_query|DB::(raw|select|statement)|whereRaw)\\(.*\\$_(GET|POST|REQUEST|COOKIE|SERVER)",
+      "cwe": [
+        "CWE-89"
+      ],
+      "owasp": [
+        "A03:2021"
+      ],
+      "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+    },
+    {
+      "id": "INJ-RUBY-SQL-INTERP",
+      "title": "String interpolation in ActiveRecord query (Ruby)",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.rb",
+        "*.erb"
+      ],
+      "remediation": "Use hash conditions or placeholders: where(\"name = ?\", name).",
+      "pattern": "\\.(where|find_by_sql|order|group|having|joins|pluck|select|from|exists\\?|calculate|delete_all|update_all)\\(\\s*\\\"[^\\\"]*#\\{",
+      "cwe": [
+        "CWE-89"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-CS-SQL-RAW",
+      "title": "Raw SQL with interpolation (.NET)",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.cs",
+        "*.cshtml"
+      ],
+      "remediation": "Use FromSqlInterpolated/parameterized SqlCommand with SqlParameter.",
+      "pattern": "(FromSqlRaw|ExecuteSqlRaw|ExecuteSqlRawAsync|new\\s+SqlCommand|CommandText\\s*=)\\s*\\(?\\s*(\\$\\\"|\\\"[^\\\"]*\\\"\\s*\\+)",
+      "cwe": [
+        "CWE-89"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-PY-SHELL-TRUE",
+      "title": "subprocess with shell=True",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.py"
+      ],
+      "remediation": "Pass an argument list with shell=False; if a shell is unavoidable, use shlex.quote on every untrusted value.",
+      "pattern": "subprocess\\.\\w+\\(.*shell\\s*=\\s*True",
+      "cwe": [
+        "CWE-78"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-PY-OS-SYSTEM",
+      "title": "os.system / os.popen command execution",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.py"
+      ],
+      "remediation": "Replace with subprocess.run([...], shell=False) and validate arguments against an allowlist.",
+      "pattern": "\\bos\\.(system|popen|popen2|popen3|spawnl?p?)\\(",
+      "cwe": [
+        "CWE-78"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-JS-CHILD-PROCESS-STRING",
+      "title": "child_process exec with dynamic string",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte"
+      ],
+      "remediation": "Use execFile/spawn with an argument array and no shell; validate inputs against an allowlist.",
+      "pattern": "\\b(exec|execSync)\\(\\s*(`[^`]*\\$\\{|[\\\"'][^\\\"']*[\\\"']\\s*\\+|\\w+\\s*\\+)",
+      "negative": "\\.exec\\(\\s*`?[^`]*\\)\\s*[;)]?\\s*$(?<=RegExp)",
+      "cwe": [
+        "CWE-78"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-JAVA-RUNTIME-EXEC",
+      "title": "Runtime.exec / ProcessBuilder command execution",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "injection",
+      "files": [
+        "*.java",
+        "*.kt"
+      ],
+      "remediation": "Pass a fixed command and an argument array; never concatenate untrusted input or invoke a shell.",
+      "pattern": "Runtime\\.getRuntime\\(\\)\\.exec\\(|new\\s+ProcessBuilder\\(",
+      "cwe": [
+        "CWE-78"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-GO-EXEC-SHELL",
+      "title": "exec.Command invoking a shell with -c",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.go"
+      ],
+      "remediation": "Invoke the binary directly with separate arguments; avoid sh -c.",
+      "pattern": "exec\\.Command(Context)?\\(\\s*(ctx\\s*,\\s*)?\\\"(sh|bash|zsh|cmd|cmd\\.exe|/bin/sh|/bin/bash|powershell)\\\"\\s*,\\s*\\\"(-c|/c|-Command)\\\"",
+      "cwe": [
+        "CWE-78"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-PHP-CMD-SUPERGLOBAL",
+      "title": "Superglobal reaches OS command (PHP)",
+      "severity": "critical",
+      "confidence": "high",
+      "category": "injection",
+      "files": [
+        "*.php"
+      ],
+      "remediation": "Avoid shell execution; if required, use escapeshellarg on each argument and an allowlist.",
+      "pattern": "\\b(system|exec|shell_exec|passthru|popen|proc_open|pcntl_exec)\\s*\\(.*\\$_(GET|POST|REQUEST|COOKIE)|`[^`]*\\$_(GET|POST|REQUEST)",
+      "cwe": [
+        "CWE-78"
+      ],
+      "owasp": [
+        "A03:2021"
+      ],
+      "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+    },
+    {
+      "id": "INJ-PY-EVAL",
+      "title": "eval/exec on dynamic data (Python)",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.py"
+      ],
+      "remediation": "Remove eval/exec; use ast.literal_eval for literals, json.loads for data, or an explicit dispatch table.",
+      "pattern": "(?<![\\w.])(eval|exec)\\(\\s*(?![\\\"'])",
+      "negative": "literal_eval|\\.eval\\(\\)|re\\.compile",
+      "cwe": [
+        "CWE-95"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-JS-EVAL",
+      "title": "eval / new Function / string timers (JS)",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte"
+      ],
+      "remediation": "Remove dynamic code evaluation; use JSON.parse, lookup tables, or function references.",
+      "pattern": "(?<![\\w.$])eval\\(|new\\s+Function\\(|set(Timeout|Interval)\\(\\s*[\\\"'`]",
+      "cwe": [
+        "CWE-95"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-PY-SSTI",
+      "title": "Template rendered from a dynamic string (SSTI)",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.py"
+      ],
+      "remediation": "Render fixed template files and pass user data as context variables; never build template source from input.",
+      "pattern": "render_template_string\\(|jinja2\\.Template\\(\\s*(?![\\\"'])|Environment\\([^)]*\\)\\.from_string\\(",
+      "cwe": [
+        "CWE-1336"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-NOSQL-REQ-OBJECT",
+      "title": "Request object passed directly to NoSQL query",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.py"
+      ],
+      "remediation": "Validate and coerce types (e.g. String(req.body.user)), use a schema validator, and enable mongoose sanitizeFilter / express-mongo-sanitize.",
+      "pattern": "\\.(find|findOne|findOneAndUpdate|findOneAndDelete|updateOne|updateMany|deleteOne|deleteMany|countDocuments|aggregate)\\(\\s*(req\\.(body|query|params)|request\\.(json|args|get_json\\(\\)))",
+      "cwe": [
+        "CWE-943"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-NOSQL-WHERE",
+      "title": "MongoDB $where / mapReduce JavaScript execution",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "injection",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs"
+      ],
+      "remediation": "Avoid $where and server-side JS; express the filter with query operators.",
+      "pattern": "[\\\"']?\\$where[\\\"']?\\s*:",
+      "cwe": [
+        "CWE-943"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-XXE-LXML",
+      "title": "XML parser with entity resolution enabled",
+      "severity": "high",
+      "confidence": "high",
+      "category": "injection",
+      "files": [
+        "*.py"
+      ],
+      "remediation": "Use defusedxml or lxml with resolve_entities=False, no_network=True.",
+      "pattern": "resolve_entities\\s*=\\s*True|XMLParser\\([^)]*load_dtd\\s*=\\s*True",
+      "cwe": [
+        "CWE-611"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "INJ-XXE-JAVA",
+      "title": "Java XML factory without XXE hardening",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "injection",
+      "files": [
+        "*.java",
+        "*.kt"
+      ],
+      "remediation": "Set disallow-doctype-decl=true (or disable external entities and DTD loading) and XMLConstants.FEATURE_SECURE_PROCESSING.",
+      "kind": "file",
+      "all_of": [
+        "(DocumentBuilderFactory|SAXParserFactory|XMLInputFactory|TransformerFactory|SchemaFactory)\\.newInstance\\("
+      ],
+      "none_of": [
+        "disallow-doctype-decl|IS_SUPPORTING_EXTERNAL_ENTITIES|ACCESS_EXTERNAL_DTD|external-general-entities"
+      ],
+      "cwe": [
+        "CWE-611"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "INJ-PATH-TRAVERSAL-JS",
+      "title": "Request data used in filesystem path (JS)",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "path-traversal",
+      "files": [
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte"
+      ],
+      "remediation": "Resolve against a fixed base directory, reject paths escaping it (path.resolve + startsWith check), or map IDs to files server-side.",
+      "pattern": "(sendFile|readFile|readFileSync|createReadStream|writeFile|writeFileSync|unlink|res\\.download|path\\.join|path\\.resolve)\\(.*req\\.(params|query|body|files)",
+      "cwe": [
+        "CWE-22"
+      ],
+      "owasp": [
+        "A01:2021"
+      ]
+    },
+    {
+      "id": "INJ-PATH-TRAVERSAL-PY",
+      "title": "Request data used in filesystem path (Python)",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "path-traversal",
+      "files": [
+        "*.py"
+      ],
+      "remediation": "Use werkzeug.utils.safe_join / send_from_directory, or resolve and verify the path stays under the base directory.",
+      "pattern": "(\\bopen|send_file|FileResponse|os\\.path\\.join|Path)\\(.*request\\.(args|form|values|files|GET|POST|query_params|path_params)",
+      "cwe": [
+        "CWE-22"
+      ],
+      "owasp": [
+        "A01:2021"
+      ]
+    },
+    {
+      "id": "INJ-PATH-TRAVERSAL-PHP",
+      "title": "User input in include/require or file function (PHP)",
+      "severity": "critical",
+      "confidence": "high",
+      "category": "path-traversal",
+      "files": [
+        "*.php"
+      ],
+      "remediation": "Never include files based on input; map to an allowlist of templates.",
+      "pattern": "\\b(include|include_once|require|require_once|file_get_contents|fopen|readfile|file)\\s*\\(?\\s*.*\\$_(GET|POST|REQUEST|COOKIE)",
+      "cwe": [
+        "CWE-98",
+        "CWE-22"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "INJ-SSRF-PY",
+      "title": "Outbound request to user-controlled URL (Python)",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "ssrf",
+      "files": [
+        "*.py"
+      ],
+      "remediation": "Validate the URL against an allowlist of hosts/schemes, resolve and block private/link-local ranges (incl. 169.254.169.254), disable redirects or re-validate them.",
+      "pattern": "(requests\\.(get|post|put|patch|delete|head|request)|httpx\\.(get|post|request|AsyncClient\\(\\)\\.get)|urlopen|urllib\\.request\\.Request)\\(.*request\\.(args|form|json|GET|POST|data|values|query_params)",
+      "cwe": [
+        "CWE-918"
+      ],
+      "owasp": [
+        "A10:2021"
+      ],
+      "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N"
+    },
+    {
+      "id": "INJ-SSRF-JS",
+      "title": "Outbound request to user-controlled URL (JS)",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "ssrf",
+      "files": [
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte"
+      ],
+      "remediation": "Validate URL against an allowlist, block internal address ranges after DNS resolution, and disable redirect following.",
+      "pattern": "\\b(fetch|axios(\\.(get|post|put|request))?|got|request|needle|superagent\\.get|https?\\.get)\\(\\s*(req\\.(query|body|params)|`[^`]*\\$\\{\\s*req\\.)",
+      "cwe": [
+        "CWE-918"
+      ],
+      "owasp": [
+        "A10:2021"
+      ],
+      "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N"
+    },
+    {
+      "id": "INJ-OPEN-REDIRECT",
+      "title": "Redirect to user-controlled location",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "open-redirect",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs"
+      ],
+      "remediation": "Redirect only to relative paths or an allowlist of hosts; reject scheme-relative (//) and backslash tricks.",
+      "pattern": "(\\bredirect|res\\.redirect|HttpResponseRedirect|sendRedirect|redirect_to|Redirect)\\(\\s*(req\\.(query|body|params)|request\\.(args|GET|POST|params|query_params)|params\\[)",
+      "cwe": [
+        "CWE-601"
+      ],
+      "owasp": [
+        "A01:2021"
+      ]
+    },
+    {
+      "id": "INJ-HEADER-CRLF",
+      "title": "User input written into response header",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "injection",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.java",
+        "*.kt",
+        "*.go",
+        "*.php",
+        "*.rb",
+        "*.erb",
+        "*.cs",
+        "*.cshtml",
+        "*.rs"
+      ],
+      "remediation": "Validate header values; reject CR/LF; prefer framework APIs that encode headers.",
+      "pattern": "(setHeader|set_header|header|addHeader|res\\.set)\\(\\s*[\\\"'][\\w-]+[\\\"']\\s*,\\s*(req\\.(query|body|params|headers)|request\\.(args|GET|headers))",
+      "cwe": [
+        "CWE-113"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    }
+  ]
+}

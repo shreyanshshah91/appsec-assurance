@@ -1,0 +1,11 @@
+{
+  "name": "appsec-assurance",
+  "owner": { "name": "appsec-assurance contributors" },
+  "plugins": [
+    {
+      "name": "appsec-assurance",
+      "source": "./",
+      "description": "Evidence-driven application security audit and hardening skill for Claude Code."
+    }
+  ]
+}

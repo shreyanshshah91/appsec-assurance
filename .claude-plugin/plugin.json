@@ -1,0 +1,10 @@
+{
+  "name": "appsec-assurance",
+  "version": "1.0.0",
+  "description": "Evidence-driven application security audit and hardening skill: SAST, SCA, secrets, IaC, CI/CD and supply-chain checks, threat modeling, safe validation, and Markdown/JSON/SARIF reports.",
+  "author": { "name": "appsec-assurance contributors" },
+  "homepage": "https://github.com/OWNER/appsec-assurance",
+  "repository": "https://github.com/OWNER/appsec-assurance",
+  "license": "MIT",
+  "keywords": ["security", "appsec", "sast", "sca", "owasp", "threat-modeling", "devsecops", "sarif"]
+}

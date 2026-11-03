@@ -1,0 +1,517 @@
+{
+  "pack": "iac",
+  "version": "1.0.0",
+  "description": "Built-in iac rules for appsec-assurance.",
+  "rules": [
+    {
+      "id": "IAC-DOCKER-NO-USER",
+      "title": "Container runs as root (no non-root USER)",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "container",
+      "files": [
+        "Dockerfile",
+        "Dockerfile.*",
+        "*.Dockerfile",
+        "*.dockerfile",
+        "Containerfile"
+      ],
+      "remediation": "Add a non-root user and `USER <uid>` in the final stage; combine with runAsNonRoot in Kubernetes.",
+      "kind": "file",
+      "status": "missing-control",
+      "all_of": [
+        "^\\s*FROM\\s"
+      ],
+      "none_of": [
+        "^\\s*USER\\s+(?!root\\b|0\\b|0:)\\S+"
+      ],
+      "cwe": [
+        "CWE-250"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "IAC-DOCKER-UNPINNED-BASE",
+      "title": "Base image unpinned or :latest",
+      "severity": "low",
+      "confidence": "low",
+      "category": "container",
+      "files": [
+        "Dockerfile",
+        "Dockerfile.*",
+        "*.Dockerfile",
+        "*.dockerfile",
+        "Containerfile"
+      ],
+      "remediation": "Pin base images to a version tag and digest (image:tag@sha256:...); update via Dependabot/Renovate.",
+      "pattern": "^\\s*FROM\\s+(--platform=\\S+\\s+)?(?!scratch\\b)[^\\s:@]+(:latest)?(\\s+(AS|as)\\s+\\S+)?\\s*$",
+      "cwe": [
+        "CWE-1357"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "IAC-DOCKER-ADD-REMOTE",
+      "title": "ADD fetches remote URL",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "container",
+      "files": [
+        "Dockerfile",
+        "Dockerfile.*",
+        "*.Dockerfile",
+        "*.dockerfile",
+        "Containerfile"
+      ],
+      "remediation": "Download with curl/wget and verify a checksum or signature, or COPY vendored artifacts.",
+      "pattern": "^\\s*ADD\\s+(--\\S+\\s+)*https?://",
+      "cwe": [
+        "CWE-494"
+      ],
+      "owasp": [
+        "A08:2021"
+      ]
+    },
+    {
+      "id": "IAC-DOCKER-SECRET-IN-LAYER",
+      "title": "Secret passed via ENV/ARG in image",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "secrets",
+      "files": [
+        "Dockerfile",
+        "Dockerfile.*",
+        "*.Dockerfile",
+        "*.dockerfile",
+        "Containerfile"
+      ],
+      "remediation": "Use BuildKit secrets (RUN --mount=type=secret) and inject runtime secrets via the orchestrator.",
+      "pattern": "^\\s*(ENV|ARG)\\s+\\w*(PASSWORD|PASSWD|SECRET|TOKEN|API_KEY|APIKEY|PRIVATE_KEY|ACCESS_KEY)\\w*(\\s*=\\s*|\\s+)(?!\\$)\\S+",
+      "cwe": [
+        "CWE-798",
+        "CWE-538"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "IAC-DOCKER-SOCKET-MOUNT",
+      "title": "Docker socket mounted into container",
+      "severity": "high",
+      "confidence": "high",
+      "category": "container",
+      "files": [
+        "*.yml",
+        "*.yaml",
+        "Dockerfile",
+        "Dockerfile.*",
+        "*.Dockerfile",
+        "*.dockerfile",
+        "Containerfile",
+        "*.json"
+      ],
+      "remediation": "Do not mount /var/run/docker.sock; it grants root on the host. Use rootless builders (BuildKit/kaniko).",
+      "pattern": "/var/run/docker\\.sock",
+      "cwe": [
+        "CWE-250"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "IAC-PRIVILEGED-CONTAINER",
+      "title": "Privileged container",
+      "severity": "high",
+      "confidence": "high",
+      "category": "container",
+      "files": [
+        "*.yml",
+        "*.yaml",
+        "*.json",
+        "*.tf"
+      ],
+      "remediation": "Remove privileged mode; grant only specific capabilities if strictly needed.",
+      "pattern": "\\bprivileged\\s*[:=]\\s*true\\b",
+      "cwe": [
+        "CWE-250"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "IAC-K8S-HOST-NAMESPACE",
+      "title": "Pod shares host network/PID/IPC namespace",
+      "severity": "high",
+      "confidence": "high",
+      "category": "kubernetes",
+      "files": [
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Remove hostNetwork/hostPID/hostIPC unless it is a vetted node-level agent.",
+      "pattern": "\\bhost(Network|PID|IPC)\\s*:\\s*true\\b",
+      "cwe": [
+        "CWE-250"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "IAC-K8S-PRIV-ESCALATION",
+      "title": "allowPrivilegeEscalation enabled",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "kubernetes",
+      "files": [
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Set allowPrivilegeEscalation: false.",
+      "pattern": "allowPrivilegeEscalation\\s*:\\s*true",
+      "cwe": [
+        "CWE-250"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "IAC-K8S-RUN-AS-ROOT",
+      "title": "Container explicitly runs as root",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "kubernetes",
+      "files": [
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Set runAsNonRoot: true and a non-zero runAsUser.",
+      "pattern": "runAsUser\\s*:\\s*0\\b|runAsNonRoot\\s*:\\s*false",
+      "cwe": [
+        "CWE-250"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "IAC-K8S-HOSTPATH",
+      "title": "hostPath volume",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "kubernetes",
+      "files": [
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Avoid hostPath; use PersistentVolumes or emptyDir. If required, mount read-only and narrowly.",
+      "pattern": "^\\s*hostPath\\s*:",
+      "cwe": [
+        "CWE-668"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "IAC-K8S-DANGEROUS-CAPS",
+      "title": "Dangerous Linux capabilities added",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "kubernetes",
+      "files": [
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Drop ALL capabilities and add back only the minimum (e.g. NET_BIND_SERVICE).",
+      "pattern": "add\\s*:\\s*\\[[^\\]]*\\b(SYS_ADMIN|NET_ADMIN|SYS_PTRACE|SYS_MODULE|DAC_READ_SEARCH|ALL)\\b",
+      "cwe": [
+        "CWE-250"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "IAC-K8S-NO-SECURITY-CONTEXT",
+      "title": "Workload without runAsNonRoot",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "kubernetes",
+      "files": [
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Set securityContext: runAsNonRoot: true, readOnlyRootFilesystem: true, allowPrivilegeEscalation: false, capabilities.drop: [ALL], seccompProfile RuntimeDefault.",
+      "kind": "file",
+      "status": "missing-control",
+      "all_of": [
+        "^kind:\\s*(Deployment|Pod|StatefulSet|DaemonSet|Job|CronJob|ReplicaSet)\\s*$"
+      ],
+      "none_of": [
+        "runAsNonRoot\\s*:\\s*true"
+      ],
+      "cwe": [
+        "CWE-250"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "IAC-K8S-NO-RESOURCE-LIMITS",
+      "title": "Workload without resource limits",
+      "severity": "low",
+      "confidence": "medium",
+      "category": "kubernetes",
+      "files": [
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Set CPU/memory requests and limits to contain resource exhaustion.",
+      "kind": "file",
+      "status": "missing-control",
+      "all_of": [
+        "^kind:\\s*(Deployment|Pod|StatefulSet|DaemonSet|Job|CronJob|ReplicaSet)\\s*$",
+        "^\\s*containers\\s*:"
+      ],
+      "none_of": [
+        "^\\s*limits\\s*:"
+      ],
+      "cwe": [
+        "CWE-770"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "IAC-K8S-RBAC-WILDCARD",
+      "title": "Kubernetes RBAC wildcard",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "kubernetes",
+      "files": [
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Grant explicit verbs/resources; avoid '*' and cluster-admin bindings for workloads.",
+      "pattern": "(verbs|resources|apiGroups)\\s*:\\s*\\[\\s*[\\\"']?\\*[\\\"']?\\s*\\]|^\\s*-\\s*[\\\"']\\*[\\\"']\\s*$|name:\\s*cluster-admin\\b",
+      "cwe": [
+        "CWE-269"
+      ],
+      "owasp": [
+        "A01:2021"
+      ]
+    },
+    {
+      "id": "IAC-K8S-SECRET-MANIFEST",
+      "title": "Kubernetes Secret manifest committed",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "secrets",
+      "files": [
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Base64 is not encryption. Use External Secrets, Sealed Secrets, SOPS or the cloud secret store CSI driver.",
+      "kind": "file",
+      "all_of": [
+        "^kind:\\s*Secret\\s*$",
+        "^(data|stringData)\\s*:"
+      ],
+      "cwe": [
+        "CWE-312"
+      ],
+      "owasp": [
+        "A02:2021"
+      ]
+    },
+    {
+      "id": "IAC-TF-OPEN-INGRESS",
+      "title": "Network rule open to the internet (0.0.0.0/0 or ::/0)",
+      "severity": "medium",
+      "confidence": "medium",
+      "category": "cloud",
+      "files": [
+        "*.tf",
+        "*.json",
+        "*.yml",
+        "*.yaml",
+        "*.bicep"
+      ],
+      "remediation": "Restrict source ranges to known CIDRs; never expose SSH/RDP/DB ports publicly; put services behind a load balancer/WAF.",
+      "pattern": "cidr_blocks\\s*=\\s*\\[[^\\]]*\\\"0\\.0\\.0\\.0/0\\\"|ipv6_cidr_blocks\\s*=\\s*\\[[^\\]]*\\\"::/0\\\"|source_address_prefix\\s*=\\s*\\\"(\\*|0\\.0\\.0\\.0/0|Internet)\\\"|source_ranges\\s*=\\s*\\[[^\\]]*\\\"0\\.0\\.0\\.0/0\\\"|CidrIp\\\"?\\s*:\\s*\\\"?0\\.0\\.0\\.0/0",
+      "negative": "egress",
+      "cwe": [
+        "CWE-284"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "IAC-TF-PUBLIC-BUCKET",
+      "title": "Object storage publicly accessible",
+      "severity": "high",
+      "confidence": "high",
+      "category": "cloud",
+      "files": [
+        "*.tf",
+        "*.json",
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Enable S3 Block Public Access (all four settings), remove public ACLs, and serve public content via CloudFront with OAC.",
+      "pattern": "acl\\s*=\\s*\\\"public-read(-write)?\\\"|(block_public_acls|block_public_policy|ignore_public_acls|restrict_public_buckets)\\s*=\\s*false|AccessControl\\\"?\\s*:\\s*\\\"?Public(Read|ReadWrite)|allUsers|allAuthenticatedUsers",
+      "cwe": [
+        "CWE-284"
+      ],
+      "owasp": [
+        "A01:2021"
+      ]
+    },
+    {
+      "id": "IAC-IAM-WILDCARD",
+      "title": "IAM policy with wildcard action",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "cloud",
+      "files": [
+        "*.tf",
+        "*.json",
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Grant least-privilege actions on specific resources; use IAM Access Analyzer to generate policies.",
+      "pattern": "\\\"Action\\\"\\s*:\\s*(\\\"\\*\\\"|\\[\\s*\\\"\\*\\\"\\s*\\])|actions\\s*=\\s*\\[\\s*\\\"\\*\\\"\\s*\\]|^\\s*Action\\s*:\\s*[\\\"']?\\*[\\\"']?\\s*$|\\\"Action\\\"\\s*:\\s*\\\"[a-z0-9]+:\\*\\\"",
+      "cwe": [
+        "CWE-269"
+      ],
+      "owasp": [
+        "A01:2021"
+      ]
+    },
+    {
+      "id": "IAC-DB-PUBLICLY-ACCESSIBLE",
+      "title": "Database publicly accessible",
+      "severity": "high",
+      "confidence": "high",
+      "category": "cloud",
+      "files": [
+        "*.tf",
+        "*.json",
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Set publicly_accessible = false and place databases in private subnets.",
+      "pattern": "publicly_accessible\\s*=\\s*true|\\\"?PubliclyAccessible\\\"?\\s*:\\s*\\\"?true",
+      "cwe": [
+        "CWE-284"
+      ],
+      "owasp": [
+        "A05:2021"
+      ]
+    },
+    {
+      "id": "IAC-ENCRYPTION-DISABLED",
+      "title": "Encryption at rest or key rotation disabled",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "cloud",
+      "files": [
+        "*.tf",
+        "*.json",
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Enable encryption at rest with KMS CMKs and automatic key rotation.",
+      "pattern": "\\b(storage_encrypted|encrypted|enable_key_rotation|encryption_enabled|kms_encryption)\\s*=\\s*false|\\\"?(StorageEncrypted|Encrypted)\\\"?\\s*:\\s*\\\"?false",
+      "cwe": [
+        "CWE-311"
+      ],
+      "owasp": [
+        "A02:2021"
+      ]
+    },
+    {
+      "id": "IAC-IMDSV1-ALLOWED",
+      "title": "EC2 instance metadata v1 allowed",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "cloud",
+      "files": [
+        "*.tf",
+        "*.json",
+        "*.yml",
+        "*.yaml"
+      ],
+      "remediation": "Require IMDSv2: http_tokens = \"required\" (limits SSRF-to-credential theft).",
+      "pattern": "http_tokens\\s*=\\s*\\\"optional\\\"|HttpTokens\\\"?\\s*:\\s*\\\"?optional",
+      "cwe": [
+        "CWE-918"
+      ],
+      "owasp": [
+        "A10:2021"
+      ]
+    },
+    {
+      "id": "IAC-HARDCODED-PASSWORD",
+      "title": "Hardcoded password in infrastructure code",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "secrets",
+      "files": [
+        "*.tf",
+        "*.tfvars",
+        "*.yml",
+        "*.yaml",
+        "*.json",
+        "*.bicep"
+      ],
+      "remediation": "Use a secrets manager reference or a generated random_password; mark variables sensitive.",
+      "pattern": "(?i)\\b(password|master_password|admin_password|db_password|root_password)\\s*[=:]\\s*\\\"(?P<secret>[^\\\"$\\{]{4,})\\\"",
+      "secret": true,
+      "exclude_files": [
+        "package-lock.json",
+        "*.lock"
+      ],
+      "cwe": [
+        "CWE-798"
+      ],
+      "owasp": [
+        "A07:2021"
+      ]
+    },
+    {
+      "id": "IAC-TF-STATE-COMMITTED",
+      "title": "Terraform state file in repository",
+      "severity": "high",
+      "confidence": "high",
+      "category": "secrets",
+      "files": [
+        "*.tfstate",
+        "*.tfstate.backup"
+      ],
+      "remediation": "Remove state from git (it contains secrets in plaintext); use an encrypted remote backend with locking.",
+      "kind": "file",
+      "all_of": [
+        "\\\"(version|terraform_version)\\\""
+      ],
+      "cwe": [
+        "CWE-312"
+      ],
+      "owasp": [
+        "A02:2021"
+      ]
+    }
+  ]
+}

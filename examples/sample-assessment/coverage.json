@@ -1,0 +1,290 @@
+[
+  {
+    "area": "authentication",
+    "check": "Authentication flows: login, reset, MFA, session lifecycle (checklists/authentication.md, session-jwt-oauth.md)",
+    "findings": 0,
+    "kind": "manual",
+    "reason": "requires analyst review (SKILL.md phases 3-7)",
+    "status": "skipped"
+  },
+  {
+    "area": "authorization",
+    "check": "Object/function-level authorization (BOLA/IDOR/BFLA) on every route - requires code tracing (checklists/authorization.md)",
+    "findings": 0,
+    "kind": "manual",
+    "reason": "requires analyst review (SKILL.md phases 3-7)",
+    "status": "skipped"
+  },
+  {
+    "area": "business-logic",
+    "check": "Business logic, race conditions and transaction integrity (checklists/business-logic-and-race-conditions.md)",
+    "findings": 0,
+    "kind": "manual",
+    "reason": "requires analyst review (SKILL.md phases 3-7)",
+    "status": "skipped"
+  },
+  {
+    "area": "cicd",
+    "check": "zizmor",
+    "findings": 0,
+    "kind": "tool",
+    "reason": "--no-tools given",
+    "status": "skipped"
+  },
+  {
+    "area": "data-flow",
+    "check": "Source-to-sink data-flow tracing across components",
+    "findings": 0,
+    "kind": "manual",
+    "reason": "requires analyst review (SKILL.md phases 3-7)",
+    "status": "skipped"
+  },
+  {
+    "area": "iac",
+    "check": "checkov",
+    "findings": 0,
+    "kind": "tool",
+    "reason": "--no-tools given",
+    "status": "skipped"
+  },
+  {
+    "area": "iac",
+    "check": "hadolint",
+    "findings": 0,
+    "kind": "tool",
+    "reason": "--no-tools given",
+    "status": "skipped"
+  },
+  {
+    "area": "inventory",
+    "check": "attack-surface-inventory",
+    "findings": 0,
+    "kind": "builtin",
+    "reason": "",
+    "status": "ran"
+  },
+  {
+    "area": "privacy",
+    "check": "Data classification, retention, backups and disaster recovery (checklists/privacy-and-data-protection.md)",
+    "findings": 0,
+    "kind": "manual",
+    "reason": "requires analyst review (SKILL.md phases 3-7)",
+    "status": "skipped"
+  },
+  {
+    "area": "rules",
+    "check": "pack:auth",
+    "findings": 3,
+    "kind": "builtin",
+    "reason": "10 rules, 0 unreadable files",
+    "status": "ran"
+  },
+  {
+    "area": "rules",
+    "check": "pack:cicd",
+    "findings": 4,
+    "kind": "builtin",
+    "reason": "8 rules, 0 unreadable files",
+    "status": "ran"
+  },
+  {
+    "area": "rules",
+    "check": "pack:config",
+    "findings": 6,
+    "kind": "builtin",
+    "reason": "14 rules, 0 unreadable files",
+    "status": "ran"
+  },
+  {
+    "area": "rules",
+    "check": "pack:crypto",
+    "findings": 2,
+    "kind": "builtin",
+    "reason": "9 rules, 0 unreadable files",
+    "status": "ran"
+  },
+  {
+    "area": "rules",
+    "check": "pack:deserialization",
+    "findings": 2,
+    "kind": "builtin",
+    "reason": "9 rules, 0 unreadable files",
+    "status": "ran"
+  },
+  {
+    "area": "rules",
+    "check": "pack:iac",
+    "findings": 16,
+    "kind": "builtin",
+    "reason": "23 rules, 0 unreadable files",
+    "status": "ran"
+  },
+  {
+    "area": "rules",
+    "check": "pack:injection",
+    "findings": 10,
+    "kind": "builtin",
+    "reason": "28 rules, 0 unreadable files",
+    "status": "ran"
+  },
+  {
+    "area": "rules",
+    "check": "pack:secrets",
+    "findings": 3,
+    "kind": "builtin",
+    "reason": "13 rules, 0 unreadable files",
+    "status": "ran"
+  },
+  {
+    "area": "rules",
+    "check": "pack:supply-chain",
+    "findings": 9,
+    "kind": "builtin",
+    "reason": "13 rules, 0 unreadable files",
+    "status": "ran"
+  },
+  {
+    "area": "rules",
+    "check": "pack:xss",
+    "findings": 2,
+    "kind": "builtin",
+    "reason": "13 rules, 0 unreadable files",
+    "status": "ran"
+  },
+  {
+    "area": "runtime",
+    "check": "Runtime behaviour, deployed configuration and infrastructure state (needs authorized DAST/cloud review)",
+    "findings": 0,
+    "kind": "manual",
+    "reason": "requires analyst review (SKILL.md phases 3-7)",
+    "status": "skipped"
+  },
+  {
+    "area": "sast",
+    "check": "bandit",
+    "findings": 0,
+    "kind": "tool",
+    "reason": "--no-tools given",
+    "status": "skipped"
+  },
+  {
+    "area": "sast",
+    "check": "brakeman",
+    "findings": 0,
+    "kind": "tool",
+    "reason": "--no-tools given",
+    "status": "skipped"
+  },
+  {
+    "area": "sast",
+    "check": "gosec",
+    "findings": 0,
+    "kind": "tool",
+    "reason": "--no-tools given",
+    "status": "skipped"
+  },
+  {
+    "area": "sast",
+    "check": "semgrep",
+    "findings": 0,
+    "kind": "tool",
+    "reason": "--no-tools given",
+    "status": "skipped"
+  },
+  {
+    "area": "sca",
+    "check": "known-vulnerability-lookup",
+    "findings": 0,
+    "kind": "builtin",
+    "reason": "no SCA source ran - dependency CVEs were NOT checked. Install osv-scanner/trivy or use --osv-api.",
+    "status": "unavailable"
+  },
+  {
+    "area": "sca",
+    "check": "osv-api",
+    "findings": 0,
+    "kind": "builtin",
+    "reason": "opt-in: pass --osv-api (sends package names/versions to api.osv.dev)",
+    "status": "skipped"
+  },
+  {
+    "area": "sca",
+    "check": "govulncheck",
+    "findings": 0,
+    "kind": "tool",
+    "reason": "--no-tools given",
+    "status": "skipped"
+  },
+  {
+    "area": "sca",
+    "check": "npm-audit",
+    "findings": 0,
+    "kind": "tool",
+    "reason": "--no-tools given",
+    "status": "skipped"
+  },
+  {
+    "area": "sca",
+    "check": "osv-scanner",
+    "findings": 0,
+    "kind": "tool",
+    "reason": "--no-tools given",
+    "status": "skipped"
+  },
+  {
+    "area": "sca",
+    "check": "pip-audit",
+    "findings": 0,
+    "kind": "tool",
+    "reason": "--no-tools given",
+    "status": "skipped"
+  },
+  {
+    "area": "sca+iac",
+    "check": "trivy",
+    "findings": 0,
+    "kind": "tool",
+    "reason": "--no-tools given",
+    "status": "skipped"
+  },
+  {
+    "area": "secrets",
+    "check": "git-tracked-sensitive-files",
+    "findings": 0,
+    "kind": "builtin",
+    "reason": "not a git repository",
+    "status": "not-applicable"
+  },
+  {
+    "area": "secrets",
+    "check": "gitleaks",
+    "findings": 0,
+    "kind": "tool",
+    "reason": "--no-tools given",
+    "status": "skipped"
+  },
+  {
+    "area": "supply-chain",
+    "check": "installed-npm-install-hooks",
+    "findings": 0,
+    "kind": "builtin",
+    "reason": "runs in deep mode only (mode=comprehensive)",
+    "status": "skipped"
+  },
+  {
+    "area": "supply-chain",
+    "check": "lockfiles+typosquat-heuristic",
+    "findings": 3,
+    "kind": "builtin",
+    "reason": "",
+    "status": "ran"
+  },
+  {
+    "area": "threat-model",
+    "check": "Threat model and attack-path chaining (references/threat-modeling.md)",
+    "findings": 0,
+    "kind": "manual",
+    "reason": "requires analyst review (SKILL.md phases 3-7)",
+    "status": "skipped"
+  }
+]

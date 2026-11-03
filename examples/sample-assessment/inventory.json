@@ -1,0 +1,245 @@
+{
+  "items": {
+    "auth": [
+      {
+        "code": "const jwt = ********\"jsonwebtoken\");",
+        "line": 3,
+        "path": "server.js"
+      },
+      {
+        "code": "const claims = jwt.\u2026[redacted 37 chars];",
+        "line": 25,
+        "path": "server.js"
+      },
+      {
+        "code": "const token = jwt.\u2026[redacted 10 chars] id: 1 }, \"hard\u2026[redacted 26 chars]\");",
+        "line": 26,
+        "path": "server.js"
+      }
+    ],
+    "ci-pipeline": [
+      {
+        "path": ".github/workflows/ci.yml"
+      }
+    ],
+    "crypto": [
+      {
+        "code": "res.json({ claims, token, sid: Math\u2026[redacted 26 chars] });",
+        "line": 27,
+        "path": "server.js"
+      }
+    ],
+    "db-query": [
+      {
+        "code": "return str(conn.execute(f\"SELECT * FROM users WHERE id = *****\").fetchall())",
+        "line": 19,
+        "path": "app.py"
+      },
+      {
+        "code": "return conn.execute(\"SELECT * FROM users WHERE id = ?\", (uid,)).fetchall()",
+        "line": 8,
+        "path": "safe.py"
+      },
+      {
+        "code": "db.query(`SELECT * FROM items WHERE name = '${re\u2026[redacted 14 chars]'`, (e, rows) => res.json(rows));",
+        "line": 8,
+        "path": "server.js"
+      }
+    ],
+    "deserialization": [
+      {
+        "code": "return str(pickle.loads(request.data))",
+        "line": 45,
+        "path": "app.py"
+      },
+      {
+        "code": "return str(yaml.load(request.data))",
+        "line": 50,
+        "path": "app.py"
+      }
+    ],
+    "dockerfile": [
+      {
+        "path": "Dockerfile"
+      }
+    ],
+    "env-file": [
+      {
+        "path": ".env"
+      }
+    ],
+    "file-access": [
+      {
+        "code": "return open(os.path.join(\"files\", request.args[\"name\"])).read()",
+        "line": 55,
+        "path": "app.py"
+      },
+      {
+        "code": "app.get(\"/file\", (req, res) => res.sendFile(req.query.path));",
+        "line": 30,
+        "path": "server.js"
+      }
+    ],
+    "http-route": [
+      {
+        "code": "@app.route(\"/user\")",
+        "line": 15,
+        "path": "app.py"
+      },
+      {
+        "code": "@app.route(\"/ping\")",
+        "line": 22,
+        "path": "app.py"
+      },
+      {
+        "code": "@app.route(\"/hello\")",
+        "line": 28,
+        "path": "app.py"
+      },
+      {
+        "code": "@app.route(\"/fetch\")",
+        "line": 33,
+        "path": "app.py"
+      },
+      {
+        "code": "@app.route(\"/go\")",
+        "line": 38,
+        "path": "app.py"
+      },
+      {
+        "code": "@app.route(\"/load\", methods=[\"POST\"])",
+        "line": 43,
+        "path": "app.py"
+      },
+      {
+        "code": "@app.route(\"/config\", methods=[\"POST\"])",
+        "line": 48,
+        "path": "app.py"
+      },
+      {
+        "code": "@app.route(\"/download\")",
+        "line": 53,
+        "path": "app.py"
+      },
+      {
+        "code": "app.get(\"/search\", (req, res) => {",
+        "line": 7,
+        "path": "server.js"
+      },
+      {
+        "code": "app.get(\"/convert\", (req, res) => {",
+        "line": 11,
+        "path": "server.js"
+      },
+      {
+        "code": "app.get(\"/profile\", (req, res) => {",
+        "line": 15,
+        "path": "server.js"
+      },
+      {
+        "code": "app.post(\"/users\", async (req, res) => {",
+        "line": 19,
+        "path": "server.js"
+      },
+      {
+        "code": "app.get(\"/me\", (req, res) => {",
+        "line": 24,
+        "path": "server.js"
+      },
+      {
+        "code": "app.get(\"/file\", (req, res) => res.sendFile(req.query.path));",
+        "line": 30,
+        "path": "server.js"
+      }
+    ],
+    "outbound-http": [
+      {
+        "code": "def fetch():",
+        "line": 34,
+        "path": "app.py"
+      },
+      {
+        "code": "return requests.get(request.args[\"url\"], timeout=*******",
+        "line": 35,
+        "path": "app.py"
+      },
+      {
+        "code": "requests.get(\"https://in\u2026[redacted 18 chars]\", verify=******",
+        "line": 59,
+        "path": "app.py"
+      }
+    ],
+    "redirect": [
+      {
+        "code": "return redirect(request.args.get(\"next\"))",
+        "line": 40,
+        "path": "app.py"
+      }
+    ],
+    "subprocess": [
+      {
+        "code": "return subprocess.check_output(\"ping -c 1 \" + host, shell=*****",
+        "line": 25,
+        "path": "app.py"
+      },
+      {
+        "code": "return subprocess.run([\"ls\", \"-l\", path], check=****, capture_output=*****",
+        "line": 12,
+        "path": "safe.py"
+      },
+      {
+        "code": "const { exec } = ********\"child_process\");",
+        "line": 2,
+        "path": "server.js"
+      }
+    ],
+    "template-render": [
+      {
+        "code": "from flask import Flask, request, render_template_string, redirect",
+        "line": 8,
+        "path": "app.py"
+      },
+      {
+        "code": "return render_template_string(\"<h1>Hello \" + request.args.get(\"name\", \"\") + \"</h1>\")",
+        "line": 30,
+        "path": "app.py"
+      },
+      {
+        "code": "document.getElementById(\"out\").innerHTML = para\u2026[redacted 11 chars]\"msg\");",
+        "line": 2,
+        "path": "public/app.js"
+      }
+    ],
+    "terraform": [
+      {
+        "path": "infra/main.tf"
+      }
+    ]
+  },
+  "summary": {
+    "auth": 3,
+    "ci-pipeline": 1,
+    "crypto": 1,
+    "db-query": 3,
+    "deserialization": 2,
+    "dockerfile": 1,
+    "env-file": 1,
+    "file-access": 2,
+    "http-route": 14,
+    "outbound-http": 3,
+    "redirect": 1,
+    "subprocess": 3,
+    "template-render": 3,
+    "terraform": 1
+  },
+  "truncated": {},
+  "trust_boundary_hints": [
+    "Client -> server API boundary: every route/resolver needs authn + object/function-level authz review.",
+    "Application -> datastore boundary: verify parameterization and least-privilege DB credentials.",
+    "Server -> external network boundary: check SSRF controls, TLS verification, timeouts, and unsafe consumption of third-party responses.",
+    "Application -> OS boundary: verify no untrusted input reaches shell/exec arguments.",
+    "Application -> filesystem boundary: path traversal, upload validation, storage outside webroot.",
+    "Untrusted data -> object graph boundary: deserialization of attacker-controlled bytes.",
+    "Contributor -> CI -> cloud/registry boundary: workflow triggers, token permissions, secret exposure."
+  ]
+}

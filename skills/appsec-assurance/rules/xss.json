@@ -1,0 +1,331 @@
+{
+  "pack": "xss",
+  "version": "1.0.0",
+  "description": "Built-in xss rules for appsec-assurance.",
+  "rules": [
+    {
+      "id": "XSS-REACT-DANGEROUS-HTML",
+      "title": "dangerouslySetInnerHTML usage",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "xss",
+      "files": [
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte"
+      ],
+      "remediation": "Render as text, or sanitize with a maintained sanitizer (e.g. DOMPurify) immediately before insertion.",
+      "pattern": "dangerouslySetInnerHTML",
+      "negative": "DOMPurify|sanitize",
+      "cwe": [
+        "CWE-79"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "XSS-DOM-INNERHTML",
+      "title": "Assignment to innerHTML/outerHTML",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "xss",
+      "files": [
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.html",
+        "*.htm",
+        "*.j2",
+        "*.jinja",
+        "*.jinja2",
+        "*.njk",
+        "*.hbs",
+        "*.ejs"
+      ],
+      "remediation": "Use textContent or DOM APIs; sanitize HTML with DOMPurify when markup is required; adopt Trusted Types.",
+      "pattern": "\\.(innerHTML|outerHTML)\\s*\\+?=(?!=)|insertAdjacentHTML\\(",
+      "negative": "DOMPurify|sanitize|=\\s*[\\\"'`][^\\\"'`$+]*[\\\"'`]\\s*;?\\s*$",
+      "cwe": [
+        "CWE-79"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "XSS-DOCUMENT-WRITE",
+      "title": "document.write usage",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "xss",
+      "files": [
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.html",
+        "*.htm",
+        "*.j2",
+        "*.jinja",
+        "*.jinja2",
+        "*.njk",
+        "*.hbs",
+        "*.ejs"
+      ],
+      "remediation": "Replace with DOM construction APIs.",
+      "pattern": "document\\.write(ln)?\\(",
+      "cwe": [
+        "CWE-79"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "XSS-VUE-V-HTML",
+      "title": "Vue v-html directive",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "xss",
+      "files": [
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.html",
+        "*.htm",
+        "*.j2",
+        "*.jinja",
+        "*.jinja2",
+        "*.njk",
+        "*.hbs",
+        "*.ejs"
+      ],
+      "remediation": "Use text interpolation or sanitize the HTML first.",
+      "pattern": "\\bv-html\\s*=",
+      "cwe": [
+        "CWE-79"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "XSS-ANGULAR-BYPASS",
+      "title": "Angular DomSanitizer bypass",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "xss",
+      "files": [
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte"
+      ],
+      "remediation": "Avoid bypassSecurityTrust*; sanitize input and let Angular's contextual escaping work.",
+      "pattern": "bypassSecurityTrust(Html|Script|Style|Url|ResourceUrl)\\(",
+      "cwe": [
+        "CWE-79"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "XSS-TEMPLATE-SAFE-FILTER",
+      "title": "Auto-escaping bypassed in server template",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "xss",
+      "files": [
+        "*.py",
+        "*.html",
+        "*.htm",
+        "*.j2",
+        "*.jinja",
+        "*.jinja2",
+        "*.njk",
+        "*.hbs",
+        "*.ejs"
+      ],
+      "remediation": "Remove |safe / mark_safe / Markup on data derived from users; sanitize with bleach/nh3 when HTML is required.",
+      "pattern": "\\|\\s*safe\\b|\\bmark_safe\\(|\\bMarkup\\(|\\{%\\s*autoescape\\s+(false|off)\\s*%\\}",
+      "cwe": [
+        "CWE-79"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "XSS-AUTOESCAPE-DISABLED",
+      "title": "Template auto-escaping disabled",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "xss",
+      "files": [
+        "*.py",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte"
+      ],
+      "remediation": "Enable autoescape (jinja2 select_autoescape, Handlebars escaping, EJS <%= %>).",
+      "pattern": "autoescape\\s*=\\s*False|noEscape\\s*:\\s*true|escape\\s*:\\s*false",
+      "cwe": [
+        "CWE-79"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "XSS-EJS-UNESCAPED",
+      "title": "Unescaped EJS/Handlebars output",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "xss",
+      "files": [
+        "*.ejs",
+        "*.hbs",
+        "*.handlebars"
+      ],
+      "remediation": "Use escaped output (<%= %>, {{ }}) for user data.",
+      "pattern": "<%-\\s*(?!include)|\\{\\{\\{[^}]+\\}\\}\\}",
+      "cwe": [
+        "CWE-79"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "XSS-RAILS-RAW",
+      "title": "Rails html_safe / raw",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "xss",
+      "files": [
+        "*.rb",
+        "*.erb"
+      ],
+      "remediation": "Keep default escaping; use sanitize() with an allowlist if markup is needed.",
+      "pattern": "\\.html_safe\\b|(?<![\\w.])raw\\(|<%==",
+      "cwe": [
+        "CWE-79"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "XSS-BLADE-RAW",
+      "title": "Laravel Blade unescaped output",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "xss",
+      "files": [
+        "*.blade.php"
+      ],
+      "remediation": "Use {{ }} (escaped) for user data.",
+      "pattern": "\\{!!.+!!\\}",
+      "cwe": [
+        "CWE-79"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "XSS-RAZOR-RAW",
+      "title": "Razor Html.Raw",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "xss",
+      "files": [
+        "*.cs",
+        "*.cshtml"
+      ],
+      "remediation": "Avoid Html.Raw on user data; sanitize with HtmlSanitizer if markup is required.",
+      "pattern": "Html\\.Raw\\(",
+      "cwe": [
+        "CWE-79"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "XSS-GO-TEMPLATE-HTML",
+      "title": "Go template.HTML conversion bypasses escaping",
+      "severity": "medium",
+      "confidence": "low",
+      "category": "xss",
+      "files": [
+        "*.go"
+      ],
+      "remediation": "Only wrap trusted constants in template.HTML; ensure html/template (not text/template) renders HTML.",
+      "pattern": "template\\.(HTML|JS|URL|HTMLAttr)\\(",
+      "cwe": [
+        "CWE-79"
+      ],
+      "owasp": [
+        "A03:2021"
+      ]
+    },
+    {
+      "id": "XSS-REFLECTED-SEND",
+      "title": "Request data written directly to HTML response",
+      "severity": "high",
+      "confidence": "medium",
+      "category": "xss",
+      "files": [
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "*.vue",
+        "*.svelte",
+        "*.py"
+      ],
+      "remediation": "Encode output for the HTML context or render through an auto-escaping template; set Content-Type correctly.",
+      "pattern": "res\\.(send|write|end)\\(\\s*(`[^`]*\\$\\{\\s*req\\.(query|params|body)|[\\\"'][^\\\"']*<[^\\\"']*[\\\"']\\s*\\+\\s*req\\.)|return\\s+f?[\\\"'][^\\\"']*<[^\\\"']*\\{?\\s*request\\.(args|GET)",
+      "cwe": [
+        "CWE-79"
+      ],
+      "owasp": [
+        "A03:2021"
+      ],
+      "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N"
+    }
+  ]
+}

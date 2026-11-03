@@ -1,0 +1,16 @@
+# Continuous security review (Mode 5) for GitLab CI. Include from .gitlab-ci.yml.
+appsec:
+  stage: test
+  image: python:3.12-slim
+  variables:
+    APPSEC_REF: v1.0.0
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq git >/dev/null
+    - git clone --depth 1 --branch "$APPSEC_REF" https://github.com/OWNER/appsec-assurance.git /opt/appsec
+  script:
+    - python3 /opt/appsec/skills/appsec-assurance/scripts/appsec.py ci --baseline .appsec/baseline.json --fail-on high --out .appsec/out --mode continuous
+  artifacts:
+    when: always
+    paths: [.appsec/out/]
+    reports:
+      sast: .appsec/out/report.sarif

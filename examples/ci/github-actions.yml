@@ -1,0 +1,48 @@
+# Continuous security review (Mode 5) for GitHub Actions.
+# Copy to .github/workflows/appsec.yml in the target repository. Vendors the skill at a pinned commit.
+name: appsec
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 3 * * 1"
+permissions:
+  contents: read
+jobs:
+  appsec:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write   # upload SARIF to code scanning
+    steps:
+      - uses: actions/checkout@v4   # pin to a commit SHA in production
+      - uses: actions/checkout@v4
+        with:
+          repository: OWNER/appsec-assurance
+          ref: v1.0.0               # pin to a commit SHA in production
+          path: .appsec-skill
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Optional scanners
+        run: |
+          pipx install semgrep
+          curl -sSfL -o /tmp/osv https://github.com/google/osv-scanner/releases/latest/download/osv-scanner_linux_amd64
+          chmod +x /tmp/osv && sudo mv /tmp/osv /usr/local/bin/osv-scanner
+      - name: Scan and gate on new findings
+        run: |
+          python3 .appsec-skill/skills/appsec-assurance/scripts/appsec.py ci \
+            --baseline .appsec/baseline.json --fail-on high --out .appsec/out --mode continuous
+      - name: Upload SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: .appsec/out/report.sarif
+          category: appsec-assurance
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: appsec-report
+          path: .appsec/out/

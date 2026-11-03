@@ -1,0 +1,16 @@
+{"action": "scan.start", "config": null, "engine": "1.0.0", "mode": "comprehensive", "offline": true, "osv_api": false, "root": ".", "seq": 1}
+{"action": "files.enumerated", "included": 11, "seq": 2, "skipped": 0}
+{"action": "stack.detected", "ci": ["github-actions"], "frameworks": ["express", "flask"], "iac": ["kubernetes", "terraform"], "primary_languages": ["javascript", "python", "hcl"], "seq": 3}
+{"action": "inventory.built", "seq": 4, "summary": {"auth": 3, "ci-pipeline": 1, "crypto": 1, "db-query": 3, "deserialization": 2, "dockerfile": 1, "env-file": 1, "file-access": 2, "http-route": 14, "outbound-http": 3, "redirect": 1, "subprocess": 3, "template-render": 3, "terraform": 1}}
+{"action": "rules.pack", "findings": 3, "pack": "auth", "rules": 10, "seq": 5}
+{"action": "rules.pack", "findings": 4, "pack": "cicd", "rules": 8, "seq": 6}
+{"action": "rules.pack", "findings": 6, "pack": "config", "rules": 14, "seq": 7}
+{"action": "rules.pack", "findings": 2, "pack": "crypto", "rules": 9, "seq": 8}
+{"action": "rules.pack", "findings": 2, "pack": "deserialization", "rules": 9, "seq": 9}
+{"action": "rules.pack", "findings": 16, "pack": "iac", "rules": 23, "seq": 10}
+{"action": "rules.pack", "findings": 10, "pack": "injection", "rules": 28, "seq": 11}
+{"action": "rules.pack", "findings": 3, "pack": "secrets", "rules": 13, "seq": 12}
+{"action": "rules.pack", "findings": 9, "pack": "supply-chain", "rules": 13, "seq": 13}
+{"action": "rules.pack", "findings": 2, "pack": "xss", "rules": 13, "seq": 14}
+{"action": "scan.findings", "open": 60, "seq": 15, "total": 60}
+{"action": "scan.end", "seq": 16}

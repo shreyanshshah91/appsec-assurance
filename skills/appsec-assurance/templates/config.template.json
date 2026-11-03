@@ -1,0 +1,21 @@
+{
+  "_comment": "Copy to .appsec/config.json in the target repository. All keys optional. CLI flags override these values.",
+  "mode": "comprehensive",
+  "fail_on": "high",
+  "exclude": ["docs/*", "*/testdata/*"],
+  "include_default_excludes": true,
+  "max_file_size_kb": 1024,
+  "rule_packs": { "enabled": ["all"], "disabled": [] },
+  "disabled_rules": [],
+  "severity_overrides": { "SC-UNPINNED-PY-REQ": "info" },
+  "custom_rule_dirs": [".appsec/rules"],
+  "tools": {
+    "enabled": ["auto"],
+    "disabled": [],
+    "timeout_seconds": 900,
+    "semgrep": { "config": ["p/default"] }
+  },
+  "allow_network_tools": true,
+  "standards": ["owasp-top10-2021", "owasp-api-2023", "asvs-5", "cwe"],
+  "report": { "formats": ["md", "json", "sarif"] }
+}
