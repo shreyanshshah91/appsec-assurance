@@ -7,7 +7,7 @@
         "driver": {
           "name": "appsec-assurance",
           "version": "1.0.0",
-          "informationUri": "https://github.com/OWNER/appsec-assurance",
+          "informationUri": "https://github.com/shreyanshshah91/appsec-assurance",
           "rules": [
             {
               "id": "AUTH-JWT-DECODE-NO-VERIFY-JS",

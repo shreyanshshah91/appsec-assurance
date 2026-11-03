@@ -44,7 +44,7 @@ written down.
 ## Quick start
 
 ```bash
-git clone https://github.com/OWNER/appsec-assurance.git
+git clone https://github.com/shreyanshshah91/appsec-assurance.git
 cd appsec-assurance
 ./install.sh            # installs to ~/.claude/skills/appsec-assurance
 ```
@@ -61,7 +61,7 @@ Or invoke the skill directly: `/appsec-assurance deep`.
 |---|---|
 | Per-project (commit it for your team) | `./install.sh --project` → `.claude/skills/appsec-assurance` |
 | Symlink for skill development | `./install.sh --link` |
-| Claude Code plugin marketplace | `/plugin marketplace add OWNER/appsec-assurance` then `/plugin install appsec-assurance` |
+| Claude Code plugin marketplace | `/plugin marketplace add shreyanshshah91/appsec-assurance` then `/plugin install appsec-assurance` |
 | Manual | copy `skills/appsec-assurance/` to `~/.claude/skills/` |
 
 Check what is available in your environment:

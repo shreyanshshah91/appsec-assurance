@@ -6,7 +6,7 @@ appsec:
     APPSEC_REF: v1.0.0
   before_script:
     - apt-get update -qq && apt-get install -y -qq git >/dev/null
-    - git clone --depth 1 --branch "$APPSEC_REF" https://github.com/OWNER/appsec-assurance.git /opt/appsec
+    - git clone --depth 1 --branch "$APPSEC_REF" https://github.com/shreyanshshah91/appsec-assurance.git /opt/appsec
   script:
     - python3 /opt/appsec/skills/appsec-assurance/scripts/appsec.py ci --baseline .appsec/baseline.json --fail-on high --out .appsec/out --mode continuous
   artifacts:

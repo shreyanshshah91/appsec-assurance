@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/OWNER/appsec-assurance/schemas/manual-findings.schema.json",
+  "$id": "https://github.com/shreyanshshah91/appsec-assurance/schemas/manual-findings.schema.json",
   "title": "appsec-assurance manual review input",
   "description": "Validated by `appsec.py validate` (which also enforces cross-field rules: confirmed findings need validation_steps, n/a and untested checklist items need notes, every triage decision needs a reason).",
   "type": "object",

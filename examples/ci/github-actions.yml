@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4   # pin to a commit SHA in production
       - uses: actions/checkout@v4
         with:
-          repository: OWNER/appsec-assurance
+          repository: shreyanshshah91/appsec-assurance
           ref: v1.0.0               # pin to a commit SHA in production
           path: .appsec-skill
       - uses: actions/setup-python@v5

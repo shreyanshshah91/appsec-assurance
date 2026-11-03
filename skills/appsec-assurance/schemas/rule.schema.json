@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/OWNER/appsec-assurance/schemas/rule.schema.json",
+  "$id": "https://github.com/shreyanshshah91/appsec-assurance/schemas/rule.schema.json",
   "title": "appsec-assurance rule pack",
   "type": "object",
   "required": ["pack", "rules"],
