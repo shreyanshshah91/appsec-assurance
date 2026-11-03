@@ -1,4 +1,4 @@
 {
-  "_comment": "Self-scan configuration for this repository. tests/ holds deliberately vulnerable samples for rule tests, and rules/*.json holds regex definitions that describe the very patterns they detect; both are excluded so the gate measures the engine and docs, not the test data.",
-  "exclude": ["tests/*", "skills/appsec-assurance/rules/*"]
+  "_comment": "Self-scan configuration for this repository. tests/ holds deliberately vulnerable samples for rule tests; rules/*.json holds regex definitions that describe the very patterns they detect; examples/sample-assessment/ is generated scan output of the vulnerable fixture. All three are excluded so the gate measures the engine and docs, not test data.",
+  "exclude": ["tests/*", "skills/appsec-assurance/rules/*", "examples/sample-assessment/*"]
 }

@@ -27,4 +27,5 @@ See [docs/extending.md](docs/extending.md) for rules, adapters, standards, check
 ## Pull requests
 - Include tests and update `CHANGELOG.md`.
 - Keep `.claude-plugin/plugin.json` version in sync with `scripts/appsec/__init__.py` (a test enforces this).
-- CI runs the suite on Python 3.9–3.13 and scans this repository with the skill itself.
+- CI runs the suite on Python 3.10–3.14 and scans this repository with the skill itself. Python 3.9 is
+  still supported; run the suite locally with a 3.9 interpreter if you touch version-sensitive code.
