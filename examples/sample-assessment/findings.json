@@ -166,9 +166,9 @@
     {
       "area": "rules",
       "check": "pack:iac",
-      "findings": 16,
+      "findings": 15,
       "kind": "builtin",
-      "reason": "23 rules, 0 unreadable files",
+      "reason": "22 rules, 0 unreadable files",
       "status": "ran"
     },
     {
@@ -326,7 +326,7 @@
     {
       "area": "supply-chain",
       "check": "lockfiles+typosquat-heuristic",
-      "findings": 3,
+      "findings": 4,
       "kind": "builtin",
       "reason": "",
       "status": "ran"
@@ -424,13 +424,13 @@
       ],
       "description": "",
       "evidence": "Value Pr0d\u2026[redacted 11 chars] (entropy 3.46). Secret redacted; it was not used or validated.",
-      "fingerprint": "121427fe1d187a3f23dd",
+      "fingerprint": "c09444a6e6f14d709570",
       "id": "AUTO-0002",
       "impact": "",
       "location": {
         "end_line": 1,
         "path": ".env",
-        "snippet": "DATABASE_URL=postgres://admin:Pr0d\u2026[redacted 11 chars]@db.internal:5432/app",
+        "snippet": "DATABASE_URL=postgres://admin:Pr0d\u2026[redacted 11 chars]@db.internal:********",
         "start_line": 1
       },
       "owasp": [
@@ -2227,14 +2227,14 @@
     },
     {
       "category": "container",
-      "confidence": "low",
+      "confidence": "high",
       "cvss_score": null,
       "cvss_vector": "",
       "cwe": [
         "CWE-1357"
       ],
       "description": "",
-      "evidence": "Line matches pattern for IAC-DOCKER-UNPINNED-BASE.",
+      "evidence": "Image 'python:latest' has tag latest and no digest.",
       "fingerprint": "2c205d341653de6ac5e1",
       "id": "AUTO-0052",
       "impact": "",
@@ -2254,7 +2254,7 @@
       "rule_id": "IAC-DOCKER-UNPINNED-BASE",
       "severity": "low",
       "sources": [
-        "builtin:iac"
+        "builtin:supply-chain-structural"
       ],
       "status": "unverified",
       "title": "Base image unpinned or :latest",
@@ -2691,7 +2691,7 @@
   "threat_model": "",
   "tool": {
     "name": "appsec-assurance",
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "triage_warnings": [],
   "trust_boundary_hints": [

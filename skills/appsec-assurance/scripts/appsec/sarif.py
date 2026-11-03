@@ -4,15 +4,18 @@ so any SARIF-emitting scanner can be integrated with a one-line adapter."""
 import json
 import os
 import re
+import urllib.parse
 from typing import Dict, List
 
 from . import TOOL_NAME, TOOL_URI, VERSION
-from .findings import Finding, Location, normalize_severity, redact
+from .findings import Finding, Location, normalize_severity
+from .rules import redact_snippet
 from .standards import owasp_for_cwes
 
 SEV_TO_LEVEL = {"critical": "error", "high": "error", "medium": "warning", "low": "note", "info": "note"}
 SEV_TO_SCORE = {"critical": "9.5", "high": "8.0", "medium": "5.5", "low": "3.0", "info": "0.0"}
 _CWE_RX = re.compile(r"CWE[-_ ]?(\d+)", re.I)
+SECRET_CWES = {"CWE-798", "CWE-259", "CWE-321", "CWE-540"}
 
 
 def export(findings: List[Finding], path: str) -> None:
@@ -93,43 +96,48 @@ def ingest(path: str, tool: str, root: str, secret_tool: bool = False) -> List[F
     abs_root = os.path.realpath(root)
     for run in doc.get("runs", []) or []:
         driver = ((run.get("tool") or {}).get("driver") or {})
-        rules = {r.get("id"): r for r in driver.get("rules", []) or []}
+        rule_list = driver.get("rules", []) or []
+        rules = {r.get("id"): r for r in rule_list}
         for ext in (run.get("tool") or {}).get("extensions", []) or []:
             for r in ext.get("rules", []) or []:
                 rules.setdefault(r.get("id"), r)
         for res in run.get("results", []) or []:
-            rid = res.get("ruleId") or (res.get("rule") or {}).get("id") or "unknown"
-            rule = rules.get(rid, {})
-            if res.get("suppressions"):
+            idx = res.get("ruleIndex", (res.get("rule") or {}).get("index"))
+            by_index = rule_list[idx] if isinstance(idx, int) and 0 <= idx < len(rule_list) else {}
+            rid = res.get("ruleId") or (res.get("rule") or {}).get("id") or by_index.get("id") or "unknown"
+            rule = rules.get(rid) or by_index
+            # Only accepted suppressions hide a result; rejected / under-review ones still count.
+            sups = res.get("suppressions") or []
+            if sups and any(x.get("status", "accepted") == "accepted" for x in sups):
                 continue
             locs = res.get("locations") or [{}]
             phys = (locs[0].get("physicalLocation") or {})
             uri = ((phys.get("artifactLocation") or {}).get("uri") or "")
-            uri = re.sub(r"^file://", "", uri)
+            uri = urllib.parse.unquote(re.sub(r"^file://", "", uri))
             if os.path.isabs(uri):
                 uri = os.path.relpath(os.path.realpath(uri), abs_root)
             uri = uri.replace(os.sep, "/")
             if uri.startswith("./"):
                 uri = uri[2:]
             region = phys.get("region") or {}
-            snippet = ((region.get("snippet") or {}).get("text") or "").strip()
-            if secret_tool and snippet:
-                snippet = redact(snippet)
             tags = " ".join((rule.get("properties") or {}).get("tags", []) or [])
             text_blob = " ".join([tags, json.dumps(rule.get("relationships", [])), rid,
                                   (rule.get("shortDescription") or {}).get("text", "")])
             cwes = sorted({f"CWE-{n}" for n in _CWE_RX.findall(text_blob)})
-            msg = (res.get("message") or {}).get("text", "")
+            is_secret = secret_tool or bool(SECRET_CWES & set(cwes)) or re.search(r"secret|credential|password", rid, re.I) is not None
+            # Every tool's text is redacted: SAST tools quote hardcoded credentials in snippets and messages.
+            snippet = redact_snippet(((region.get("snippet") or {}).get("text") or "").strip(), aggressive=is_secret)
+            msg = redact_snippet((res.get("message") or {}).get("text", ""), aggressive=is_secret)
             title = (rule.get("shortDescription") or {}).get("text") or msg.split("\n")[0][:120] or rid
             out.append(Finding(
                 rule_id=f"{tool}:{rid}", title=title.strip(), severity=_sev_from_result(res, rule),
-                category="secrets" if secret_tool else _category(tool, cwes),
+                category="secrets" if is_secret else _category(tool, cwes, tags),
                 status="unverified", confidence="medium",
                 location=Location(path=uri or "(unknown)", start_line=int(region.get("startLine") or 0),
                                   end_line=int(region.get("endLine") or region.get("startLine") or 0),
                                   snippet=snippet[:300]),
                 description=((rule.get("fullDescription") or {}).get("text") or "")[:2000],
-                evidence=(redact(msg) if secret_tool and len(msg) > 200 else msg[:1000]),
+                evidence=msg[:1000],
                 remediation=((rule.get("help") or {}).get("text") or "See tool documentation.")[:2000],
                 cwe=cwes, owasp=owasp_for_cwes(cwes),
                 references=[rule["helpUri"]] if rule.get("helpUri") else [],
@@ -138,7 +146,9 @@ def ingest(path: str, tool: str, root: str, secret_tool: bool = False) -> List[F
     return out
 
 
-def _category(tool: str, cwes: List[str]) -> str:
+def _category(tool: str, cwes: List[str], tags: str = "") -> str:
+    if re.search(r"misconfig|iac|config", tags, re.I):
+        return "iac"
     if tool in ("osv-scanner", "npm-audit", "pip-audit", "govulncheck"):
         return "vulnerable-dependency"
     if tool in ("checkov", "hadolint", "kics"):
@@ -146,5 +156,5 @@ def _category(tool: str, cwes: List[str]) -> str:
     if tool == "zizmor":
         return "cicd"
     if tool == "trivy":
-        return "vulnerable-dependency" if not cwes else "iac"
+        return "vulnerable-dependency"  # trivy misconfig results are caught by their tags above
     return "code"

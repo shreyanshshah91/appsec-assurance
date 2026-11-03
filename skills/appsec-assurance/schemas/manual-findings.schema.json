@@ -48,7 +48,7 @@
         "type": "object",
         "required": ["status", "reason"],
         "properties": {
-          "fingerprint": {"type": "string"}, "id": {"type": "string"},
+          "fingerprint": {"type": "string"}, "id": {"type": "string"}, "rule_id": {"type": "string"}, "path": {"type": "string"},
           "status": {"enum": ["confirmed", "suspected", "false-positive", "accepted-risk", "fixed", "missing-control"]},
           "reason": {"type": "string", "minLength": 1},
           "severity": {"enum": ["critical", "high", "medium", "low", "info"]},

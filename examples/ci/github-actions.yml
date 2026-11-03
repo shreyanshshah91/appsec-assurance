@@ -16,13 +16,13 @@ jobs:
       contents: read
       security-events: write   # upload SARIF to code scanning
     steps:
-      - uses: actions/checkout@v4   # pin to a commit SHA in production
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           repository: shreyanshshah91/appsec-assurance
-          ref: v1.0.0               # pin to a commit SHA in production
+          ref: v1.0.1               # a release tag; pin to its commit SHA for stronger guarantees
           path: .appsec-skill
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.12"
       - name: Optional scanners
@@ -30,19 +30,35 @@ jobs:
           pipx install semgrep
           curl -sSfL -o /tmp/osv https://github.com/google/osv-scanner/releases/latest/download/osv-scanner_linux_amd64
           chmod +x /tmp/osv && sudo mv /tmp/osv /usr/local/bin/osv-scanner
+      # On pull requests, take the gate's config and baseline from the BASE branch. Otherwise a PR
+      # could add exclusions, disable rules or baseline its own findings and pass its own gate.
+      - name: Load trusted config and baseline
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          mkdir -p .appsec-trusted
+          if [ -n "$BASE_REF" ]; then
+            git fetch --depth=1 origin "$BASE_REF"
+            git show "origin/$BASE_REF:.appsec/config.json" > .appsec-trusted/config.json 2>/dev/null || echo '{}' > .appsec-trusted/config.json
+            git show "origin/$BASE_REF:.appsec/baseline.json" > .appsec-trusted/baseline.json 2>/dev/null || rm -f .appsec-trusted/baseline.json
+          else
+            cp .appsec/config.json .appsec-trusted/config.json 2>/dev/null || echo '{}' > .appsec-trusted/config.json
+            cp .appsec/baseline.json .appsec-trusted/baseline.json 2>/dev/null || true
+          fi
       - name: Scan and gate on new findings
         run: |
           python3 .appsec-skill/skills/appsec-assurance/scripts/appsec.py ci \
-            --baseline .appsec/baseline.json --fail-on high --out .appsec/out --mode continuous
+            --config .appsec-trusted/config.json --baseline .appsec-trusted/baseline.json \
+            --fail-on high --out .appsec/out --mode continuous
       - name: Upload SARIF
         if: always()
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@4bfa242aa49c5f7c6770b98670d354a7dfac05f8 # v3.39.1
         with:
           sarif_file: .appsec/out/report.sarif
           category: appsec-assurance
       - name: Upload report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: appsec-report
           path: .appsec/out/

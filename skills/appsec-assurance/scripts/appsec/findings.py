@@ -123,9 +123,12 @@ def finalize(findings: List[Finding]) -> List[Finding]:
             _merge_into(merged[f.fingerprint], f)
             continue
         key = None
-        if f.cwe and f.location.start_line:
+        # Cross-tool merge only: an external tool and a built-in rule reporting the same
+        # weakness at the same spot. Never merge analyst findings, two built-in rules,
+        # or two secrets (each secret needs its own rotation).
+        if f.cwe and f.location.start_line and _mergeable(f):
             key = (f.location.path, f.location.start_line, tuple(sorted(f.cwe)))
-            if key in by_loc_cwe:
+            if key in by_loc_cwe and _cross_tool(merged[by_loc_cwe[key]], f):
                 _merge_into(merged[by_loc_cwe[key]], f)
                 continue
         merged[f.fingerprint] = f
@@ -143,6 +146,18 @@ def finalize(findings: List[Finding]) -> List[Finding]:
             nxt += 1
         f.sources = sorted(set(f.sources))
     return out
+
+
+def _builtin(f: Finding) -> bool:
+    return all(s.startswith("builtin:") for s in f.sources)
+
+
+def _mergeable(f: Finding) -> bool:
+    return "manual-review" not in f.sources and f.category != "secrets"
+
+
+def _cross_tool(a: Finding, b: Finding) -> bool:
+    return _mergeable(a) and _mergeable(b) and _builtin(a) != _builtin(b) and not set(a.sources) & set(b.sources)
 
 
 def _merge_into(target: Finding, other: Finding) -> None:

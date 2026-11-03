@@ -6,7 +6,7 @@
       "tool": {
         "driver": {
           "name": "appsec-assurance",
-          "version": "1.0.0",
+          "version": "1.0.1",
           "informationUri": "https://github.com/shreyanshshah91/appsec-assurance",
           "rules": [
             {
@@ -586,7 +586,7 @@
                   "A08:2021"
                 ],
                 "security-severity": "3.0",
-                "precision": "low"
+                "precision": "high"
               }
             },
             {
@@ -1623,7 +1623,7 @@
             }
           ],
           "partialFingerprints": {
-            "appsecFingerprint/v1": "121427fe1d187a3f23dd"
+            "appsecFingerprint/v1": "c09444a6e6f14d709570"
           },
           "properties": {
             "status": "unverified",
@@ -3256,7 +3256,7 @@
           "ruleId": "IAC-DOCKER-UNPINNED-BASE",
           "level": "note",
           "message": {
-            "text": "Base image unpinned or :latest [unverified, confidence low]. Line matches pattern for IAC-DOCKER-UNPINNED-BASE."
+            "text": "Base image unpinned or :latest [unverified, confidence high]. Image 'python:latest' has tag latest and no digest."
           },
           "locations": [
             {
@@ -3277,10 +3277,10 @@
           },
           "properties": {
             "status": "unverified",
-            "confidence": "low",
+            "confidence": "high",
             "severity": "low",
             "sources": [
-              "builtin:iac"
+              "builtin:supply-chain-structural"
             ],
             "findingId": "AUTO-0052"
           }

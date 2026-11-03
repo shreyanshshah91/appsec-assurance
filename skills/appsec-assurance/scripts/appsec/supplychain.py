@@ -31,6 +31,14 @@ POPULAR = {
              "torch", "scikit-learn", "openai", "anthropic", "paramiko", "pyjwt", "bcrypt"],
 }
 
+# Legitimate, popular packages that sit one edit away from another popular name.
+KNOWN_GOOD = {
+    "npm": {"preact", "pug", "vuex", "ms", "ws", "pg", "chai", "nock", "got", "ora", "csv", "ejs", "yup",
+            "zod", "joi", "qs", "ini", "acorn", "redux", "react-is", "debug", "node-fetch", "globby"},
+    "pypi": {"scapy", "boto", "six", "httpie", "requests-oauthlib", "flask-cors", "jinja", "pytz",
+             "attrs", "pandas-stubs", "torchvision", "pyjwt", "pyyaml", "celery", "click"},
+}
+
 INSTALL_HOOKS = ("preinstall", "install", "postinstall")
 SUSPICIOUS_SCRIPT = re.compile(r"curl|wget|https?://|node\s+-e|eval|base64|\|\s*(ba)?sh|powershell|/dev/tcp|\bnc\s")
 
@@ -62,7 +70,7 @@ def _lev1(a: str, b: str) -> bool:
 def typosquat_candidate(name: str, ecosystem: str) -> str:
     n = name.lower()
     popular = POPULAR.get(ecosystem, [])
-    if n in popular:
+    if n in popular or n in KNOWN_GOOD.get(ecosystem, set()) or n.startswith("@types/"):
         return ""
     norm = n.replace("_", "-").replace(".", "-")
     for p in popular:
@@ -212,3 +220,40 @@ def check_dependency_tree(root: str, limit: int = 5000) -> Tuple[List[Finding], 
             "Review necessity; consider `npm ci --ignore-scripts` plus an explicit allowlist (e.g. @lavamoat/allow-scripts).",
             ["CWE-829"], [A08]))
     return out, scanned
+
+
+_FROM = re.compile(r"^\s*FROM\s+(?:--platform=\S+\s+)?(\S+)(?:\s+(?:AS|as)\s+(\S+))?\s*$")
+
+
+def check_docker_base_images(root: str, files: List[str]) -> List[Finding]:
+    """IAC-DOCKER-UNPINNED-BASE, done structurally so multi-stage aliases
+    (`FROM builder`) and registry ports (`registry:5000/app`) are handled."""
+    out = []
+    for rel in files:
+        base = os.path.basename(rel)
+        if not (base == "Dockerfile" or base.startswith("Dockerfile.") or base.endswith((".Dockerfile", ".dockerfile")) or base == "Containerfile"):
+            continue
+        try:
+            text = read_text(root, rel)
+        except (OSError, ValueError):
+            continue
+        aliases = set()
+        for ln, line in enumerate(text.split("\n"), 1):
+            m = _FROM.match(line.rstrip("\r"))
+            if not m:
+                continue
+            image, alias = m.group(1), m.group(2)
+            if alias:
+                aliases.add(alias.lower())
+            if image.lower() in aliases or image == "scratch" or "$" in image or "@sha256:" in image:
+                continue
+            last = image.rsplit("/", 1)[-1]
+            tag = last.split(":", 1)[1] if ":" in last else ""
+            if tag and tag != "latest":
+                continue
+            out.append(_finding(
+                "IAC-DOCKER-UNPINNED-BASE", "Base image unpinned or :latest", "low", "high", "unverified",
+                rel, ln, line.strip(), f"Image '{image}' has {'tag latest' if tag else 'no tag'} and no digest.",
+                "Pin base images to a version tag and digest (image:tag@sha256:...); update via Dependabot/Renovate.",
+                ["CWE-1357"], [A08], category="container"))
+    return out

@@ -56,8 +56,9 @@ def validate(doc: Dict) -> List[str]:
                 errs.append(f"{p}: cvss_vector invalid: {e}")
     for i, t in enumerate(doc.get("triage", []) or []):
         p = f"triage[{i}]"
-        if not (t.get("fingerprint") or t.get("id")):
-            errs.append(f"{p}: needs 'fingerprint' (preferred) or 'id'")
+        if not (t.get("fingerprint") or (t.get("id") and t.get("rule_id"))):
+            errs.append(f"{p}: needs 'fingerprint' (preferred), or both 'id' and 'rule_id' "
+                        "(AUTO ids can shift between scans)")
         if t.get("status") not in TRIAGE_STATUSES:
             errs.append(f"{p}: status must be one of {TRIAGE_STATUSES}")
         if not t.get("reason"):
@@ -106,9 +107,16 @@ def apply_triage(findings: List[Finding], doc: Dict) -> Tuple[List[Finding], Lis
     by_id = {f.id: f for f in findings}
     warnings = []
     for t in doc.get("triage", []) or []:
-        f = by_fp.get(t.get("fingerprint", "")) or by_id.get(t.get("id", ""))
+        f = by_fp.get(t.get("fingerprint", ""))
+        if not f and not t.get("fingerprint"):
+            cand = by_id.get(t.get("id", ""))
+            # An id alone is only trusted if the rule matches too; otherwise a rescan
+            # that shifted AUTO numbering would silently triage the wrong finding.
+            if cand and cand.rule_id == t.get("rule_id") and (not t.get("path") or cand.location.path == t["path"]):
+                f = cand
         if not f:
-            warnings.append(f"triage entry {t.get('fingerprint') or t.get('id')} matches no finding (stale?)")
+            warnings.append(f"triage entry {t.get('fingerprint') or t.get('id')} matches no finding "
+                            "(stale fingerprint, or id/rule_id mismatch) - not applied")
             continue
         f.status = t["status"]
         f.triage_reason = t["reason"]

@@ -86,7 +86,7 @@ class Rule:
         return Finding(
             rule_id=self.id, title=d["title"], severity=d["severity"],
             category=d["category"], status=self.status, confidence=d["confidence"],
-            location=Location(path=rel, start_line=ln, end_line=ln, snippet=snippet[:300]),
+            location=Location(path=rel, start_line=ln, end_line=ln, snippet=snippet[:4000]),
             description=d.get("description", ""), evidence=evidence,
             impact=d.get("impact", ""), remediation=d["remediation"],
             cwe=list(d.get("cwe", [])), owasp=list(d.get("owasp", [])),
@@ -106,7 +106,9 @@ class Rule:
                     first_line = text.count("\n", 0, m.start()) + 1
             if any(rx.search(text) for rx in self.none_of):
                 return []
-            line = text.splitlines()[first_line - 1] if first_line else ""
+            lines = text.split("\n")
+            line = lines[first_line - 1] if 0 < first_line <= len(lines) else ""
+            line = line.rstrip("\r")[:4000]
             ev = f"Matched {len(self.all_of)} required signal(s)"
             if self.none_of:
                 ev += f"; none of {len(self.none_of)} expected control pattern(s) present"
@@ -128,7 +130,9 @@ class Rule:
                     continue
                 if self.entropy_min and shannon_entropy(secret) < self.entropy_min:
                     continue
-                snippet = snippet.replace(secret, redact(secret))
+                for m2 in self.pattern.finditer(snippet):  # every match on the line, not just the first
+                    v = m2.groupdict().get("secret") or next((g for g in m2.groupdict().values() if g), None) or m2.group(0)
+                    snippet = snippet.replace(v, redact(v))
                 evidence = (f"Value {redact(secret)} (entropy {shannon_entropy(secret):.2f}). "
                             "Secret redacted; it was not used or validated.")
             out.append(self._finding(rel, ln, snippet, evidence))
@@ -138,9 +142,26 @@ class Rule:
 _ASSIGNED_VALUE = re.compile(r"([=:]\s*[\"']?)([^\s\"',;]{4,})")
 
 
-def redact_snippet(snippet: str, secret_rules: List[Rule], aggressive: bool = False) -> str:
-    """Mask secret-shaped values in snippets produced by non-secret rules, so a
-    line that also carries a credential never leaks it into reports."""
+_DEFAULT_SECRET_RULES: Optional[List["Rule"]] = None
+BUILTIN_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "rules")
+
+
+def default_secret_rules() -> List["Rule"]:
+    """Secret-detecting line rules from the built-in packs (cached)."""
+    global _DEFAULT_SECRET_RULES
+    if _DEFAULT_SECRET_RULES is None:
+        packs, _ = load_packs([BUILTIN_DIR])
+        _DEFAULT_SECRET_RULES = [r for rs in packs.values() for r in rs if r.secret and r.kind == "line"]
+    return _DEFAULT_SECRET_RULES
+
+
+def redact_snippet(snippet: str, secret_rules: Optional[List[Rule]] = None, aggressive: bool = False) -> str:
+    """Mask every secret-shaped value in a snippet or message, so text that
+    carries a credential never leaks it into any output."""
+    if not snippet:
+        return snippet
+    if secret_rules is None:
+        secret_rules = default_secret_rules()
     for r in secret_rules:
         for m in r.pattern.finditer(snippet):
             for val in [v for v in m.groupdict().values() if v] or [m.group(0)]:
@@ -157,7 +178,7 @@ def load_packs(dirs: List[str]) -> Tuple[Dict[str, List[Rule]], List[str]]:
     errors: List[str] = []
     seen_ids: Dict[str, str] = {}
     for d in dirs:
-        for path in sorted(glob.glob(os.path.join(d, "*.json"))):
+        for path in sorted(glob.glob(os.path.join(glob.escape(d), "*.json"))):
             try:
                 with open(path, encoding="utf-8") as fh:
                     data = json.load(fh)
@@ -194,15 +215,20 @@ def run(root: str, files: List[str], rules: List[Rule], min_confidence: str = "l
             continue
         in_test = bool(TEST_PATH.search(rel))
         for r in applicable:
-            for f in r.scan(rel, text):
+            try:
+                produced = r.scan(rel, text)
+            except Exception as e:  # noqa: BLE001 - one bad rule/file must not abort the scan
+                errors.append(f"{rel}: rule {r.id} failed: {e}")
+                continue
+            for f in produced:
                 if in_test and not r.secret:
                     f.confidence = "low"
                     f.description = (f.description + " (Located in test/fixture code; "
                                      "confirm whether it is reachable in production.)").strip()
                 if severity_overrides and f.rule_id in severity_overrides:
                     f.severity = severity_overrides[f.rule_id]
-                if not r.secret:
-                    f.location.snippet = redact_snippet(f.location.snippet, secret_rules,
-                                                        aggressive=f.category == "secrets")
+                # Redact before truncating so a secret crossing the cut can't leak partially.
+                f.location.snippet = redact_snippet(f.location.snippet, secret_rules,
+                                                    aggressive=f.category == "secrets")[:300]
                 findings.append(f)
     return findings, errors

@@ -33,28 +33,6 @@
       ]
     },
     {
-      "id": "IAC-DOCKER-UNPINNED-BASE",
-      "title": "Base image unpinned or :latest",
-      "severity": "low",
-      "confidence": "low",
-      "category": "container",
-      "files": [
-        "Dockerfile",
-        "Dockerfile.*",
-        "*.Dockerfile",
-        "*.dockerfile",
-        "Containerfile"
-      ],
-      "remediation": "Pin base images to a version tag and digest (image:tag@sha256:...); update via Dependabot/Renovate.",
-      "pattern": "^\\s*FROM\\s+(--platform=\\S+\\s+)?(?!scratch\\b)[^\\s:@]+(:latest)?(\\s+(AS|as)\\s+\\S+)?\\s*$",
-      "cwe": [
-        "CWE-1357"
-      ],
-      "owasp": [
-        "A08:2021"
-      ]
-    },
-    {
       "id": "IAC-DOCKER-ADD-REMOTE",
       "title": "ADD fetches remote URL",
       "severity": "medium",

@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Mode | `comprehensive` |
-| Engine | appsec-assurance 1.0.0 |
+| Engine | appsec-assurance 1.0.1 |
 | Files scanned | 11 |
 | Manual review merged | yes |
 
@@ -81,7 +81,7 @@ _A zero means no open finding was mapped to the category, not that the category 
 | rules | pack:config | builtin | **ran** | 6 | 14 rules, 0 unreadable files |
 | rules | pack:crypto | builtin | **ran** | 2 | 9 rules, 0 unreadable files |
 | rules | pack:deserialization | builtin | **ran** | 2 | 9 rules, 0 unreadable files |
-| rules | pack:iac | builtin | **ran** | 16 | 23 rules, 0 unreadable files |
+| rules | pack:iac | builtin | **ran** | 15 | 22 rules, 0 unreadable files |
 | rules | pack:injection | builtin | **ran** | 10 | 28 rules, 0 unreadable files |
 | rules | pack:secrets | builtin | **ran** | 3 | 13 rules, 0 unreadable files |
 | rules | pack:supply-chain | builtin | **ran** | 9 | 13 rules, 0 unreadable files |
@@ -101,7 +101,7 @@ _A zero means no open finding was mapped to the category, not that the category 
 | secrets | git-tracked-sensitive-files | builtin | **not-applicable** | 0 | not a git repository |
 | secrets | gitleaks | tool | **skipped** | 0 | --no-tools given |
 | supply-chain | installed-npm-install-hooks | builtin | **skipped** | 0 | runs in deep mode only (mode=comprehensive) |
-| supply-chain | lockfiles+typosquat-heuristic | builtin | **ran** | 3 |  |
+| supply-chain | lockfiles+typosquat-heuristic | builtin | **ran** | 4 |  |
 | threat-model | Threat model and attack-path chaining (references/threat-modeling.md) | manual | **skipped** | 0 | requires analyst review (SKILL.md phases 3-7) |
 
 ### Manual checklist results
@@ -179,7 +179,7 @@ GET /fetch?url=http://169.254.169.254/latest/meta-data/iam/security-credentials/
 | [AUTO-0049](#auto-0049) | medium | unverified | medium | Non-cryptographic RNG used for security value | `server.js:27` |
 | [AUTO-0050](#auto-0050) | low | missing-control | high | Workflow without explicit token permissions | `.github/workflows/ci.yml:5` |
 | [AUTO-0051](#auto-0051) | low | unverified | high | Third-party GitHub Action not pinned to a commit SHA | `.github/workflows/ci.yml:12` |
-| [AUTO-0052](#auto-0052) | low | unverified | low | Base image unpinned or :latest | `Dockerfile:1` |
+| [AUTO-0052](#auto-0052) | low | unverified | high | Base image unpinned or :latest | `Dockerfile:1` |
 | [AUTO-0053](#auto-0053) | low | missing-control | medium | Workload without resource limits | `k8s/deployment.yaml:2` |
 | [AUTO-0054](#auto-0054) | low | missing-control | high | No lockfile for npm dependencies | `package.json` |
 | [AUTO-0055](#auto-0055) | low | missing-control | medium | Express app without security headers middleware | `package.json:9` |
@@ -234,10 +234,10 @@ return str(pickle.loads(request.data))
 - **Status / confidence:** unverified / medium
 - **Location:** `.env:1`
 - **Classification:** CWE-798, A07:2021
-- **Detected by:** builtin:secrets · rule `SEC-CONN-STRING-CREDS` · fingerprint `121427fe1d187a3f23dd`
+- **Detected by:** builtin:secrets · rule `SEC-CONN-STRING-CREDS` · fingerprint `c09444a6e6f14d709570`
 
 ```
-DATABASE_URL=postgres://admin:Pr0d…[redacted 11 chars]@db.internal:5432/app
+DATABASE_URL=postgres://admin:Pr0d…[redacted 11 chars]@db.internal:********
 ```
 
 **Evidence.** Value Pr0d…[redacted 11 chars] (entropy 3.46). Secret redacted; it was not used or validated.
@@ -1147,16 +1147,16 @@ jobs:
 **Base image unpinned or :latest**
 
 - **Severity:** low
-- **Status / confidence:** unverified / low
+- **Status / confidence:** unverified / high
 - **Location:** `Dockerfile:1`
 - **Classification:** CWE-1357, A08:2021
-- **Detected by:** builtin:iac · rule `IAC-DOCKER-UNPINNED-BASE` · fingerprint `2c205d341653de6ac5e1`
+- **Detected by:** builtin:supply-chain-structural · rule `IAC-DOCKER-UNPINNED-BASE` · fingerprint `2c205d341653de6ac5e1`
 
 ```
 FROM python:latest
 ```
 
-**Evidence.** Line matches pattern for IAC-DOCKER-UNPINNED-BASE.
+**Evidence.** Image 'python:latest' has tag latest and no digest.
 
 **Remediation.** Pin base images to a version tag and digest (image:tag@sha256:...); update via Dependabot/Renovate.
 

@@ -19,9 +19,9 @@ written down.
 - **Stack-aware:** detects languages, frameworks, package managers, data stores, containers,
   Kubernetes, Terraform/CloudFormation, CI systems, cloud providers and mobile targets, then loads
   the matching stack guides.
-- **Broad coverage:** 140 built-in rules in 10 packs (secrets, injection, XSS, crypto, auth/session,
+- **Broad coverage:** 139 built-in rules in 10 packs (secrets, injection, XSS, crypto, auth/session,
   configuration, deserialization, IaC/containers, CI/CD, supply chain and malware indicators), plus
-  structural checks for lockfiles, typosquats, git-tracked secrets and dependency install hooks.
+  structural checks for lockfiles, typosquats, Docker base images, git-tracked secrets and dependency install hooks.
 - **Uses the tools you already trust:** Semgrep, Gitleaks, OSV-Scanner, Trivy, Bandit, gosec,
   govulncheck, Brakeman, Checkov, Hadolint, zizmor, npm audit, pip-audit and OWASP ZAP (baseline).
   Any tool that emits SARIF plugs in with a single line. Missing tools never break a run; they are
@@ -189,7 +189,7 @@ docs/                        architecture, usage, extending
 python3 -m unittest discover -s tests -t . -v
 ```
 
-The suite (54 tests) checks the following:
+The suite (79 tests) checks the following:
 
 - CVSS against known vectors.
 - Every rule against positive and negative samples.
@@ -200,6 +200,8 @@ The suite (54 tests) checks the following:
 - The scope gate, including production and expiry rules.
 - SARIF ingest, the OSV client (mocked), DAST header analysis and supply-chain heuristics.
 - Skill structure and documentation link integrity.
+- Regression tests for every issue found in an independent code review (redaction, triage, scope
+  bypasses, parsing edge cases, rule false positives).
 
 CI also scans this repository with the skill itself.
 

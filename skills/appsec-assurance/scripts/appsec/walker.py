@@ -26,7 +26,11 @@ def walk(root: str, excludes: List[str], max_kb: int) -> Tuple[List[str], List[T
     """Return (included relative paths, skipped [(path, reason)]). Sorted."""
     files: List[str] = []
     skipped: List[Tuple[str, str]] = []
-    for dirpath, dirnames, filenames in os.walk(root):
+    def onerror(err: OSError) -> None:
+        rel = os.path.relpath(err.filename or root, root).replace(os.sep, "/")
+        skipped.append((rel, f"unreadable directory: {err.strerror}"))
+
+    for dirpath, dirnames, filenames in os.walk(root, onerror=onerror):
         rel_dir = os.path.relpath(dirpath, root).replace(os.sep, "/")
         rel_dir = "" if rel_dir == "." else rel_dir
         keep = []
@@ -62,11 +66,15 @@ def walk(root: str, excludes: List[str], max_kb: int) -> Tuple[List[str], List[T
 def read_text(root: str, rel: str) -> str:
     with open(os.path.join(root, rel), "rb") as fh:
         data = fh.read()
+    if data.startswith((b"\xff\xfe", b"\xfe\xff")):
+        return data.decode("utf-16", "replace")
     if b"\x00" in data[:8192]:
         raise ValueError("binary content")
-    return data.decode("utf-8", "replace")
+    return data.decode("utf-8-sig", "replace")
 
 
 def iter_lines(text: str) -> Iterator[Tuple[int, str]]:
-    for i, line in enumerate(text.splitlines(), 1):
-        yield i, line
+    # Split on \n only: str.splitlines() also breaks on \f, \v, U+2028 etc.,
+    # which would make line numbers disagree with editors and SARIF viewers.
+    for i, line in enumerate(text.split("\n"), 1):
+        yield i, line.rstrip("\r")

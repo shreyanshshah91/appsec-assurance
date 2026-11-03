@@ -42,3 +42,9 @@ regression tests, rescan diff showing the fingerprints gone.
 fingerprint; gate only on *new* findings at/above the threshold; upload
 `report.sarif` to code scanning. Templates in `examples/ci/`. Never auto-update
 the baseline in CI — baseline changes are reviewed in a PR.
+
+**Trust boundary:** on pull/merge requests, load `.appsec/config.json` and
+`.appsec/baseline.json` from the *base* branch (the templates do this). If the
+gate reads them from the PR's own checkout, a PR can add exclusions, disable
+rules, downgrade severities or baseline its own findings and pass its own gate.
+Protect `.appsec/` with CODEOWNERS so changes to it need security review.

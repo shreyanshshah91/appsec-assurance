@@ -114,9 +114,9 @@
   {
     "area": "rules",
     "check": "pack:iac",
-    "findings": 16,
+    "findings": 15,
     "kind": "builtin",
-    "reason": "23 rules, 0 unreadable files",
+    "reason": "22 rules, 0 unreadable files",
     "status": "ran"
   },
   {
@@ -274,7 +274,7 @@
   {
     "area": "supply-chain",
     "check": "lockfiles+typosquat-heuristic",
-    "findings": 3,
+    "findings": 4,
     "kind": "builtin",
     "reason": "",
     "status": "ran"

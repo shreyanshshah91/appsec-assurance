@@ -42,6 +42,8 @@ class Adapter:
         findings: List[Finding] = []
         for argv, out_path, capture in self.commands(root, raw, cfg, stack):
             log.event("tool.exec", tool=self.name, argv=argv, network=self.network)
+            if os.path.exists(out_path):
+                os.remove(out_path)  # never parse a stale result from a previous run
             res = subprocess.run(argv, cwd=root, capture_output=True, timeout=timeout)
             if capture:
                 with open(out_path, "wb") as fh:
@@ -91,7 +93,7 @@ def _gitleaks_argv(root, raw, cfg, stack):
 def _dockerfiles(root):
     hits = []
     for pat in ("**/Dockerfile", "**/Dockerfile.*", "**/*.Dockerfile"):
-        hits += glob.glob(os.path.join(root, pat), recursive=True)
+        hits += glob.glob(os.path.join(glob.escape(root), pat), recursive=True)
     return sorted({os.path.relpath(h, root) for h in hits if "node_modules" not in h})
 
 
@@ -113,7 +115,7 @@ class JsonAuditAdapter(Adapter):
                 return []
             return [(["npm", "audit", "--json", "--package-lock-only"], out_path, True)]
         cmds = []
-        for i, req in enumerate(sorted(glob.glob(os.path.join(root, "requirements*.txt")))):
+        for i, req in enumerate(sorted(glob.glob(os.path.join(glob.escape(root), "requirements*.txt")))):
             p = os.path.join(raw, f"pip-audit-{i}.json")
             cmds.append((["pip-audit", "-r", os.path.relpath(req, root), "-f", "json", "--progress-spinner", "off"], p, True))
         return cmds
@@ -133,7 +135,7 @@ class JsonAuditAdapter(Adapter):
                                             "package-lock.json", [c for c in via.get("cwe", []) or []],
                                             fix="Upgrade per `npm audit fix` guidance" if v.get("fixAvailable") else "No fix available; assess exposure or replace the package."))
         else:
-            deps = data.get("dependencies", data if isinstance(data, list) else [])
+            deps = data if isinstance(data, list) else data.get("dependencies", [])
             for d in deps:
                 for vuln in d.get("vulns", []):
                     fixv = ", ".join(vuln.get("fix_versions", []))

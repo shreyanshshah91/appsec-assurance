@@ -33,7 +33,7 @@
   ],
   "triage": [
     { "fingerprint": "<fingerprint from findings.json>", "status": "false-positive", "reason": "Value is a public test fixture key in tests/; not loaded in production builds." },
-    { "id": "AUTO-0007", "status": "confirmed", "reason": "Traced request.args['url'] to requests.get with no allowlist (app.py:35).", "severity": "high" }
+    { "id": "AUTO-0007", "rule_id": "INJ-SSRF-PY", "status": "confirmed", "reason": "Traced request.args['url'] to requests.get with no allowlist (app.py:35). id-based triage must name the rule_id; prefer fingerprints.", "severity": "high" }
   ],
   "attack_paths": [
     {

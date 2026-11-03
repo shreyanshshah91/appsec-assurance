@@ -31,9 +31,9 @@ class FindingsTest(unittest.TestCase):
 
     def test_dedupe_same_location_and_cwe_from_two_tools(self):
         out = finalize([F("A", cwe=["CWE-89"], src="semgrep", sev="medium"),
-                        F("B", cwe=["CWE-89"], src="builtin", sev="high")])
+                        F("B", cwe=["CWE-89"], src="builtin:injection", sev="high")])
         self.assertEqual(len(out), 1)
-        self.assertEqual(out[0].sources, ["builtin", "semgrep"])
+        self.assertEqual(out[0].sources, ["builtin:injection", "semgrep"])
         self.assertEqual(out[0].severity, "high")
 
     def test_identical_lines_get_distinct_fingerprints(self):
@@ -295,3 +295,30 @@ class SupplyChainTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class AdapterTest(unittest.TestCase):
+    def test_pip_audit_both_json_shapes(self):
+        from appsec.adapters import get
+        ad = get("pip-audit")
+        d = tempfile.mkdtemp()
+        vuln = {"name": "pyyaml", "version": "5.3", "vulns": [{"id": "GHSA-x", "fix_versions": ["5.3.1"], "description": "d"}]}
+        for shape in ({"dependencies": [vuln]}, [vuln]):
+            p = os.path.join(d, "out.json")
+            with open(p, "w") as fh:
+                json.dump(shape, fh)
+            fs = ad.parse(p, d)
+            self.assertEqual(len(fs), 1, f"shape {type(shape).__name__}")
+            self.assertIn("5.3.1", fs[0].remediation)
+
+    def test_stale_output_not_reused(self):
+        from appsec.adapters import SarifAdapter
+        from appsec.log import ActivityLog
+        d = tempfile.mkdtemp()
+        stale = os.path.join(d, "fake.sarif")
+        with open(stale, "w") as fh:
+            json.dump({"version": "2.1.0", "runs": [{"tool": {"driver": {"name": "x"}}, "results": [
+                {"ruleId": "old", "message": {"text": "stale"}, "locations": []}]}]}, fh)
+        ad = SarifAdapter("fake", "true", "sast", "n/a", argv=lambda r, raw, c, s: [["true"]])
+        fs = ad.run(d, d, {}, {}, 30, ActivityLog(os.path.join(d, "log.jsonl")))
+        self.assertEqual(fs, [], "a tool that wrote nothing must not yield last run's results")

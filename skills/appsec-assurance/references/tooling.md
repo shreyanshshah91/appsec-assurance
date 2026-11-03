@@ -19,7 +19,7 @@ at runtime (`appsec.py doctor`). Nothing is installed automatically.
 | OWASP ZAP baseline | Passive DAST | Targets only | ZAP distribution (`zap-baseline.py`) | Only via `appsec.py dast --zap` after scope gate + approval. |
 
 ## Built-in fallbacks
-- 140+ regex rules across 10 packs (`appsec.py rules`).
+- 139 regex rules across 10 packs plus structural checks (`appsec.py rules`).
 - Structural supply-chain checks (lockfiles, typosquat heuristic, git-tracked
   sensitive files, installed npm install hooks).
 - `--osv-api`: stdlib OSV.dev client (opt-in; sends package names+versions).

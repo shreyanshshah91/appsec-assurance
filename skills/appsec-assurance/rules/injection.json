@@ -222,7 +222,8 @@
       ],
       "remediation": "Use execFile/spawn with an argument array and no shell; validate inputs against an allowlist.",
       "pattern": "\\b(exec|execSync)\\(\\s*(`[^`]*\\$\\{|[\\\"'][^\\\"']*[\\\"']\\s*\\+|\\w+\\s*\\+)",
-      "negative": "\\.exec\\(\\s*`?[^`]*\\)\\s*[;)]?\\s*$(?<=RegExp)",
+      "negative": "\\b\\w*(re|regex|regexp|rx|pattern|RegExp|matcher)\\w*\\.exec\\(|/[^/\\s]+/[gimsuy]*\\.exec\\(",
+      "ignore_case": false,
       "cwe": [
         "CWE-78"
       ],

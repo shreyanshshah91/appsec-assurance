@@ -74,7 +74,13 @@ def run_scan(root: str, cfg: Dict, out: str, *, offline: bool = False, osv_api: 
     log.event("scan.start", root="." if deterministic else root, mode=cfg["mode"], engine=VERSION,
               config=cfg.get("_path"), offline=offline, osv_api=osv_api)
 
-    files, skipped = walk(root, cfg["effective_excludes"], int(cfg["max_file_size_kb"]))
+    excludes = list(cfg["effective_excludes"])
+    out_abs = os.path.realpath(out)
+    if out_abs == os.path.realpath(root) or out_abs.startswith(os.path.realpath(root) + os.sep):
+        rel_out = os.path.relpath(out_abs, os.path.realpath(root)).replace(os.sep, "/")
+        if rel_out != ".":
+            excludes.append(rel_out + "/*")  # never scan our own previous output
+    files, skipped = walk(root, excludes, int(cfg["max_file_size_kb"]))
     log.event("files.enumerated", included=len(files), skipped=len(skipped))
     for rel, why in skipped:
         cov.record("files", rel, "skipped", why, kind="file")
@@ -110,7 +116,8 @@ def run_scan(root: str, cfg: Dict, out: str, *, offline: bool = False, osv_api: 
         log.event("rules.pack", pack=name, rules=len(packs[name]), findings=len(fs))
 
     # Structural supply-chain checks
-    sc = supplychain.check_lockfiles(stack) + supplychain.check_typosquats(root, files)
+    sc = (supplychain.check_lockfiles(stack) + supplychain.check_typosquats(root, files)
+          + supplychain.check_docker_base_images(root, files))
     findings.extend(sc)
     cov.record("supply-chain", "lockfiles+typosquat-heuristic", "ran", findings=len(sc))
     tracked, why = supplychain.check_tracked_env_files(root)
@@ -132,6 +139,7 @@ def run_scan(root: str, cfg: Dict, out: str, *, offline: bool = False, osv_api: 
     for ad in adapters.REGISTRY:
         area = ad.area
         if tools_only is not None and ad.name not in tools_only:
+            cov.record(area, ad.name, "skipped", "not selected with --tools", kind="tool")
             continue
         if no_tools:
             cov.record(area, ad.name, "skipped", "--no-tools given", kind="tool")
@@ -139,7 +147,7 @@ def run_scan(root: str, cfg: Dict, out: str, *, offline: bool = False, osv_api: 
         if ad.name in disabled_tools:
             cov.record(area, ad.name, "skipped", "disabled by configuration", kind="tool")
             continue
-        if wanted != "all" and ad.name not in wanted:
+        if wanted != "all" and ad.name not in wanted and tools_only is None:  # --tools overrides the mode profile
             cov.record(area, ad.name, "skipped", f"not part of {cfg['mode']} mode profile", kind="tool")
             continue
         if not ad.applies(stack):

@@ -55,6 +55,7 @@
       ],
       "remediation": "Prefer registry releases pinned in a lockfile; if a git dependency is needed pin to a commit SHA.",
       "pattern": "\\\"[^\\\"]+\\\"\\s*:\\s*\\\"(git\\+|git://|github:|gitlab:|bitbucket:|https?://|file:)|^\\s*(git\\+|https?://)\\S+|@\\s*(git\\+|https?://)",
+      "negative": "^\\s*\\\"(homepage|url|repository|bugs|funding|author|license|\\$schema|registry|email)\\\"\\s*:|^\\s*-?-?(index-url|extra-index-url|find-links|trusted-host)",
       "cwe": [
         "CWE-829"
       ],

@@ -4,6 +4,7 @@ Exit codes: 0 success, 1 security gate failed, 2 usage/runtime error, 3 out of s
 """
 
 import argparse
+import http.client
 import json
 import os
 import shutil
@@ -61,7 +62,11 @@ def _scan(args):
     cfg = config.resolve(config.load(args.root, args.config), args.mode)
     if args.fail_on:
         cfg["fail_on"] = args.fail_on
-    tools_only = args.tools.split(",") if args.tools else None
+    tools_only = [t.strip() for t in args.tools.split(",") if t.strip()] if args.tools else None
+    if tools_only:
+        unknown = sorted(set(tools_only) - {a.name for a in adapters.REGISTRY})
+        if unknown:
+            raise SystemExit(f"unknown tool(s): {', '.join(unknown)}; known: {', '.join(a.name for a in adapters.REGISTRY)}")
     return cfg, engine.run_scan(args.root, cfg, args.out, offline=args.offline, osv_api=args.osv_api,
                                 deterministic=args.deterministic, tools_only=tools_only, no_tools=args.no_tools)
 
@@ -177,12 +182,13 @@ def cmd_dast(args) -> int:
         return 2
     try:
         sc = scope.load(args.scope)
+        target = scope.normalize_target(args.target)  # one canonical URL for the gate and the request
     except (OSError, ValueError) as e:
-        _p(f"DENIED: cannot load scope file: {e}")
+        _p(f"DENIED: {e}")
         return 3
-    ok, why = scope.check(sc, args.target, "dast-passive")
+    ok, why = scope.check(sc, target, "dast-passive")
     log = ActivityLog(os.path.join(args.out, "activity.log.jsonl"))
-    log.event("dast.scope-check", target=args.target, allowed=ok, reason=why)
+    log.event("dast.scope-check", target=target, allowed=ok, reason=why)
     if not ok:
         _p(f"DENIED: {why}")
         return 3
@@ -191,16 +197,16 @@ def cmd_dast(args) -> int:
         return 3
     found = []
     try:
-        status, headers = dast.fetch(args.target)
-        log.event("dast.request", method="GET", target=args.target, status=status)
-        found += dast.analyze_headers(args.target, status, headers)
-    except OSError as e:
+        status, headers = dast.fetch(target)
+        log.event("dast.request", method="GET", target=target, status=status)
+        found += dast.analyze_headers(target, status, headers)
+    except (OSError, ValueError, http.client.HTTPException) as e:
         _p(f"error: request failed: {e}")
         return 2
     if args.zap:
         try:
-            found += dast.zap_baseline(args.target, os.path.join(args.out, "raw"), 1800)
-            log.event("dast.zap-baseline", target=args.target, findings=len(found))
+            found += dast.zap_baseline(target, os.path.join(args.out, "raw"), 1800)
+            log.event("dast.zap-baseline", target=target, findings=len(found))
         except (FileNotFoundError, OSError, ValueError) as e:
             _p(f"warning: ZAP baseline not run: {e}")
     with open(auto, encoding="utf-8") as fh:
@@ -208,7 +214,7 @@ def cmd_dast(args) -> int:
     existing = [Finding.from_dict(d) for d in doc["findings"]]
     merged = finalize(existing + found)
     doc["findings"] = [f.to_dict() for f in merged]
-    doc["coverage"].append({"area": "dast", "check": f"passive-headers:{args.target}", "kind": "dast",
+    doc["coverage"].append({"area": "dast", "check": f"passive-headers:{target}", "kind": "dast",
                             "status": "ran", "reason": why, "findings": len(found)})
     with open(auto, "w", encoding="utf-8") as fh:
         json.dump(doc, fh, indent=2, sort_keys=True)

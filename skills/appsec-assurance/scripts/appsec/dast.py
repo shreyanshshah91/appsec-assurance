@@ -24,6 +24,8 @@ HEADER_CHECKS = [
 def fetch(url: str, timeout: int = 15) -> Tuple[int, List[Tuple[str, str]]]:
     p = urllib.parse.urlparse(url)
     conn_cls = http.client.HTTPSConnection if p.scheme == "https" else http.client.HTTPConnection
+    if not p.hostname:
+        raise ValueError(f"cannot parse host from {url!r}")
     conn = conn_cls(p.hostname, p.port, timeout=timeout)
     path = (p.path or "/") + (f"?{p.query}" if p.query else "")
     conn.request("GET", path, headers={"User-Agent": "appsec-assurance-passive-check"})
@@ -39,7 +41,7 @@ def analyze_headers(url: str, status: int, headers: List[Tuple[str, str]]) -> Li
     for k, v in headers:
         h.setdefault(k.lower(), []).append(v)
     out = []
-    is_https = url.startswith("https://")
+    is_https = urllib.parse.urlparse(url).scheme.lower() == "https"
     ctype = ";".join(h.get("content-type", [""])).lower()
     is_html = "html" in ctype or not ctype
 

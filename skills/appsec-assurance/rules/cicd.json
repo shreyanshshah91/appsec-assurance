@@ -38,7 +38,7 @@
       ],
       "remediation": "Pass the value through an env var (env: TITLE: ${{ github.event.issue.title }}) and reference \"$TITLE\" in the script.",
       "pattern": "\\$\\{\\{\\s*github\\.(event\\.(issue|pull_request|comment|review|review_comment|discussion|head_commit|commits|pages|workflow_run|inputs)[^}]*\\.(title|body|message|name|label|ref|email|head_ref|default_branch|page_name)|head_ref)\\s*\\}\\}",
-      "negative": "^\\s*[\\w-]+\\s*:\\s*[\\\"']?\\$\\{\\{[^}]*\\}\\}[\\\"']?\\s*$",
+      "negative": "^\\s*(?!-?\\s*(run|script)\\s*:)[\\w-]+\\s*:\\s*[\\\"']?\\$\\{\\{[^}]*\\}\\}[\\\"']?\\s*$",
       "cwe": [
         "CWE-78",
         "CWE-94"

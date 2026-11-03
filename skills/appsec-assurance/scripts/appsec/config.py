@@ -86,7 +86,27 @@ def load(root: str, path: Optional[str] = None) -> Dict[str, Any]:
             raise SystemExit(f"{path}: unknown config keys: {', '.join(sorted(unknown))}")
     cfg = _deep_merge(DEFAULTS, user)
     cfg["_path"] = path
+    _validate(cfg, path or "config")
     return cfg
+
+
+def _validate(cfg: Dict[str, Any], where: str) -> None:
+    from .findings import SEVERITIES
+    errs = []
+    if cfg.get("mode") not in MODES:
+        errs.append(f"mode must be one of {', '.join(MODES)}")
+    if cfg.get("fail_on") not in SEVERITIES:
+        errs.append(f"fail_on must be one of {', '.join(SEVERITIES)}")
+    for rid, sev in (cfg.get("severity_overrides") or {}).items():
+        if sev not in SEVERITIES:  # a typo must never silently downgrade a finding
+            errs.append(f"severity_overrides.{rid}: {sev!r} is not one of {', '.join(SEVERITIES)}")
+    if not isinstance(cfg.get("max_file_size_kb"), int) or cfg["max_file_size_kb"] <= 0:
+        errs.append("max_file_size_kb must be a positive integer (kilobytes)")
+    for k in ("exclude", "disabled_rules", "custom_rule_dirs"):
+        if not isinstance(cfg.get(k), list):
+            errs.append(f"{k} must be a list")
+    if errs:
+        raise SystemExit(f"{where}: invalid configuration:\n  " + "\n  ".join(errs))
 
 
 def resolve(cfg: Dict[str, Any], mode: Optional[str]) -> Dict[str, Any]:
